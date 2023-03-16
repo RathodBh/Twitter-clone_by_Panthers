@@ -4,6 +4,8 @@ const PORT=3008
 const conn = require('./connection/connectdb');
 const register = require('./Routes/register')
 const login = require('./Routes/login')
+// const conn = require('../connection/connectdb');
+
 
 // my all end points
 
