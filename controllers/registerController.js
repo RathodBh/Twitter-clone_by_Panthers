@@ -1,7 +1,9 @@
 const conn = require('../connection/connectdb');
 const queryExecuter = require('../queryExecute/queryExecuter')
-
-const registerUser = async (req, res) => {
+const express = require('express')
+const app = express();
+const asyncHandler = require("express-async-handler");
+const registerUser = asyncHandler(async (req, res) => {
     //i need to show the post request for register page
     try {
         const { name, email, password, cpassword, } = req.body;
@@ -49,14 +51,14 @@ const registerUser = async (req, res) => {
     } catch (error) {
 
     }
-};
+});
 
 
-const getregisterUser = async (req, res) => {
+const getregisterUser = asyncHandler(async(req,res) => {
     //i need to show the get request for register page
-    console.log("i am here");
-
-};
+    
+    res.render('register')
+});
 
 
 
