@@ -4,6 +4,9 @@ const PORT=3008
 const conn = require('./connection/connectdb');
 const register = require('./Routes/register')
 const login = require('./Routes/login')
+
+// my all end points
+
 app.use('/user',register)
 app.use('/user-login',login)
 

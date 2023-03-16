@@ -1,8 +1,6 @@
 const conn = require('../connection/connectdb');
 const queryExecuter = require('../queryExecute/queryExecuter')
 
-
-
 const registerUser = async (req, res) => {
     //i need to show the post request for register page
     try {
@@ -56,6 +54,7 @@ const registerUser = async (req, res) => {
 
 const getregisterUser = async (req, res) => {
     //i need to show the get request for register page
+    console.log("i am here");
 
 };
 
