@@ -3,7 +3,7 @@ const app = express();
 const router = express.Router()
 // console.log(router);
 
-const {registerUser,getregisterUser} = require('../controllers/userController')
+const {registerUser,getregisterUser} = require('../controllers/registerController')
 
 // add routes
 
