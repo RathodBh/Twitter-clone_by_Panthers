@@ -23,16 +23,12 @@
   },
   "homepage": "https://github.com/dev-bhavesh/Twitter-clone_by_Panthers#readme",
   "dependencies": {
-<<<<<<< HEAD
-    "express": "^4.18.2",
-=======
     "bcrypt": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "express-async-handler": "^1.2.0",
->>>>>>> 400f7949b66448d2d8bdf88362ee6879a90c20f7
     "mysql2": "^3.2.0",
     "nodemon": "^2.0.21"
   }
