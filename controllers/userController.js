@@ -51,7 +51,6 @@ const registerUser = async (req, res) => {
     } catch (error) {
 
     }
-
 };
 
 
