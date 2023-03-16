@@ -5,6 +5,7 @@ const app = express();
 const asyncHandler = require("express-async-handler");
 const registerUser = asyncHandler(async (req, res) => {
     //i need to show the post request for register page
+    console.log("now");
     try {
         const { name, email, password, cpassword, } = req.body;
         async function register(name, email, password, cpassword) {
@@ -53,13 +54,45 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 });
 
-
-const getregisterUser = asyncHandler(async(req,res) => {
+const getregisterUser = asyncHandler(async (req, res) => {
     //i need to show the get request for register page
-    
-    res.render('register')
+    let flag = false
+    res.render('register',{flag})
+});
+
+const getEmailCheck = asyncHandler(async (req, res) => {
+    //i need to show the post request for checkEmail fetch request
+    console.log("i am google i am cool");
+    const { data } = req.body
+    const qry1 = `select * from Jwt_prac.users where email='${data}'`
+    const oldUser = await queryExecuter(qry1)
+    if (oldUser.length == 0) {
+        let isNew = true
+        res.json({ isNew });
+    }
+    else {
+        let isNew = false
+        res.json({ isNew });
+    }
+
+});
+const getUserNameCheck = asyncHandler(async (req, res) => {
+    //i need to show the post request for checkEmail fetch request
+    console.log("i am google i am cool");
+    const { data } = req.body
+    const qry1 = `select * from Jwt_prac.users where username='${data}'`
+    const oldUser = await queryExecuter(qry1)
+    if (oldUser.length == 0) {
+        let isNew = true
+        res.json({ isNew });
+    }
+    else {
+        let isNew = false
+        res.json({ isNew });
+    }
+
 });
 
 
 
-module.exports = { registerUser, getregisterUser }
+module.exports = { registerUser, getregisterUser,getEmailCheck,getUserNameCheck }
