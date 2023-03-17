@@ -6,13 +6,13 @@
     --text-gray: #909BA4;
     --text-black: #0F1419;
     }
-    .cover{
+    .cover img{
         height: 150px;
-
+        width: 100%;
         /* background-image: linear-gradient( 109.6deg, rgba(156,252,248,1) 11.2%, rgba(110,123,251,1) 91.1% ); */
-        background: url(../img/cover.jpg);
-        background-repeat: no-repeat;
-        background-size: cover;
+        /* background: url(../img/cover.jpg); */
+        /* background-repeat: no-repeat;
+        background-size: cover; */
     }
     .dp {
        margin-top: -4rem; 
