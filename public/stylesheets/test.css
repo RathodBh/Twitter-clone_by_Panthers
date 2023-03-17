@@ -1,0 +1,23 @@
+#twt-area{
+width: 100%; 
+outline: none; 
+border: 0px;
+font-size: 20px;
+}
+#twt_btn_lnk{
+    justify-content: space-between;
+    padding-top: 10px;   
+}
+#modal_dialog{
+    max-width: 580px;
+}
+#modal-content_id{
+    border-radius: 15px;
+}
+#modal_dialog .tweet-comment-box{
+    resize: none;
+}
+#modal_body{
+    padding: 5px;
+justify-content: space-between;
+}
