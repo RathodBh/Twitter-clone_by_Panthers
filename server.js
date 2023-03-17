@@ -15,6 +15,8 @@ app.set('view engine','ejs')
 app.use('/user',register)
 app.use('/user-login',login)
 app.use('/dashboard',dashboard)
-
+app.get("/profile",(req,res)=>{
+    res.render("profile")
+})
 app.listen(PORT,()=>{ console.log(`I am listining on ${PORT}`);
 })
