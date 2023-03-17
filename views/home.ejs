@@ -8,7 +8,8 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"/>
   <title>home</title>
 </head>
 
@@ -27,8 +28,8 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-body d-flex flex-column">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit_profile">
-                  Launch demo modal
+                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#edit_profile">
+                  Edit Profile
                 </button>
                 <button type="button" class="btn btn-light" onclick="changePassword()">Change Password</button>
                 <button type="button" class="btn btn-light" onclick="logout()">Logout</button>
@@ -41,11 +42,38 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
+                <button type="button" class="btn btn-light edit_image_icons" id="edit_camera_icon"><i class="fa-solid fa-camera"></i></button>
               </div>
               <div class="modal-body">
-                ...
+                <form>
+                  <img src="/assets/images/cover_img.png" class="img-fluid" alt="cover_image" id="cover-image">
+                  <div class="container" id="edit_image_container">
+                    <button type="button" class="btn btn-light edit_image_icons" id="edit_camera_icon"><i class="fa-solid fa-camera"></i></button>
+                    <button type="button" class="btn btn-light edit_image_icons" id="edit_close_icon"><i class="fa-solid fa-circle-xmark"></i></button>
+                  </div>
+                  <img src="/assets/images/cover_img.png" class="img-fluid" alt="cover_image" id="profile-image">
+                  <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="name" class="form-control" id="name" aria-describedby="emailHelp">
+                    <div id="text" class="form-text"></div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username">
+                  </div>
+                  <div class="mb-3">
+                    <label for="bio" class="form-label">Bio</label>
+                    <input type="text" class="form-control" id="bio">
+                  </div>
+                  <div class="mb-3">
+                    <label for="birth_date" class="form-label">Birth Date</label>
+                    <input type="date" class="form-control" id="biobirth_date">
+                  </div>
+           
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

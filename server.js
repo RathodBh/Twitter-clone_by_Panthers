@@ -14,7 +14,7 @@ const conn = require("./connection/connectdb");
 app.use('/user',register)
 app.use('/user-login',login)
 app.use('/user-home',home)
-// app.use('/editProfile',editProfile)
+app.use('/editProfile',editProfile)
 
 app.listen(PORT,()=>{ console.log(`I am listining on ${PORT}`);
 })
