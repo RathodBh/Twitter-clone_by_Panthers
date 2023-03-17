@@ -18,5 +18,11 @@ app.use('/user-login',login)
 app.use('/dashboard',dashboard)
 app.use("/profile", profile)
 
+app.get("/signup",(req,res)=>{
+    res.render('signup')
+})
+app.get("/login",(req,res)=>{
+    res.render('login')
+})
 app.listen(PORT,()=>{ console.log(`I am listining on ${PORT}`);
 })
