@@ -12,6 +12,15 @@ a{
 .fs-14{
     font-size: 14px;
 }
+.fs-16{
+    font-size: 16px;
+}
+.fw-300{
+    font-weight:300;
+}
+.fw-600{
+    font-weight:600;
+}
 .all-center{
     display: flex;
     justify-content: center;
@@ -72,7 +81,7 @@ a{
     border-radius: 50px
 }
 
-.active{
+.inner-menu .active{
     font-weight: 800;
 }
 
@@ -182,4 +191,57 @@ a{
     max-height: 100vh;
     position: sticky;
     top: 0px;  
+}
+
+/* home  */
+.tweet-container .tweet{
+    transition: all 0.5s;
+    box-shadow: 0 0 9px var(--bg-black);
+}
+.tweet-container .tweet:hover{
+    background: var(--bg-gray);
+    transition: all 0.5s;
+}
+.tweet-img-container img{
+    width: 100%;
+    object-fit: contain;
+    border-radius: 16px;
+}
+.tweet-video-container video{
+    width: 100%;
+    object-fit: contain;
+    border-radius: 16px;
+}
+.tweet-reactions-container a{
+    color: var(--text-gray);
+    transition: all 0.5s;
+}
+.tweet-reactions-container a i{
+    padding: 8px;
+    border-radius: 50%;
+}
+.tweet-reactions-container .comment:hover,
+.tweet-reactions-container .share:hover,
+.tweet-reactions-container .chart:hover{
+    color: var(--text-blue);
+    font-weight: 500
+}
+.tweet-reactions-container .comment:hover i,
+.tweet-reactions-container .share:hover i,
+.tweet-reactions-container .chart:hover i{
+    background: #afd7f3;
+}
+.tweet-reactions-container .retweet:hover{
+    color: green;
+    font-weight: 500
+}
+.tweet-reactions-container .retweet:hover i{
+    background: rgb(192, 244, 192);
+}
+.tweet-reactions-container .like:hover{
+    color: red;
+    font-weight: 500
+}
+.tweet-reactions-container .like:hover i{
+    background: rgb(242, 174, 174);
 }

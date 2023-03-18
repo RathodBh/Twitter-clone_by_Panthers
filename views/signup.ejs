@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
+
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <link rel="stylesheet" href="/stylesheets/signup.css">
+
+    <title>Twitter | Sign-up</title>
+
+</head>
+
+<body>
+
+    <!-- Modal  -->
+    <div class="modal" id="signup">
+        <div class="modal-dialog container">
+            <div class="modal-content rounded">
+
+                <div class="modal-header bg-blue top-radius  d-flex flex-column jcc">
+                        <i class="fa-brands fa-twitter twitter-logo"></i>
+                        <h3 class="modal-title text-light">Register your account</h3>
+                </div>
+
+                <div class="modal-body bg-light">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="swiper mySwiper w-100 h-100">
+                                <div class="swiper-wrapper w-100">
+                                    <div class="swiper-slide">
+                                        <img src="https://images.indianexpress.com/2022/11/Twitter-Pixabay.jpg?w=640" />
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <img
+                                            src="https://www.jornalcontabil.com.br/wp-content/uploads/schema-and-structured-data-for-wp/twitter-1200x675.jpg" />
+                                    </div>
+                                    <div class="swiper-slide">
+                                        <img src="https://swiperjs.com/demos/images/nature-3.jpg" />
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <form action="/user/sign-up" class="w-100" method="post">
+                                <div class="data">
+                                    <div class="candidate">
+                                        <div id="part1">
+
+                                            <!-- <h1 class="txt-center m-20 text-blue">Registration</h1> -->
+
+                                            <div class="d-flex jcc alc p-10 flex-column">
+
+                                                <div class="mb-3 w100">
+                                                    <label for="name" class="form-label text-dark">Name</label>
+                                                    <input type="text" class="form-control rounded" name="name" id="name" placeholder="Enter name">
+                                                  </div>
+                                                <div class="mb-3 w100">
+                                                    <label for="email" class="form-label text-dark">Email address</label>
+                                                    <input type="email" class="form-control rounded" id="email" name="email" placeholder="name@example.com">
+                                                </div>
+
+                                                <label for="year" class="form-label w-100 text-dark">Date of Birth</label>
+                                                <p class="text-gray fs-14 w-100">This will be shown publicly. Confirm your own age.</p>
+                                                <div class="d-flex jcsb control">
+                                                    <div class="w30">
+                                                        <select class="form-select rounded" id ="year" name = "yyyy" onchange="change_year(this)" onmousedown="if(this.options.length>8){this.size=8;}" >
+                                                        </select>
+                                                    </div>
+                                                    <div class="w30">
+                                                        <select class="form-select rounded"  id ="month" name = "mm" onchange="change_month(this)" onmousedown="if(this.options.length>8){this.size=8;}">
+                                                        </select>
+                                                    </div>
+                                                    <div class="w30">
+                                                        <select class="form-select rounded" id ="day" name = "dd"   >
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="part2">
+                                            <!-- <h1 class="text-blue txt-center m-20 ">Account Details</h1> -->
+
+                                            <div class="d-flex jcc alc p-10 flex-column">
+                                                <div class="mb-3 w100">
+                                                    <div class="d-flex jcsb">
+                                                        <label for="username" class="form-label text-dark">Username</label>
+                                                        <span class="text-dark" id="usernameLimit">
+                                                        </span>
+                                                    </div>
+                                                        <input type="text" class="form-control rounded" name="uname" id="username" placeholder="Enter username">
+                                                    <span class="w-100 text-danger fs-14" id="usernameError"></span>
+                                                  </div>
+                                                <div class="mb-3 w100">
+                                                    <label for="password" class="form-label text-dark">Password</label>
+                                                    <input type="password" class="form-control rounded" name="password" id="password" placeholder="Enter password">
+                                                    <span class="w-100" id="pwdError"></span>
+                                                    
+                                                </div>
+                                                <div class="mb-3 w100">
+                                                    <label for="cpassword" class="form-label text-dark">Confirm password</label>
+                                                    <input type="cpassword" class="form-control rounded" id="password" name="cpassword" placeholder="Enter confirm password">
+                                                    <span class="w-100" id="cpwdError"></span>
+                                                 
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="w100 control d-flex bottom">
+                                        <input type="button" value="PREVIOUS" class="w50 " id="prev">
+                                        <input type="button" value="NEXT" class="w50 bg-blue text-light" id="next">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="modal-footer bottom-radius py-4">
+                    <p class="text-center w-100">Already have an account? <a href="/user-login" class="text-light fw-600">Login now</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+    <!-- Initialize Swiper -->
+ 
+    <script src="/javascripts/signup.js"></script>
+    <script>
+        
+        //for stopping the hide modal
+        var myModal = new bootstrap.Modal(document.getElementById('signup'), {
+            keyboard: false,
+            backdrop: false
+        })
+        
+        //auto show the modal
+        myModal.show();
+
+    </script>
+</body>
+
+</html>
