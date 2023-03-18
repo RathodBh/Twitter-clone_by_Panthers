@@ -66,7 +66,8 @@
                                                   </div>
                                                 <div class="mb-3 w100">
                                                     <label for="email" class="form-label text-dark">Email address</label>
-                                                    <input type="email" class="form-control rounded" id="email" name="email" placeholder="name@example.com">
+                                                    <input type="email" class="form-control rounded" id="email" name="email" onkeyup="checkuserEmail(this)"  placeholder="name@example.com">
+                                                    <span class="w-100 text-danger fs-14" id="emailError"></span>
                                                 </div>
 
                                                 <label for="year" class="form-label w-100 text-dark">Date of Birth</label>
@@ -97,7 +98,7 @@
                                                         <span class="text-dark" id="usernameLimit">
                                                         </span>
                                                     </div>
-                                                        <input type="text" class="form-control rounded" name="uname" id="username" placeholder="Enter username">
+                                                        <input type="text" class="form-control rounded" name="uname" onkeyup="checkusername(this)" id="username" placeholder="Enter username">
                                                     <span class="w-100 text-danger fs-14" id="usernameError"></span>
                                                   </div>
                                                 <div class="mb-3 w100">

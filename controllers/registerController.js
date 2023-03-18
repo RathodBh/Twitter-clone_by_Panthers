@@ -58,7 +58,6 @@ const registerUser = async (req, res) => {
 
                         res.render('active', { activated: false, activationUrl: activationUrl, userID: id });
 
-
                     }
                 }
             } catch (error) {
@@ -82,9 +81,9 @@ const getregisterUser = asyncHandler(async (req, res) => {
 
 const getEmailCheck = asyncHandler(async (req, res) => {
     //i need to show the post request for checkEmail fetch request
-    console.log("i am google i am cool");
+
     const { data } = req.body
-    const qry1 = `select * from Jwt_prac.users where email='${data}'`
+    const qry1 = `select * from users where email='${data}'`
     const oldUser = await queryExecuter(qry1)
     if (oldUser.length == 0) {
         let isNew = true
@@ -98,9 +97,9 @@ const getEmailCheck = asyncHandler(async (req, res) => {
 });
 const getUserNameCheck = asyncHandler(async (req, res) => {
     //i need to show the post request for checkEmail fetch request
-    console.log("i am google i am cool");
+  
     const { data } = req.body
-    const qry1 = `select * from Jwt_prac.users where username='${data}'`
+    const qry1 = `select * from users where username='${data}'`
     const oldUser = await queryExecuter(qry1)
     if (oldUser.length == 0) {
         let isNew = true

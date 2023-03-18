@@ -189,3 +189,76 @@ unm.addEventListener("input",(e)=>{
     e.target.value = e.target.value.substring(0,50);
     unmLimit.innerText = e.target.value.length + " / " + 50;
 })
+
+
+
+///BY Jigar
+
+async function checkusername(e) {
+    console.log(e.value);
+    const save_req = await fetch(`http://localhost:3008/user/sign-up/checkusername`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        data: e.value
+
+      })
+    });
+
+    var resSave = await save_req.json();
+    // console.log(resSave.isNew);
+    if (resSave.isNew == true) {
+      // console.log("i ma he");
+      let usermsg = document.getElementById('usernameError')
+      // console.log(usermsg);
+      let content = `<span style="color: #1c800f; font-size:14px">Username Available</span>`
+      usermsg.innerHTML = content
+      return true
+    }
+    else {
+      let usermsg = document.getElementById('usernameError')
+      let content = `<span style="color: #b9370f; font-size:14px">Username unAvailable</span>`
+      usermsg.innerHTML = content;
+    //   submitbtn.style.display = 'none';
+      return false;
+    }
+    
+  }
+
+
+  async function checkuserEmail(e) {
+    let email = e.value
+
+    const save_req = await fetch(`http://localhost:3008/user/sign-up/checkemail`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        data: e.value
+
+      })
+    });
+
+    var resSave = await save_req.json();
+    // console.log(resSave.isNew);
+    if (resSave.isNew == true) {
+      // console.log("i ma he");
+      let usermsg = document.getElementById('emailError')
+      // console.log(usermsg);
+      let content = `<span style="color: #1c800f;"></span>`
+      usermsg.innerHTML = content
+      //count += 1
+      return true
+    }
+    else {
+      let usermsg = document.getElementById('emailError')
+      let content = `<span style="color: #b9370f;">User Already Exists!</span>`
+      usermsg.innerHTML = content;
+      //count -= 1
+    //   submitbtn.style.display = 'none';
+      return false
+    }
+  }
