@@ -9,7 +9,12 @@ const getDashboard = asyncHandler(async (req, res) => {
     let flag = false
     res.render('dashboard',{flag})
 });
+const tweetit = asyncHandler(async (req, res) => {
+    //i need to show the get request for tweet page
+    let flag = false
+    res.render('dashboard',{flag})
+});
 
 
 
-module.exports = { getDashboard }
+module.exports = { getDashboard,tweetit }

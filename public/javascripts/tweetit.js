@@ -5,7 +5,7 @@ function twt_clk(){
     // fetch api
     function fetch_data() {
         try {
-            fetch('http://localhost:3008/tweet/getapi?twt_value=' + twt_value + '').then(function (response) {
+            fetch('http://localhost:3008/dashboard/getapi?twt_value=' + twt_value + '').then(function (response) {
                 return response.json()
             })
                 .then(function (responseData) {
