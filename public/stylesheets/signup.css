@@ -273,3 +273,18 @@ form,.candidate {
     right: 0%;
     top: 49%
 }
+
+
+.form-select option{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: var(--dark);
+}
+
+.heading{
+    text-align: center;
+    color: #222831
+}
+

@@ -76,6 +76,7 @@ var swiper = new Swiper(".mySwiper", {
 //date of birth by jigar
 var Days = [31,28,31,30,31,30,31,31,30,31,30,31];// index => month [0-11]
 $(document).ready(function(){
+   
     var option = '<option value="day" selected hidden disabled>day</option>';
     var selectedDay="day";
     for (var i=1;i <= Days[0];i++){ //add option days
@@ -103,7 +104,8 @@ $(document).ready(function(){
     var d = new Date();
     var option = '<option value="year" selected hidden disabled>year</option>';
     selectedYear ="year";
-    for (var i=1930;i <= d.getFullYear();i++){// years start i
+    var ThisYear = d.getFullYear()
+    for (var i=ThisYear;i >=1930 ;i--){// years start i
         option += '<option value="'+ i + '">' + i + '</option>';
     }
     $('#year').append(option);
@@ -123,7 +125,9 @@ function isLeapYear(year) {
 }
 
 function change_year(select)
+
 {
+    select.size=0;
     if( isLeapYear( $(select).val() ) )
 	  {
 		    Days[1] = 29;
@@ -137,7 +141,7 @@ function change_year(select)
 			       var day = $('#day');
 			       var val = $(day).val();
 			       $(day).empty();
-			       var option = '<option value="day" selected hidden disabled>day</option>';
+			       var option = '<option value="day" selected  disabled>day</option>';
 			       for (var i=1;i <= Days[1];i++){ //add option days
 				         option += '<option value="'+ i + '">' + i + '</option>';
              }
@@ -151,6 +155,7 @@ function change_year(select)
   }
 
 function change_month(select) {
+    select.size=0;
     var day = $('#day');
     var val = $(day).val();
     $(day).empty();

@@ -48,26 +48,27 @@ const loginGet = asyncHandler(async (req, res) => {
 
     let solve
     let error
+    error = false;
+    res.render('login', { error })
     // console.log("here");
-    const token = await req.cookies['Access_token'];
-    if (token) {    
-        try {
+    // const token = await req.cookies['Access_token'];
+    // if (token) {    
+    //     try {
 
-            solve = jwt.verify(token, process.env.JWT_SECRET);
+    //         solve = jwt.verify(token, process.env.JWT_SECRET);
 
-        } catch (error) {
-            err = false;
-            res.render('login', { error })
-        }
-    }
+    //     } catch (error) {
+    //         err = false;
+    //         res.render('login', { error })
+    //     }
+    // }
 
-    if (token && solve) {
-        res.redirect('/home')
-    }
-    else {
-        error = false;
-        res.render('login', { error })
-    }
+    // if (token && solve) {
+    //     res.redirect('/home')
+    // }
+    // else {
+       
+    // }
 
 })
 

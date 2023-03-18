@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/stylesheets/signup.css">
 
-    <title>Twitter | Home</title>
+    <title>Twitter | Sign-up</title>
 
 </head>
 
@@ -51,7 +51,7 @@
                             </div>
                         </div>
                         <div class="col-6">
-                            <form action="" class="w-100">
+                            <form action="/user/sign-up" class="w-100" method="post">
                                 <div class="data">
                                     <div class="candidate">
                                         <div id="part1">
@@ -62,26 +62,26 @@
 
                                                 <div class="mb-3 w100">
                                                     <label for="name" class="form-label text-dark">Name</label>
-                                                    <input type="text" class="form-control rounded" id="name" placeholder="Enter name">
+                                                    <input type="text" class="form-control rounded" name="name" id="name" placeholder="Enter name">
                                                   </div>
                                                 <div class="mb-3 w100">
                                                     <label for="email" class="form-label text-dark">Email address</label>
-                                                    <input type="email" class="form-control rounded" id="email" placeholder="name@example.com">
+                                                    <input type="email" class="form-control rounded" id="email" name="email" placeholder="name@example.com">
                                                 </div>
 
                                                 <label for="year" class="form-label w-100 text-dark">Date of Birth</label>
                                                 <p class="text-gray fs-14 w-100">This will be shown publicly. Confirm your own age.</p>
                                                 <div class="d-flex jcsb control">
                                                     <div class="w30">
-                                                        <select class="form-select rounded" id ="year" name = "yyyy" onchange="change_year(this)">
+                                                        <select class="form-select rounded" id ="year" name = "yyyy" onchange="change_year(this)" onmousedown="if(this.options.length>8){this.size=8;}" >
                                                         </select>
                                                     </div>
                                                     <div class="w30">
-                                                        <select class="form-select rounded"  id ="month" name = "mm" onchange="change_month(this)">
+                                                        <select class="form-select rounded"  id ="month" name = "mm" onchange="change_month(this)" onmousedown="if(this.options.length>8){this.size=8;}">
                                                         </select>
                                                     </div>
                                                     <div class="w30">
-                                                        <select class="form-select rounded" id ="day" name = "dd" >
+                                                        <select class="form-select rounded" id ="day" name = "dd"   >
                                                         </select>
                                                     </div>
                                                 </div>
@@ -97,18 +97,18 @@
                                                         <span class="text-dark" id="usernameLimit">
                                                         </span>
                                                     </div>
-                                                        <input type="text" class="form-control rounded" id="username" placeholder="Enter username">
+                                                        <input type="text" class="form-control rounded" name="uname" id="username" placeholder="Enter username">
                                                     <span class="w-100 text-danger fs-14" id="usernameError"></span>
                                                   </div>
                                                 <div class="mb-3 w100">
                                                     <label for="password" class="form-label text-dark">Password</label>
-                                                    <input type="password" class="form-control rounded" id="password" placeholder="Enter password">
+                                                    <input type="password" class="form-control rounded" name="password" id="password" placeholder="Enter password">
                                                     <span class="w-100" id="pwdError"></span>
                                                     
                                                 </div>
                                                 <div class="mb-3 w100">
                                                     <label for="cpassword" class="form-label text-dark">Confirm password</label>
-                                                    <input type="cpassword" class="form-control rounded" id="password" placeholder="Enter confirm password">
+                                                    <input type="cpassword" class="form-control rounded" id="password" name="cpassword" placeholder="Enter confirm password">
                                                     <span class="w-100" id="cpwdError"></span>
                                                  
                                                 </div>
@@ -116,11 +116,6 @@
                                         </div>
 
 
-                                        <div id="part5">
-                                            <!-- <h1 class="text-blue txt-center m-20 ">Authentication</h1> -->
-
-                                            
-                                        </div>
                                     </div>
                                     <div class="w100 control d-flex bottom">
                                         <input type="button" value="PREVIOUS" class="w50 " id="prev">
@@ -135,7 +130,7 @@
                 </div>
 
                 <div class="modal-footer bottom-radius py-4">
-                    <p class="text-center w-100">Already have an account? <a href="/login" class="text-light fw-600">Login now</a></p>
+                    <p class="text-center w-100">Already have an account? <a href="/user-login" class="text-light fw-600">Login now</a></p>
                 </div>
             </div>
         </div>
