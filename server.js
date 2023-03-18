@@ -6,6 +6,8 @@ const register = require('./Routes/register')
 const login = require('./Routes/login')
 const profile = require('./Routes/profile')
 const dashboard = require('./Routes/dashboard')
+
+
 const queryExecuter = require('./queryExecute/queryExecuter')
 app.use(express.static(__dirname + '/public'))
 app.set('view engine','ejs')
@@ -18,10 +20,12 @@ app.use('/user',register)
 app.use('/user-login',login)
 app.use('/dashboard',dashboard)
 app.use("/profile", profile)
-app.get('/tweet',(req,res)=>{ 
-    console.log("hello");
-res.render('tweet');
-})
+app.use('/dashboard/tweet',dashboard)
+
+// app.get('/dashboard/tweet?',(req,res)=>{ 
+//     console.log("hello");
+// res.render('dashboard');
+// })
 
 
 

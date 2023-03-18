@@ -12,12 +12,190 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/stylesheets/test.css">
     <script type="text/javascript" src="/javascripts/tweetit.js"></script>  
+
+    <!-- jquery -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
     <title>Document</title>
 </head>
 
 <body>
     <%- include("menu") -%>
-        <!-- for tweet -->
+    
+<div class="col-6 p-2 border">
+    <div class="inner-main home ">
+        <div class="blur-ui px-2">
+            <h4 class="text-black">Home</h4>
+
+            <ul class="nav nav-tabs row">
+                <li class="nav-item col-6 text-center">
+                  <a class="nav-link" data-bs-toggle="tab" href="#for-you">Menu 1</a>
+                </li>
+                <li class="nav-item col-6 text-center">
+                  <a class="nav-link" data-bs-toggle="tab" href="#following-home">Menu 2</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tab-content px-2">
+            <div id="for-you" class="tab-pane active">
+                <div class="tweet-container">
+                    <div class="tweet row pt-4 border border-bottom-1 border-top-0">
+                        <div class="col-1">
+                            <img src="/assets/images/cover.jpg" alt="" class="profile-size me-2 border">
+                        </div>
+                        <div class="col-10 px-4">
+                            <div class="d-flex align-items-center user-info">
+                                <span class="text-black fs-16 me-1 fw-600">
+                                    Bhavesh Rathod
+                                </span>
+                                <span class="fs-16 text-gray me-1">
+                                    @rathod_bh
+                                </span>
+                                <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
+                                <span class="date fs-16 me-1 text-gray">
+                                    March 17
+                                </span>
+                            </div>
+                            <div class="tweet-content">
+                                <p class="text-black fs-16 fw-300">Set up animal birth control units in all major cities: CM Shri @myogiadityanath
+                                    Ji Maharaj</p>
+                            </div>
+
+                            <div class="tweet-img-container">
+                                <img src="/assets/images/cover.jpg" alt="" class="w-100">
+                            </div>
+
+                            <!-- <div class="tweet-video-container">
+                                <video controls>
+                                    <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                                </video>
+                            </div> -->
+
+                            <div class="tweet-reactions-container mt-3">
+                                <ul class="list-unstyled row">
+                                    <li class="col">
+                                        <a href="" class="comment">
+                                            <i class="fa-regular fa-comment"></i>
+                                            31
+                                        </a>
+                                    </li>
+                                    <li  class="col">
+                                        <a href="" class="retweet">
+                                            <i class="fa-solid fa-retweet"></i>
+                                            31
+                                        </a>
+                                    </li>
+                                    <li class="col">
+                                        <a href="" class="like">
+                                            <i class="fa-regular fa-heart"></i>
+                                            31
+                                        </a>
+                                    </li>
+                                    <li class="col">
+                                        <a href="" class="chart">
+                                            <i class="fa-solid fa-chart-simple"></i>
+                                            31
+                                        </a>
+                                    </li>
+                                    <li class="col">
+                                        <a href="" class="share">
+                                            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                                            
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <a href="">...</a>
+                        </div>
+                    </div>
+                    <div class="tweet row pt-4 border border-bottom-1">
+                        <div class="col-1">
+                            <img src="/assets/images/cover.jpg" alt="" class="profile-size border me-2">
+                        </div>
+                        <div class="col-10 px-4">
+                            <div class="d-flex align-items-center user-info">
+                                <span class="text-black fs-16 me-1 fw-600">
+                                    Bhavesh Rathod
+                                </span>
+                                <span class="fs-16 text-gray me-1">
+                                    @rathod_bh
+                                </span>
+                                <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
+                                <span class="date fs-16 me-1 text-gray">
+                                    March 17
+                                </span>
+                            </div>
+                            <div class="tweet-content">
+                                <p class="text-black fs-16 fw-300">Set up animal birth control units in all major cities: CM Shri @myogiadityanath
+                                    Ji Maharaj</p>
+                            </div>
+
+                            <!-- <div class="tweet-img-container">
+                                <img src="/assets/images/cover.jpg" alt="" class="w-100">
+                            </div> -->
+
+                            <div class="tweet-video-container">
+                                <video controls autoplay>
+                                    <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" >
+                                </video>
+                            </div>
+
+                            <div class="tweet-reactions-container mt-3">
+                                <ul class="list-unstyled row">
+                                    <li class="col">
+                                        <a href="" class="comment">
+                                            <i class="fa-regular fa-comment"></i>
+                                            31
+                                        </a>
+                                    </li>
+                                    <li  class="col">
+                                        <a href="" class="retweet">
+                                            <i class="fa-solid fa-retweet"></i>
+                                            31
+                                        </a>
+                                    </li>
+                                    <li class="col">
+                                        <a href="" class="like">
+                                            <i class="fa-regular fa-heart"></i>
+                                            31
+                                        </a>
+                                    </li>
+                                    <li class="col">
+                                        <a href="" class="chart">
+                                            <i class="fa-solid fa-chart-simple"></i>
+                                            31
+                                        </a>
+                                    </li>
+                                    <li class="col">
+                                        <a href="" class="share">
+                                            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                                            
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            <a href="">...</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="following-home" class="tab-pane container">
+                Part2
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include("search") -%>
+    <!-- for tweet -->
+
+
         <div class="col-4 p-2">
 
             <div class="inner-main">
@@ -27,13 +205,13 @@
 
 
                 <!-- The Modal -->
-                <div class="modal " id="myModal">
-                    <div class="modal-dialog" id="modal_dialog">
+                <div class="modal " id="myModal"  >
+                    <div class="modal-dialog" id="modal_dialog" >
                         <div class="modal-content ps-3 pb-2  " id="modal-content_id">
 
                             <!-- Modal Header -->
                             <div class="d-flex p-2">
-                                <button type="button" class="btn-close " data-bs-dismiss="modal"></button>
+                                <button type="button" class="btn-close" onclick="btn_close()" data-bs-dismiss="modal"></button>
                             </div>
 
                             <!-- Modal body -->
@@ -73,7 +251,7 @@
                 </div>
             </div>
         </div>
-        <%- include("search") -%>
+       
 </body>
 
 </html>

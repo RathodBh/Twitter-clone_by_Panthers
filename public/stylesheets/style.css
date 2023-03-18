@@ -1,4 +1,4 @@
-:root{
+:root {
     --bg-blue: #1d9bf0;
     --text-blue: #1d9bf0;
     --bg-gray: #eff3f4;
@@ -6,151 +6,173 @@
     --text-gray: #909ba4;
     --text-black: #0f1419;
 }
-a{
+
+a {
     text-decoration: none;
 }
-.fs-14{
+
+.fs-14 {
     font-size: 14px;
 }
-.all-center{
+
+.all-center {
     display: flex;
     justify-content: center;
-    align-items:center;
-}
-.border-radius-12{
-    border-radius: 12px;
-}
-.bg-blue{
-    background: var(--bg-blue) ;
-}
-.bg-gray{
-    background: var(--bg-gray) ;
-}
-.bg-light-gray{
-    background: var(--bg-light-gray) ;
-}
-.text-blue{
-    color: var(--text-blue) ;
+    align-items: center;
 }
 
-.text-gray{
+.border-radius-12 {
+    border-radius: 12px;
+}
+
+.bg-blue {
+    background: var(--bg-blue);
+}
+
+.bg-gray {
+    background: var(--bg-gray);
+}
+
+.bg-light-gray {
+    background: var(--bg-light-gray);
+}
+
+.text-blue {
+    color: var(--text-blue);
+}
+
+.text-gray {
     color: var(--text-gray)
 }
-.text-black{
+
+.text-black {
     color: var(--text-black)
 }
-.wrapper{
+
+.wrapper {
     /* min-height: 600px; */
     max-height: 100vh;
     /* overflow: hidden; */
 }
-.wrapper .container{
+
+.wrapper .container {
     height: 100%;
 }
 
-.inner-menu{
+.inner-menu {
     position: relative;
     padding: 5px;
 }
 
-.inner-menu ul li{
+.inner-menu ul li {
     margin: 5px 0;
 }
 
-.inner-menu ul li:nth-child(1){
+.inner-menu ul li:nth-child(1) {
     margin: 1px 0;
 }
 
-.menu-link{
+.menu-link {
     text-decoration: none;
     color: var(--text-black);
     font-weight: 400;
 }
 
-.menu-ul li{
+.menu-ul li {
     padding: 5px 20px 5px 5px;
     border-radius: 50px
 }
 
-.active{
+.active {
     font-weight: 800;
 }
 
-.logo-icon{
+.logo-icon {
     padding: 10px;
     border-radius: 50%;
     font-size: 30px;
 }
 
-.link-icon{
+.link-icon {
     padding: 10px;
     font-size: 22px;
 }
 
-.link-hover:hover{
+.link-hover:hover {
     background: var(--bg-gray);
     width: fit-content;
 }
-.logo-icon:hover{
+
+.logo-icon:hover {
     background: var(--bg-gray);
     width: fit-content
 }
-.link-hover:hover a,.link-hover a{
+
+.link-hover:hover a,
+.link-hover a {
     color: var(--text-black)
 }
 
-.link-icon ~ span{
+.link-icon~span {
     font-size: 20px
 }
 
-.btn-tweet{
+.btn-tweet {
     font-size: 20px;
     padding: 8px;
     margin-top: 10px
 }
 
-.btn-tweet:hover{
+.btn-tweet:hover {
     background: #0974c1;
 }
 
-.bottom-menu{
+.bottom-menu {
     position: absolute;
     bottom: 0;
     width: 100%;
 }
-.bottom-menu ul li{
+
+.bottom-menu ul li {
     display: flex;
     justify-content: space-between;
     width: 100%
 }
-.bottom-menu .bottom-pic,.profile-size{
+
+.bottom-menu .bottom-pic,
+.profile-size {
     height: 44px;
     width: 44px;
     border-radius: 50%;
 }
-.bottom-dots{
+
+.bottom-dots {
     font-size: 4px;
     margin: 0 1px;
 }
 
 /* right  */
 /* search  */
-.search-box input{
-   padding: 8px 8px 8px 40px;
-   color: var(--text-black);
-   background: var(--bg-gray);
-   border: 1px solid transparent;
-   margin-top: 3px;
-   outline: none;
-   transition: all 0.6s;
+.search-box input {
+    padding: 8px 8px 8px 40px;
+    color: var(--text-black);
+    background: var(--bg-gray);
+    border: 1px solid transparent;
+    margin-top: 3px;
+    outline: none;
+    transition: all 0.6s;
 }
-.search-box input:hover,.search-box input:active,.search-box input:focus{
-   color: var(--text-black);
-   background:#FFF;
-   border: 1px solid var(--text-blue);
-   margin-top: 3px;
+
+.search-box input:hover,
+.search-box input:active,
+.search-box input:focus {
+    color: var(--text-black);
+    background: #FFF;
+    border: 1px solid var(--text-blue);
+    margin-top: 3px;
 }
-.search-box .search-icon{
+
+.search-box .search-icon {
     color: var(--text-gray);
     position: absolute;
     top: 50%;
@@ -158,28 +180,107 @@ a{
     translate: -50% -50%;
 }
 
-.search-box input:hover ~ .search-icon,
-.search-box input:active ~ .search-icon,
-.search-box input:focus ~ .search-icon{
+.search-box input:hover~.search-icon,
+.search-box input:active~.search-icon,
+.search-box input:focus~.search-icon {
     color: var(--text-blue)
 }
 
-.footer ul.footer-link-container li{
+.footer ul.footer-link-container li {
     margin: 5px 5px 0 5px;
     line-height: 15px;
 }
 
-.footer ul.footer-link-container li a,.footer a{
+.footer ul.footer-link-container li a,
+.footer a {
     color: var(--text-gray);
     font-size: 13px;
 }
-.footer ul.footer-link-container li a:hover{
+
+.footer ul.footer-link-container li a:hover {
     text-decoration: underline;
 }
 
-.left,.right{
+.left,
+.right {
     height: 100vh;
     max-height: 100vh;
     position: sticky;
-    top: 0px;  
+    top: 0px;
 }
+
+
+.left,
+.right {
+    height: 100vh;
+    max-height: 100vh;
+    position: sticky;
+    top: 0px;
+}
+
+/* home  */
+.tweet-container .tweet {
+    transition: all 0.5s;
+    box-shadow: 0 0 9px var(--bg-black);
+}
+
+.tweet-container .tweet:hover {
+    background: var(--bg-gray);
+    transition: all 0.5s;
+}
+
+.tweet-img-container img {
+    width: 100%;
+    object-fit: contain;
+    border-radius: 16px;
+}
+
+.tweet-video-container video {
+    width: 100%;
+    object-fit: contain;
+    border-radius: 16px;
+}
+
+.tweet-reactions-container a {
+    color: var(--text-gray);
+    transition: all 0.5s;
+}
+
+.tweet-reactions-container a i {
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.tweet-reactions-container .comment:hover,
+.tweet-reactions-container .share:hover,
+.tweet-reactions-container .chart:hover {
+    color: var(--text-blue);
+    font-weight: 500
+}
+
+.tweet-reactions-container .comment:hover i,
+.tweet-reactions-container .share:hover i,
+.tweet-reactions-container .chart:hover i {
+    background: #afd7f3;
+}
+
+.tweet-reactions-container .retweet:hover {
+    color: green;
+    font-weight: 500
+}
+
+.tweet-reactions-container .retweet:hover i {
+    background: rgb(192, 244, 192);
+}
+
+.tweet-reactions-container .like:hover {
+    color: red;
+    font-weight: 500
+}
+
+.tweet-reactions-container .like:hover i {
+    background: rgb(242, 174, 174);
+}
+
+
+

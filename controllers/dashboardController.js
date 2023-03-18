@@ -12,7 +12,7 @@ const getDashboard = asyncHandler(async (req, res) => {
 const tweetit = asyncHandler(async (req, res) => {
     //i need to show the get request for tweet page
     let flag = false
-    res.render('dashboard',{flag})
+    res.render('tweet',{flag})
 });
 
 
