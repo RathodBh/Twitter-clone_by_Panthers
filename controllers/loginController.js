@@ -57,12 +57,15 @@ const loginHandler = async (req, res) => {
 
         let payload = { email };
         const session_token = jwt.sign(payload, "JWT_SECRET");
-        req.session.email = session_token
-        console.log(req.session);
+        req.session.user_id = result[0].id;
+        req.session.email = session_token;
 
-        // var hour = 3600000
-        // req.session.cookie.expires = new Date(Date.now() + hour)
-        // req.session.cookie.maxAge = hour
+
+    console.log("login",req.session);
+
+        var hour = 3600000
+        req.session.cookie.expires = new Date(Date.now() + hour)
+        req.session.cookie.maxAge = hour
 
 
         return res.redirect("/dashboard");

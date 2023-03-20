@@ -17,11 +17,17 @@ async function queryExecuter(query) {
 
 
 const commentInfo = asyncHandler(async (req, res) => {
+
+    const token = req.session.email
+    if (!token) {
+        res.redirect('/user-login')
+    }
     let tweet_id = req.params.id;
+    let userId = req.session.user_id;
     let db = `twitter_clone`;
     try {
         // let sel_q = `SELECT id,name,user_image,user_name FROM ${db}.users `;
-        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name  FROM ${db}.tweets as t JOIN ${db}.users u ON t.id = t.user_id WHERE t.id = ${tweet_id}`;
+        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name  FROM ${db}.tweets as t JOIN ${db}.users as u  WHERE t.id = ${tweet_id} && u.id = ${userId} `;
 
         const all_tweet_data = await queryExecuter(sel_tweets);
 
@@ -82,7 +88,6 @@ const commentInfo = asyncHandler(async (req, res) => {
             hover_post_at.push(post_at.push(`${hover_hours}:${d.getMinutes()} ${hover_is_am_pm} • ${month[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`))
         })
         
-        console.log(hover_post_at);
         //i need to show the get request for register page
         let flag = false
         res.render('tweet_details', { tweet_data: all_tweet_data, post_date: post_at, hover_post_date: hover_post_at });
