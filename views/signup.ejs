@@ -22,9 +22,9 @@
 <body>
 
     <!-- Modal  -->
-    <div class="modal" id="signup">
+    <div class="modal fade" id="signup">
         <div class="modal-dialog container">
-            <div class="modal-content rounded">
+            <div id="jobImage" class="modal-content rounded">
 
                 <div class="modal-header bg-blue top-radius  d-flex flex-column jcc">
                         <i class="fa-brands fa-twitter twitter-logo"></i>
@@ -101,17 +101,23 @@
                                                         <input type="text" class="form-control rounded" name="uname" onkeyup="checkusername(this)" id="username" placeholder="Enter username">
                                                     <span class="w-100 text-danger fs-14" id="usernameError"></span>
                                                   </div>
-                                                <div class="mb-3 w100">
+                                                  <div class="mb-3 w100 position-relative">
                                                     <label for="password" class="form-label text-dark">Password</label>
-                                                    <input type="password" class="form-control rounded" name="password" id="password" placeholder="Enter password">
-                                                    <span class="w-100" id="pwdError"></span>
-                                                    
+                                                    <div class="position-relative">
+                                                        <input type="password" class="form-control rounded" id="password"
+                                                            placeholder="Enter password" name="password">
+                                                        <i class="far fa-eye text-secondary" id="togglePassword"></i>
+                                                    </div>
+            
                                                 </div>
-                                                <div class="mb-3 w100">
-                                                    <label for="cpassword" class="form-label text-dark">Confirm password</label>
-                                                    <input type="cpassword" class="form-control rounded" id="password" name="cpassword" placeholder="Enter confirm password">
-                                                    <span class="w-100" id="cpwdError"></span>
-                                                 
+                                                <div class="mb-3 w100 position-relative">
+                                                    <label for="password" class="form-label text-dark">Confirm Password</label>
+                                                    <div class="position-relative">
+                                                        <input type="password" class="form-control rounded" id="password"
+                                                            placeholder="retype password" name="cpassword">
+                                                        <i class="far fa-eye text-secondary" id="togglePassword"></i>
+                                                    </div>
+            
                                                 </div>
                                             </div>
                                         </div>
@@ -157,7 +163,26 @@
         
         //auto show the modal
         myModal.show();
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
 
+        togglePassword.addEventListener('click', function (e) {
+            // toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+
+            // toggle the eye slash icon
+            if(this.classList.contains('fa-eye-slash')){
+                this.classList.remove('fa-eye-slash');
+                this.classList.add('fa-eye');
+            }else{
+                this.classList.remove('fa-eye');
+                this.classList.add('fa-eye-slash');
+            }
+        });
+
+
+        
     </script>
 </body>
 

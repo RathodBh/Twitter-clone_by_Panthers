@@ -15,7 +15,10 @@
     padding: 0;
     box-sizing: border-box;
     font-family: system-ui, -apple-system, sans-serif;
-    color: var(--white)
+    color: var(--white);
+    /* background-image: url("../assets/images/TwitGif_L1.gif");
+    object-fit: cover;
+    background-repeat: no-repeat; */
 }
 
 .white {
@@ -147,6 +150,10 @@ body {
     display: grid;
     place-items: center;
     background: var(--lite);
+    background-image: url("../assets/images/id.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    transition:all 0.3s linear ;
 }
 
 /* .candidate{ */
@@ -287,4 +294,3 @@ form,.candidate {
     text-align: center;
     color: #222831
 }
-

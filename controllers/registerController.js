@@ -1,8 +1,10 @@
 const conn = require('../connection/connectdb');
+const jwt = require('jsonwebtoken')
 // const queryExecuter = require('../queryExecute/queryExecuter')
 const express = require('express')
 const crypto = require('crypto');
 const app = express();
+
 const bcrypt = require('bcrypt');
 const asyncHandler = require("express-async-handler");
 async function queryExecuter(query) {
@@ -16,48 +18,44 @@ async function queryExecuter(query) {
     })
 }
 
+
 const registerUser = async (req, res) => {
     //i need to show the post request for register page
     console.log("now");
-    const {yyyy,mm,dd}  = req.body
+    const { yyyy, mm, dd } = req.body
     let dob = `${yyyy}/${mm}/${dd}`
     try {
-        const { name,email,password, cpassword,uname }  = req.body
-        console.log(name, email,password, cpassword,uname,dob );
-        async function register(name, email, password,uname,dob) {
+        const { name, email, password, cpassword, uname } = req.body
+        async function register(name, email, password, uname, dob) {
 
             try {
-                let flag,tree
+                let flag, tree
                 if (!(email && password && name && uname && dob)) {
-                    tree=true
+                    tree = true
                     return res.render('signup', { tree });
                 }
-                const qry1 = `select * from twitter_clone.users where email='${email}' or username='${uname}'`
-                // console.log(qry1);
-                const oldUser = await queryExecuter(qry1)
+                const qry1 = `select * from twitter_clone.users where email='${email}' or user_name='${uname}'`
+                
                 // console.log(oldUser);
+                const oldUser = await queryExecuter(qry1)
                 if (oldUser.length != 0) {
-                     flag = true
+                    flag = true
                     return res.render('signup', { flag });
                 }
                 else {
                     const salt = await bcrypt.genSalt(15);
                     const hashedPassword = await bcrypt.hash(password, salt);
-                    const qry = `INSERT INTO twitter_clone.users (name, email, password,username, birth_date,created_at) VALUES ('${name}', '${email}', '${hashedPassword}', '${uname}','${dob}',NOW())`
-                    console.log(qry);
+                    const qry = `INSERT INTO twitter_clone.users (name, email, password,user_name, birth_date,created_at) VALUES ('${name}', '${email}', '${hashedPassword}', '${uname}','${dob}',NOW())`
                     const result = await queryExecuter(qry)
-
+                    // console.log(result);
                     if (result) {
-
-                        // console.log(result);
+                     
                         let id = result.insertId
-                        // console.log(id);
                         const token = crypto.randomBytes(32).toString('hex');
 
                         const activationUrl = `https://example.com/activate-account/${token}`;
 
-                        res.render('active', { activated: false, activationUrl: activationUrl, userID: id });
-
+                        res.render('active', { activated: false, activationUrl: activationUrl, userID: id })
                     }
                 }
             } catch (error) {
@@ -65,7 +63,7 @@ const registerUser = async (req, res) => {
             }
         }
 
-        register(name, email, password,uname,dob)
+        register(name, email, password, uname, dob)
 
     } catch (error) {
 
@@ -74,8 +72,8 @@ const registerUser = async (req, res) => {
 
 const getregisterUser = asyncHandler(async (req, res) => {
     //i need to show the get request for register page
-    let flag,tree = false
-    res.render('signup',{flag,tree})
+    let flag, tree = false
+    res.render('signup', { flag, tree })
     // res.render('register',{flag,tree})
 });
 
@@ -97,7 +95,7 @@ const getEmailCheck = asyncHandler(async (req, res) => {
 });
 const getUserNameCheck = asyncHandler(async (req, res) => {
     //i need to show the post request for checkEmail fetch request
-  
+
     const { data } = req.body
     const qry1 = `select * from users where username='${data}'`
     const oldUser = await queryExecuter(qry1)
@@ -123,4 +121,4 @@ const activeUser = async (req, res) => {
 
 
 
-module.exports = { registerUser, getregisterUser,getEmailCheck,getUserNameCheck,activeUser }
+module.exports = { registerUser, getregisterUser, getEmailCheck, getUserNameCheck, activeUser }

@@ -4,13 +4,10 @@ const router = express.Router()
 const { protectLogin,} = require('../Middlewares/loginAuth')
 const { getEmailCheckLogin} = require('../controllers/loginController')
 
-const { loginHandler,loginGet} =  require('../controllers/loginController')
+const { logoutGet} =  require('../controllers/logoutController')
 
 // add routes..S
 
-router.route('/').get(protectLogin,loginGet)
-router.route('/').post(loginHandler)
-// router.route('/checkuser').post(getUserNameCheck)
-router.route('/checkemail').post(getEmailCheckLogin)
+router.route('/').get(logoutGet)
 
 module.exports = router;

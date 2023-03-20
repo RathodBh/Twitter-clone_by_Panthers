@@ -38,7 +38,7 @@
                                         </span>
                                     </div>
                                     <div class="tweet-content">
-                                        <a href="/tweet_details/<%= t.id %>">
+                                        <a href="/tweet/tweet_details/<%= t.id %>">
                                             <p class="text-black fs-16 fw-300">
                                                 <%= t.tweet %>
                                             </p>
@@ -59,7 +59,7 @@
                                                 <div class="tweet-reactions-container mt-3">
                                                     <ul class="list-unstyled row">
                                                         <li class="col">
-                                                            <a href="/tweet_details/<%= t.id %>" class="comment">
+                                                            <a href="/tweet/tweet_details/<%= t.id %>" class="comment">
                                                                 <i class="fa-regular fa-comment"></i>
                                                                 <%= t.tweet_comments %>
                                                             </a>
@@ -93,31 +93,38 @@
                                                 </div>
                                 </div>
                                 <div class="col-1 dropstart">
-                                    <a href="" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false"> ••• </a>
-                                                           <ul class="dropdown-menu">
-                                                            <li class="d-flex">
-                                                                <a class="dropdown-item" href="#"><i class="fa-solid fa-user-plus me-2"></i> Follow <span class="text-blue">@<%= t.user_name
-                                                                    %></span>
-                                                                
-                                                               </a></li>
-                                                               
+                                    <a href="" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false"> •••
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li class="d-flex">
+                                            <a class="dropdown-item" href="#"><i class="fa-solid fa-user-plus me-2"></i>
+                                                Follow <span class="text-blue">@<%= t.user_name %></span>
 
-                                                            <li class="d-flex">
-                                                                <a class="dropdown-item" href="#"><i class="fa-solid fa-user-minus me-2"></i> Unfollow <span class="text-blue">@<%= t.user_name %></span>
-                                                                
-                                                               </a></li>
-                                                               
-                                                            <li class="d-flex">
-                                                                <a class="dropdown-item" href="#"><i class="fa-regular fa-eye me-2"></i> Visit profile <span class="text-blue">@<%= t.user_name %></span>
-                                                               </a></li>
-                                                          </ul>
+                                            </a>
+                                        </li>
+
+
+                                        <li class="d-flex">
+                                            <a class="dropdown-item" href="#"><i
+                                                    class="fa-solid fa-user-minus me-2"></i> Unfollow <span
+                                                    class="text-blue">@<%= t.user_name %></span>
+
+                                            </a>
+                                        </li>
+
+                                        <li class="d-flex">
+                                            <a class="dropdown-item" href="#"><i class="fa-regular fa-eye me-2"></i>
+                                                Visit profile <span class="text-blue">@<%= t.user_name %></span>
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                             <% }) %>
                     </div>
                 </div>
                 <div id="following-home" class="tab-pane container">
-                    Part2
+                    Part 2
                 </div>
             </div>
         </div>
