@@ -9,5 +9,6 @@ const { getDashboard,tweetit } = require("../controllers/dashboardController");
 
 router.route('/').get(getDashboard)
 router.route('/tweet').get(tweetit)
+// router.route('/').post(tweetit1)
 
 module.exports = router;

@@ -21,3 +21,8 @@ font-size: 20px;
     padding: 5px;
 justify-content: space-between;
 }
+
+#iimg img{
+    height: 50%;
+    width: 50%;
+}
