@@ -7,8 +7,11 @@ const login = require('./Routes/login')
 const profile = require('./Routes/profile')
 const dashboard = require('./Routes/dashboard')
 const multer = require('multer')
+const util = require('util')
 app.use(express.static(__dirname + '/public'))
 
+const path = require("path")
+var query = util.promisify(conn.query).bind(conn)
 app.set('view engine','ejs')
 // const conn = require('../connection/connectdb');
 
@@ -20,27 +23,49 @@ app.use('/user-login',login)
 app.use('/dashboard',dashboard)
 app.use("/profile",profile)
 
+app.get("/prof",(req,res)=>{
+    res.render('profile')
+})
 
 app.get("/login",(req,res)=>{
     res.render('login')
 })
 
-const upload = multer({
-    storage:multer.diskStorage({
-        destination:function(req,file,callback){
-            callback(null,"uploads")
-        },
-        filename:function(req,file,callback){
-            callback(null,file.fieldname+"-"+Date.now()+".jpg")
-        }
+const storage=multer.diskStorage({
+    destination:(req,file,cb)=>{
+    cb(null,"./public/uploads")
+    },
+    filename:(req,file,cb)=>{
+    console.log(file);
+    cb(null, Date.now() +path.extname(file.originalname))
+    }
     })
-}).single("uploaded_file");
+    const upload = multer({storage:storage})
+    app.post("/upload",upload.single("dp"), async(req,res)=>{
+    
+    try {
+   
+    
+    try {
+    const file = req.file;
+    console.log(file);
 
-app.post("/upload",upload,(req,res)=>{
-    console.log(req.body,req.file);
-    res.send("file uploads")
-})
-
+    var dp = 'http://localhost:3008/uploads/' + req.file.filename;
+    console.log("Image uploaded")
+    await query(`insert into users(name,email,password,user_name,user_image) values('Sagar Khatri','sagar18@gmail.com','hello','sagar_18','${dp}')`)
+    
+    res.send("success")
+    
+    } catch (error) {
+    throw error;
+    }
+    
+    
+    } catch (error) {
+    throw error;
+    }
+    });
+    
 app.get("/multer",(req,res)=>{
     res.render('multer')
 })

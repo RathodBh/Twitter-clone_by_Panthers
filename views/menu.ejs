@@ -67,12 +67,8 @@
                         <div class="bottom-menu dropup" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <ul class="list-unstyled menu-ul">
                                 <li class="link-hover w-100 all-center">
-                                    <div class="all-center">
-                                        <img src="" alt="" class="bottom-pic me-2 border">
-                                        <div class="info">
-                                            <h6>Bhavesh Rathod</h6>
-                                            <span class="text-gray">@BH836246637534545 </span>
-                                        </div>
+                                    <div class="all-center" id="status">
+                                        
                                     </div>
                                     <span class="all-center flex-row">
                                         <i class="fa-solid fa-circle bottom-dots"></i>
@@ -87,3 +83,31 @@
                         </div>
                     </div>
                 </div>
+            
+
+                <script>
+                   
+async function demo(){
+    let data1= await fetch("http://localhost:3008/profile");
+   let data =await data1.json();
+   // Converting received data to JSON
+   console.log("data::::",data);
+   let udata = ``;
+
+   data.forEach(users => {
+        udata +=`
+                 <img src="${users.user_image}" alt="" class="bottom-pic me-2 border">
+                 <div class="info">
+                     <h6>${users.name}</h6>
+                    <span class="text-gray">${users.user_name}</span>
+                </div>
+        
+        `;
+   });
+   document.getElementById("status").innerHTML = udata;
+}
+demo();
+                </script>
+            </body>
+
+            </html>                

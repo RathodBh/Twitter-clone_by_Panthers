@@ -9,6 +9,7 @@
     .cover img{
         height: 150px;
         width: 100%;
+        object-fit: cover;
         /* background-image: linear-gradient( 109.6deg, rgba(156,252,248,1) 11.2%, rgba(110,123,251,1) 91.1% ); */
         /* background: url(../img/cover.jpg); */
         /* background-repeat: no-repeat;
@@ -58,4 +59,7 @@
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     background-image: linear-gradient( 109.6deg, rgba(156,252,248,1) 11.2%, rgba(110,123,251,1) 91.1% );
    }
-
+   .user-data img{
+    margin-top: -0.3rem;
+    margin-left: 0.2rem;
+   }

@@ -4,62 +4,9 @@
     <div class="col-6 p-2">
         <div class="inner-main">
 
-            <div class="card">
-                <div class="cover">
-                    <img src="/assets/images/cover.jpg" alt="">
-                </div>
-                <div class="row ">
-                    <div class="col">
-                        <div class="dp">
-                            <img src="/assets/images/logo-t.png" class="card-img-left" alt="">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="mt-2 ms-5 follow">
-                            <p><a href="">Edit Profile</a></p>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="card-body">
-                    <div class="user-data">
-                        <label for="" class="bold">Username</label>
-                        <p class="text-secondary">@username</p>
-                    </div>
-                    <p class="card-text ">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus in voluptatum
-                        minima nisi ipsum </p>
-
-
-                    <div class="info d-flex ">
-                        <p class="text-secondary ms-1"><i class="fa-solid fa-location-dot"></i> everywhere</p>
-
-                        <p class="text-secondary ms-2"><i class="fa-solid fa-link"></i>
-                        <p class="text-info">username.com</p>
-                        </p>
-
-                        <p class="text-secondary ms-2"><i class="fa-solid fa-cake-candles"></i> Date Of Birth: March 21
-                        </p>
-                    </div>
-                    <div class="join">
-                        <p class="text-secondary"><i class="fa-solid fa-calendar-days"></i> Join Date</p>
-                    </div>
-
-                    <div class="d-flex">
-                        <p>
-                            67
-                        <p class="ms-2">Following</p>
-
-                        </p>
-                        <p class="ms-3">
-                            67K
-                        <p class="ms-2">Followers</p>
-
-                        </p>
-                    </div>
-
-                </div>
-
-
+            <div class="card" id="card">
+                
+                
 
 
 
@@ -103,4 +50,83 @@
 
         </div>
     </div>
+    <script>
+
+demo();
+async function demo(){
+    let data1= await fetch("http://localhost:3008/profile");
+   let data =await data1.json();
+   // Converting received data to JSON
+   console.log("data::::",data);
+
+//    let data1= await fetch("http://localhost:3008/profile");
+//    let data =await data1.json();
+//    // Converting received data to JSON
+//    console.log("data::::",data);
+    let udata = ``;
+
+    data.forEach(users => {
+        udata += `<div class="cover">
+                    <img src="${users.cover_image}" alt="">
+                </div>
+                <div class="row ">
+                    <div class="col">
+                        <div class="dp">
+                            <img src="${users.user_image}" class="card-img-left" alt="">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mt-2 ms-5 follow">
+                            <p><a href="">Edit Profile</a></p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <div class="user-data">
+                        
+                        <label for="" class="bold">${users.name}</label>
+                        <img src="./uploads/red_verified.png" alt="" height="20px" width="20px">
+                        
+                        <p class="text-secondary">@${users.user_name}</p>
+                    </div>
+                    <p class="card-text text-dark ">${users.bio}  <i class="fa-regular fa-face-laugh-beam"></i></p>
+
+
+                    <div class="info d-flex ">
+                        <p class="text-secondary ms-1"><i class="fa-solid fa-location-dot"></i> everywhere</p>
+
+                        <p class="text-secondary ms-2"><i class="fa-solid fa-link"></i>
+                        <p class="text-info">username.com</p>
+                        </p>
+
+                        <p class="text-secondary ms-2"><i class="fa-solid fa-cake-candles"></i> Date Of Birth:  ${users.birth_date.slice(0,10)}
+                        </p>
+                    </div>
+                    <div class="join">
+                        <p class="text-secondary"><i class="fa-solid fa-calendar-days"></i>   ${users.created_at.slice(0,10)}</p>
+                    </div>
+
+                    <div class="d-flex">
+                        <p>
+                            ${users.following}
+                        <p class="ms-2">Following</p>
+
+                        </p>
+                        <p class="ms-3">
+                            ${users.followers}
+                        <p class="ms-2">Followers</p>
+
+                        </p>
+                    </div>
+
+                </div>
+                `;
+    });
+    
+    document.getElementById("card").innerHTML = udata;
+
+}
+    </script>
+
     <%- include("search") -%>
