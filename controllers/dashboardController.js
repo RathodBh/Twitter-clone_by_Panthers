@@ -27,7 +27,7 @@ const getDashboard = asyncHandler(async (req, res) => {
             res.redirect('/user-login')
         }
         // let sel_q = `SELECT id,name,user_image,user_name FROM ${db}.users `;
-        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name  FROM ${db}.tweets as t JOIN ${db}.users u ON t.id = t.user_id`;
+        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name  FROM ${db}.tweets as t LEFT JOIN ${db}.users u ON t.user_id = u.id ORDER BY  t.id DESC `;
 
         const all_tweet_data = await queryExecuter(sel_tweets);
 
