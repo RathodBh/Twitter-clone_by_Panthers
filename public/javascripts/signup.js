@@ -262,3 +262,38 @@ async function checkusername(e) {
       return false
     }
   }
+
+  async function checkemailforlogin(e) {
+    let email = e.value
+
+    const save_req = await fetch(`http://localhost:3008/user-login/checkemail`, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        data: e.value
+
+      })
+    });
+
+    var resSave = await save_req.json();
+    // console.log(resSave.isNew);
+    if (resSave.isNew == true) {
+      // console.log("i ma he");
+      let usermsg = document.getElementById('emailError')
+      // console.log(usermsg);
+      let content = `<span style="color: #1c800f;"></span>`
+      usermsg.innerHTML = content
+      //count += 1
+      return true
+    }
+    else {
+      let usermsg = document.getElementById('emailError')
+      let content = `<span style="color: #b9370f;">User Already Exists!</span>`
+      usermsg.innerHTML = content;
+      //count -= 1
+    //   submitbtn.style.display = 'none';
+      return false
+    }
+  }
