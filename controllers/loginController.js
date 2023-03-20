@@ -60,9 +60,9 @@ const loginHandler = async (req, res) => {
         req.session.email = session_token
         console.log(req.session);
 
-        var hour = 3600000
-        req.session.cookie.expires = new Date(Date.now() + hour)
-        req.session.cookie.maxAge = hour
+        // var hour = 3600000
+        // req.session.cookie.expires = new Date(Date.now() + hour)
+        // req.session.cookie.maxAge = hour
 
 
         return res.redirect("/dashboard");

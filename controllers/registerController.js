@@ -34,7 +34,9 @@ const registerUser = async (req, res) => {
                     tree = true
                     return res.render('signup', { tree });
                 }
-                const qry1 = `select * from twitter_clone.users where email='${email}' or username='${uname}'`
+                const qry1 = `select * from twitter_clone.users where email='${email}' or user_name='${uname}'`
+                
+                // console.log(oldUser);
                 const oldUser = await queryExecuter(qry1)
                 if (oldUser.length != 0) {
                     flag = true
@@ -43,7 +45,7 @@ const registerUser = async (req, res) => {
                 else {
                     const salt = await bcrypt.genSalt(15);
                     const hashedPassword = await bcrypt.hash(password, salt);
-                    const qry = `INSERT INTO twitter_clone.users (name, email, password,username, birth_date,created_at) VALUES ('${name}', '${email}', '${hashedPassword}', '${uname}','${dob}',NOW())`
+                    const qry = `INSERT INTO twitter_clone.users (name, email, password,user_name, birth_date,created_at) VALUES ('${name}', '${email}', '${hashedPassword}', '${uname}','${dob}',NOW())`
                     const result = await queryExecuter(qry)
                     // console.log(result);
                     if (result) {

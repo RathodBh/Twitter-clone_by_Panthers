@@ -16,18 +16,12 @@ async function queryExecuter(query) {
 }
 
 
-const getDashboard = asyncHandler(async (req, res) => {
-
-
-
+const commentInfo = asyncHandler(async (req, res) => {
+    let tweet_id = req.params.id;
     let db = `twitter_clone`;
     try {
-        const token = req.session.email
-        if (!token) {
-            res.redirect('/user-login')
-        }
         // let sel_q = `SELECT id,name,user_image,user_name FROM ${db}.users `;
-        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name  FROM ${db}.tweets as t JOIN ${db}.users u ON t.id = t.user_id`;
+        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name  FROM ${db}.tweets as t JOIN ${db}.users u ON t.id = t.user_id WHERE t.id = ${tweet_id}`;
 
         const all_tweet_data = await queryExecuter(sel_tweets);
 
@@ -35,9 +29,11 @@ const getDashboard = asyncHandler(async (req, res) => {
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
         let post_at = []
+        let hover_post_at = []
         //set month name and date
         all_tweet_data.forEach((tweet) => {
             const d = new Date(tweet.created_at);
+           
             const d2 = new Date()
 
             const diffTime = Math.abs(d2 - d);
@@ -46,10 +42,6 @@ const getDashboard = asyncHandler(async (req, res) => {
             const diffHours = Math.ceil(diffTime / (1000 * 60 * 60));
             const diffMinutes = Math.ceil(diffTime / (1000 * 60));
 
-            function addZero(i) {
-                if (i < 10) { i = "0" + i }
-                return i;
-            }
 
             if (diffMinutes < 60) {
                 post_at.push(`${diffMinutes} Minutes ago`)
@@ -72,27 +64,34 @@ const getDashboard = asyncHandler(async (req, res) => {
                     hours = hours - 12;
                 }
                 if (diffYears) {
-
-
                     post_at.push(`${hours}:${d.getMinutes()} ${is_am_pm} • ${month[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`)
+
                 } else {
                     post_at.push(`${hours}:${d.getMinutes()} ${is_am_pm} • ${month[d.getMonth()]} ${d.getDate()}`)
-
                 }
             }
-        })
 
+
+            //onhover real date
+            let hover_is_am_pm = "AM"
+            let hover_hours = d.getHours()
+            if (hover_hours >= 12) {
+                hover_is_am_pm = "PM"
+                hover_hours = hover_hours - 12;
+            }
+            hover_post_at.push(post_at.push(`${hover_hours}:${d.getMinutes()} ${hover_is_am_pm} • ${month[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`))
+        })
+        
+        console.log(hover_post_at);
         //i need to show the get request for register page
         let flag = false
-        res.render('dashboard', { tweet_data: all_tweet_data, post_date: post_at });
+        res.render('tweet_details', { tweet_data: all_tweet_data, post_date: post_at, hover_post_date: hover_post_at });
 
     } catch (err) {
         console.log("Error Dashboard:", err);
     }
-    //i need to show the get request for register page
 
-});
-
+})
 
 
-module.exports = { getDashboard }
+module.exports = { commentInfo }

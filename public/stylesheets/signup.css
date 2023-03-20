@@ -150,12 +150,10 @@ body {
     display: grid;
     place-items: center;
     background: var(--lite);
-    /* background-image: url("https://officesnapshots.com/wp-content/uploads/2020/04/twitter-offices-toronto-3-1200x894.jpg"); */
-      background-image: url("../assets/images/id.png");
+    background-image: url("../assets/images/id.png");
     background-repeat: no-repeat;
     background-size: cover;
-    /* background-position-x: -305px; */
-    
+    transition:all 0.3s linear ;
 }
 
 /* .candidate{ */
