@@ -1,0 +1,226 @@
+<%- include("menu") -%>
+
+    <!-- main panel  -->
+    <div class="col-6 p-2 border">
+        <div class="inner-main home ">
+            <div class="blur-ui px-2">
+                <div class="d-flex align-items-center mb-3 my-1">
+                    <a href="" class="fa-solid fa-arrow-left-long text-dark d-inline-block me-2 " onclick="back()"></a>
+
+                    <h5 class="text-black d-inline-block mb-0">Tweet</h5>
+                </div>
+
+                <ul class="nav nav-tabs row">
+                    <!-- <li class="nav-item col-6 text-center">
+                  <a class="nav-link active" data-bs-toggle="tab" href="#for-you">Tweet</a>
+                </li> -->
+                    <!-- <li class="nav-item col-6 text-center">
+                  <a class="nav-link" data-bs-toggle="tab" href="#following-home">Menu 2</a>
+                </li> -->
+                </ul>
+            </div>
+
+            <div class="tab-content px-2">
+                <div id="for-you" class="tab-pane active">
+                    <div class="tweet-container">
+                        <% tweet_data.forEach((t,index)=>{ %>
+                            <div class="tweet row pt-4 border border-bottom-1 border-top-0">
+                                <div class="col-1">
+                                    <img src="<%= t.user_image %>" alt="" class="profile-size me-2 border">
+                                </div>
+                                <div class="col-10 px-4">
+                                    <div class="d-flex align-items-center user-info">
+                                        <span class="text-black fs-16 me-1 fw-600">
+                                            <%= t.name %>
+                                        </span>
+                                    </div>
+                                    <span class="fs-16 text-gray me-1">
+                                        @<%= t.user_name %>
+                                    </span>
+                                </div>
+                                <div class="col-1">
+                                    <a href="" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false"> ••• </a>
+                                                           <ul class="dropdown-menu">
+                                                            <li class="d-flex">
+                                                                <a class="dropdown-item" href="#"><i class="fa-solid fa-user-plus me-2"></i> Follow <span class="text-blue">@<%= t.user_name
+                                                                    %></span>
+                                                                
+                                                               </a></li>
+                                                               
+
+                                                            <li class="d-flex">
+                                                                <a class="dropdown-item" href="#"><i class="fa-solid fa-user-minus me-2"></i> Unfollow <span class="text-blue">@<%= t.user_name %></span>
+                                                                
+                                                               </a></li>
+                                                               
+                                                            <li class="d-flex">
+                                                                <a class="dropdown-item" href="#"><i class="fa-regular fa-eye me-2"></i> Visit profile <span class="text-blue">@<%= t.user_name %></span>
+                                                               </a></li>
+                                                          </ul>
+                                </div>
+
+                                <div class="col-12 py-3">
+                                    <div class="tweet-content">
+                                        <p class="text-black fs-16 fw-300">
+                                            <%= t.tweet %>
+                                        </p>
+                                    </div>
+                                    <% if(t.media_type=="image" ){ %>
+                                        <div class="tweet-img-container">
+                                            <img src="<%= t.media_url %>" alt="" class="w-100">
+                                        </div>
+                                        <% }else if(t.media_type=="video" ){ %>
+                                            <div class="tweet-video-container">
+                                                <video controls>
+                                                    <source src="<%= t.media_url %>" type="video/mp4">
+                                                </video>
+                                            </div>
+                                            <% } %>
+                                                <div class="text-gray py-2 border-bottom" title="<%= hover_post_date[index] %>">
+                                                    <%= post_date[index] %>
+                                                </div>
+                                                <div class="text-gray py-2 border-bottom">
+                                                    <p class="d-inline-block me-3 mb-0"><span class="text-dark fw-600">
+                                                            <%= t.tweet_retweets %>
+                                                        </span> retweets</p>
+                                                    <p class="d-inline-block mb-0"><span class="text-dark fw-600">
+                                                            <%= t.tweet_likes %>
+                                                        </span> likes</p>
+
+                                                </div>
+
+                                                <div class="tweet-reactions-container py-2 border-bottom">
+                                                    <ul class="list-unstyled row my-0">
+                                                        <li class="col">
+                                                            <a href="" class="comment">
+                                                                <i class="fa-regular fa-comment"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="col">
+                                                            <a href="" class="retweet">
+                                                                <i class="fa-solid fa-retweet"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="col">
+                                                            <a href="" class="like">
+                                                                <i class="fa-regular fa-heart"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="col">
+                                                            <a href="" class="chart">
+                                                                <i class="fa-solid fa-chart-simple"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="col">
+                                                            <a href="" class="share">
+                                                                <i class="fa-solid fa-arrow-up-from-bracket"></i>
+
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                <div class="comments py-3">
+                                                    <div class="comment row border py-2">
+                                                        <div class="col-1">
+                                                            <img src="" alt="" class="profile-size me-2 border">
+                                                        </div>
+                                                        <div class="col-10">
+                                                            <div class="d-flex align-items-center user-info">
+                                                                <span class="text-black fs-16 me-1 fw-600">
+                                                                    <%= t.name %>
+                                                                </span>
+                                                                <span class="fs-16 text-gray me-1">
+                                                                    @<%= t.user_name %>
+                                                                </span>
+                                                                <i
+                                                                    class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
+                                                                <span class="date fs-16 me-1 text-gray">
+                                                                    <%= post_date[index] %>
+                                                                </span>
+                                                            </div>
+                                                            <div class="sub-info">
+                                                                <!-- <a href="/tweet_details/<%= t.id %>"> -->
+                                                                <p class="text-gray fs-16 fw-300 mb-0">
+                                                                    replying to <span class="text-blue">@<%= t.user_name
+                                                                            %></span>
+                                                                </p>
+                                                                <!-- </a> -->
+                                                                <p class="tweet mb-0">
+                                                                    <%= t.tweet %>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-1">
+                                                           <a href="" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false"> ••• </a>
+                                                           <ul class="dropdown-menu">
+                                                            <li class="d-flex">
+                                                                <a class="dropdown-item" href="#"><i class="fa-solid fa-user-plus me-2"></i> Follow <span class="text-blue">@<%= t.user_name
+                                                                    %></span>
+                                                                
+                                                               </a></li>
+                                                               
+
+                                                            <li class="d-flex">
+                                                                <a class="dropdown-item" href="#"><i class="fa-solid fa-user-minus me-2"></i> Unfollow <span class="text-blue">@<%= t.user_name %></span>
+                                                                
+                                                               </a></li>
+                                                               
+                                                            <li class="d-flex">
+                                                                <a class="dropdown-item" href="#"><i class="fa-regular fa-eye me-2"></i> Visit profile <span class="text-blue">@<%= t.user_name %></span>
+                                                               </a></li>
+                                                          </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="comment row border py-2">
+                                                        <div class="col-1">
+                                                            <img src="" alt="" class="profile-size me-2 border">
+                                                        </div>
+                                                        <div class="col-10">
+                                                            <div class="d-flex align-items-center user-info">
+                                                                <span class="text-black fs-16 me-1 fw-600">
+                                                                    <%= t.name %>
+                                                                </span>
+                                                                <span class="fs-16 text-gray me-1">
+                                                                    @<%= t.user_name %>
+                                                                </span>
+                                                                <i
+                                                                    class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
+                                                                <span class="date fs-16 me-1 text-gray">
+                                                                    <%= post_date[index] %>
+                                                                </span>
+                                                            </div>
+                                                            <div class="sub-info">
+                                                                <!-- <a href="/tweet_details/<%= t.id %>"> -->
+                                                                <p class="text-gray fs-16 fw-300 mb-0">
+                                                                    replying to <span class="text-blue">@<%= t.user_name
+                                                                            %></span>
+                                                                </p>
+                                                                <!-- </a> -->
+                                                                <p class="tweet mb-0">
+                                                                    <%= t.tweet %>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-1">
+                                                            •••
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                </div>
+                            </div>
+                            <% }) %>
+                    </div>
+                </div>
+                <div id="following-home" class="tab-pane container">
+                    Part2
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function back() {
+            window.history.back();
+        }
+    </script>
+    <%- include("search") -%>

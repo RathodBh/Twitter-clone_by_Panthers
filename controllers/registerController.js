@@ -33,9 +33,9 @@ const registerUser = async (req, res) => {
                     return res.render('signup', { tree });
                 }
                 const qry1 = `select * from twitter_clone.users where email='${email}' or username='${uname}'`
-                console.log(qry1);
+                // console.log(qry1);
                 const oldUser = await queryExecuter(qry1)
-                console.log(oldUser);
+                // console.log(oldUser);
                 if (oldUser.length != 0) {
                      flag = true
                     return res.render('signup', { flag });
