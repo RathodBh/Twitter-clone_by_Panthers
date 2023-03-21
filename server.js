@@ -13,11 +13,13 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 app.use(cookieParser());
 app.use(session({
-secret:"secret key",
-resave:false,
-saveUninitialized:true,
+    secret: "secret key",
+    resave: false,
+    saveUninitialized: true,
 
 }));
+
+const path = require('path');
 
 
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -30,31 +32,13 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 
 // my all end points
+app.set('view engine', 'ejs')
 app.use('/user', register)
 app.use('/user-login', login)
+app.use('/user-logout', logout)
 app.use('/dashboard', dashboard)
-app.set('view engine','ejs')
-// // const session = require('./connection/session')
-// const bcrypt = require('bcrypt');
-// const crypto = require('crypto');
-// my all end points
-app.use('/user',register)
-app.use('/user-login',login)
-app.use('/user-logout',logout)
-app.use('/dashboard',dashboard)
 app.use("/profile", profile)
 app.use("/tweet", commentInfo)
-
-// async function queryExecuter(query) {
-//     return new Promise((resolve, rejects) => {
-//         conn.query(query, (err, result) => {
-//             if (err) {
-//                 rejects(err);
-//             }
-//             resolve(result);
-//         });
-//     })
-// }
 
 
 

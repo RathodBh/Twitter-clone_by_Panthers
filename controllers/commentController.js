@@ -21,6 +21,7 @@ const commentInfo = asyncHandler(async (req, res) => {
     const token = req.session.email
     if (!token) {
         res.redirect('/user-login')
+        return;
     }
     let tweet_id = req.params.id;
     let userId = req.session.user_id;
@@ -91,7 +92,7 @@ const commentInfo = asyncHandler(async (req, res) => {
         //i need to show the get request for register page
         let flag = false
         res.render('tweet_details', { tweet_data: all_tweet_data, post_date: post_at, hover_post_date: hover_post_at });
-
+        return;
     } catch (err) {
         console.log("Error Dashboard:", err);
     }
