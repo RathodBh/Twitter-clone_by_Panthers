@@ -15,7 +15,38 @@ async function queryExecuter(query) {
     })
 }
 
+const getpostLike = asyncHandler(async (req, res) => {
+    console.log("herer");
+    try {
+        const token = req.session.email
+        const user_id = req.session.user_id
+        if (!token) {
+            res.redirect('/user-login');
+            return
+        }
+        const { data} = req.body;
+        if(data.like==true){
+            // SELECT count(user_id) FROM twitter_clone.likes where tweet_id=5;
+            const qrt = `SELECT count(user_id) FROM twitter_clone.likes where tweet_id=${data.tweet_id};`
 
+            const like_data = await queryExecuter(qrt);
+            console.log(like_data);
+
+            var flag=true
+            return res.json({flag})
+        }
+        else{
+            var flag1=false
+            return res.json({flag1})
+        }
+
+
+
+    } catch (error) {
+        
+    }
+
+})
 const getDashboard = asyncHandler(async (req, res) => {
 
     let db = `twitter_clone`;
@@ -156,4 +187,4 @@ const postTweet = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { getDashboard, postTweet }
+module.exports = { getDashboard, postTweet,getpostLike }

@@ -1,7 +1,7 @@
 <%- include("menu") -%>
-<div class="loader">
-    <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
-</div>
+    <div class="loader">
+        <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
+    </div>
     <!-- main panel  -->
     <div class="col-6 px-0 border">
         <div class="inner-main home">
@@ -82,8 +82,9 @@
                                                                 </a>
                                                             </li>
                                                             <li class="col">
-                                                                <a href="" class="like">
-                                                                    <i class="fa-regular fa-heart"></i>
+                                                                <a class="like <%= t.id %>">
+                                                                    <!-- <i class="fa-solid fa-heart" style="color: #f21c1c;" ></i> -->
+                                                                    <i class="fa-regular fa-heart"onclick="likepost(this)" id="<%= t.id %>""></i>
                                                                     <%= t.tweet_likes %>
 
                                                                 </a>
@@ -143,46 +144,82 @@
             </div>
         </div>
     </div>
-<script>
-      window.addEventListener("load", function () {
+    <script>
+        window.addEventListener("load", function () {
             const loader = document.querySelector(".loader");
             loader.className += " hidden"; // class "loader hidden"
         });
-</script>
-<style>
-    .loader {
-        position: fixed;
-        z-index: 99;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+        //done by jigar
+        async function likepost(e) {
+            let tweet_id= e.id 
+            console.log(tweet_id);
+            if (e.classList.value == 'fa-regular fa-heart') {
+                console.log("here");
+                e.classList.value = 'fa-regular fa-heart text-danger';
+                let like = true
+                const save_req = await fetch(`http://localhost:3008/dashboard/like`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: {like,tweet_id}
 
-    .loader>img {
-        width: 100px;
-    }
+                    })
+                });
+            }
+            else if (e.classList.value == 'fa-regular fa-heart text-danger') {
+                e.classList.value = 'fa-regular fa-heart'
+                let like = false;
+                const save_req = await fetch(`http://localhost:3008/dashboard/like`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: like
 
-    .loader.hidden {
-        animation: fadeOut 1s;
-        animation-fill-mode: forwards;
-    }
+                    })
+                });
+            }
 
-    @keyframes fadeOut {
-        100% {
-            opacity: 0;
-            visibility: hidden;
         }
-    }
 
-    .thumb {
-        height: 100px;
-        border: 1px solid black;
-        margin: 10px;
-    }
-</style>
+    </script>
+    <style>
+        .loader {
+            position: fixed;
+            z-index: 99;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader>img {
+            width: 100px;
+        }
+
+        .loader.hidden {
+            animation: fadeOut 1s;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadeOut {
+            100% {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .thumb {
+            height: 100px;
+            border: 1px solid black;
+            margin: 10px;
+        }
+    </style>
     <%- include("search") -%>

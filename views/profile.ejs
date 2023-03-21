@@ -43,13 +43,13 @@
                                             </a>
                                         </div>
 
-                                        <% if(t.media_type=="image" ){ %>
+                                        <% if(t.media_type.includes("image")){ %>
                                             <div class="tweet-img-container">
                                                 <img src="<%= t.media_url %>" alt="" class="w-100">
                                             </div>
-                                            <% }else if(t.media_type=="video" ){ %>
+                                            <% }else if(t.media_type.includes("video") ){ %>
                                                 <div class="tweet-video-container">
-                                                    <video controls>
+                                                    <video controls loop>
                                                         <source src="<%= t.media_url %>" type="video/mp4">
                                                     </video>
                                                 </div>

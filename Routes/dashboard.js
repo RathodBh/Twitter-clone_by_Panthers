@@ -8,11 +8,12 @@ const multer = require('multer')
 const path = require('path')
 
 // const {registerUser,getregisterUser, getEmailCheck,getUserNameCheck} = require('../controllers/registerController');
-const { getDashboard,postTweet } = require("../controllers/dashboardController");
+const { getDashboard,postTweet,getpostLike } = require("../controllers/dashboardController");
 
 //get request
 router.route('/').get(getDashboard)
 router.route('/search').get()
+router.route('/like').post(getpostLike)
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
