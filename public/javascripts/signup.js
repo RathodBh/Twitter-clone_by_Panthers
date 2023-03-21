@@ -52,7 +52,7 @@ function checkStatus(i) {
         next.setAttribute("value", "NEXT")
         next.setAttribute("type", "button")
     }
-    console.log(allParts.length);
+    // console.log(allParts.length);
 }
 
 
@@ -195,7 +195,6 @@ unm.addEventListener("input",(e)=>{
 ///BY Jigar
 
 async function checkusername(e) {
-    console.log(e.value);
     const save_req = await fetch(`http://localhost:3008/user/sign-up/checkusername`, {
       method: "POST",
       headers: {

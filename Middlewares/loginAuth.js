@@ -5,7 +5,6 @@ const protectLogin = async (req, res, next) => {
   
     const token = req.session.email
   
-    console.log(token);
     if (token) {
         let solve = jwt.verify(token, "JWT_SECRET");
         if(solve){

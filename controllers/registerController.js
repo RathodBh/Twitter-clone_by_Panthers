@@ -21,7 +21,7 @@ async function queryExecuter(query) {
 
 const registerUser = async (req, res) => {
     //i need to show the post request for register page
-    console.log("now");
+    
     const { yyyy, mm, dd } = req.body
     let dob = `${yyyy}/${mm}/${dd}`
     try {
@@ -112,7 +112,6 @@ const getUserNameCheck = asyncHandler(async (req, res) => {
 const activeUser = async (req, res) => {
     //i need to show the post request for Active  request
     const userID = req.query.id;
-    console.log(userID);
     const update_query = `UPDATE users SET is_active = '1' WHERE (id = ${parseInt(userID)});`
     const result = await queryExecuter(update_query);
     // res.render('activate_page', { activated: true });

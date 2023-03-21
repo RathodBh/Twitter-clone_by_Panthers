@@ -61,7 +61,6 @@ const loginHandler = async (req, res) => {
         req.session.email = session_token;
 
 
-    console.log("login",req.session);
 
         var hour = 3600000
         req.session.cookie.expires = new Date(Date.now() + hour)
