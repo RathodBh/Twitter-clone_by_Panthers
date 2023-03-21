@@ -8,5 +8,6 @@ const { protectRegistration } = require('../Middlewares/registerAuth')
 const { getDashboard } = require("../controllers/dashboardController");
 
 router.route('/').get(getDashboard)
+router.route('/search').get()
 
 module.exports = router;

@@ -45,6 +45,7 @@ app.use('/dashboard',dashboard)
 app.use("/profile", profile)
 app.use("/tweet", commentInfo)
 
+
 // async function queryExecuter(query) {
 //     return new Promise((resolve, rejects) => {
 //         conn.query(query, (err, result) => {
