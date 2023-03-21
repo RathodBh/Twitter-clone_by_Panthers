@@ -11,7 +11,7 @@ const getProfile = asyncHandler(async(req, res) => {
    
     var users = await query(`select * from users where id=6`);
 
-
+    
     let flag = false;
     res.json(users)
     // res.render('profile',{flag})

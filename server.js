@@ -15,15 +15,86 @@ var query = util.promisify(conn.query).bind(conn)
 app.set('view engine','ejs')
 // const conn = require('../connection/connectdb');
 
+const storages=multer.diskStorage({
+    destination:(req,file,cb)=>{
+        cb(null,"./public/uploads")
+    },
+    filename:(req,file,cb)=>{
+        console.log(file);
+        cb(null, Date.now() +path.extname(file.originalname))
+    }
+})
+const uploads = multer({storage:storages})
+app.post("/updateProfile",uploads.fields([{
+    
+    name: 'cover_image', maxCount: 1
+  }, {
+    name: 'profile_image', maxCount: 1
+  }]), async(req,res)=>{
+    // const registerUser = asyncHandler(async (req, res) => {
+        try {
+            const {user_name,user_email,user_bio, user_dob} = req.body;
+            // async function edit(user_name, user_email,user_bio, user_dob) {
+                try {
+                    const file = req.files;
+                    // console.log("here");
+                    // console.log(file.cover_image[0].filename);
+                    // console.log(file.profile_image[0].filename);
+                    var cover_imgsrc = 'http://localhost:3008/uploads/' + file.cover_image[0].filename;
+                    var profile_imgsrc = 'http://localhost:3008/uploads/' + file.profile_image[0].filename;
+                    console.log("Image uploaded")
+                    
+
+                    await query(`update users set name = "${user_name}", user_name="${user_name}", bio="${user_bio}" ,birth_date="${user_dob}",email="${user_email}" cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id="6"`);
+                    res.send("Update")
+                    // const oldUser = await queryExecuter(qry1)
+                    // res.render("dashboard", {cover_imgsrc,profile_imgsrc })
+                    
+                } catch (error) {
+                    throw error;
+                }
+            // }
+    
+        } catch (error) {
+            throw error;
+        }
+        var name = req.body.name;
+    var mail = req.body.user_email;
+    var bio = req.body.user_bio;
+    var dob = req.body.user_dob;
+    });
 
 // my all end points
+
+app.get("/users",async(req,res)=>{
+    var getuser = await query(`select name,user_name,user_image,cover_image,birth_date,bio,email from users where id = 6`);
+    console.log(getuser);
+    res.json(getuser);
+
+
+})
+
+
+app.get("/tweets",async(req,res)=>{
+
+    var tweets = await query(`select users.name as nm,users.user_name as unm,users.user_image as dp ,tweets.tweet as t,tweets.media_url as p,tweets.tweet_likes as l ,tweets.tweet_comments as c, tweets.tweet_retweets as r from users 
+    left join tweets on users.id = tweets.user_id where tweets.user_id=6`);
+    console.log(tweets);
+    res.json(tweets);
+})
 
 app.use('/user',register)
 app.use('/user-login',login)
 app.use('/dashboard',dashboard)
 app.use("/profile",profile)
 
-app.get("/prof",(req,res)=>{
+app.get("/prof",async(req,res)=>{
+
+    
+
+    
+
+
     res.render('profile')
 })
 
@@ -68,6 +139,9 @@ const storage=multer.diskStorage({
     
 app.get("/multer",(req,res)=>{
     res.render('multer')
+})
+app.get("/like",(req,res)=>{
+    res.render('like')
 })
 
 
