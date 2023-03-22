@@ -16,7 +16,6 @@ app.use(session({
     secret: "secret key",
     resave: false,
     saveUninitialized: true,
-
 }));
 
 const path = require('path');
@@ -41,7 +40,10 @@ app.use("/profile", profile)
 app.use("/tweet", commentInfo)
 
 
+// app.post("/dashboard/comment",(req,res)=>{
+//     const {tweetId,comment_text} = req.body;
 
+// })
 app.listen(PORT, () => {
     console.log(`I am listining on ${PORT}`);
 })

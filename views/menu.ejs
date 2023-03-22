@@ -14,7 +14,7 @@
     <!-- jquery -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <!-- <script src="/javascripts/tweetit.js"></script> -->
-    <script type="text/javascript" src="/javascripts/tweetit.js"></script>  
+    <script type="text/javascript" src="/javascripts/tweetit.js"></script>
 
     <!-- emoji picker  -->
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
@@ -34,14 +34,14 @@
             <div class="modal-content ps-3 pb-2">
                 <form action="/dashboard/tweet" method="post" enctype="multipart/form-data">
                     <div class="d-flex p-2">
-                        <button type="button" class="btn-close"  data-bs-dismiss="modal"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
 
                     <div class="modal-body" id="modal_body">
                         <div id="errLimit" class="my-1">
 
                         </div>
-                        
+
                         <div class="d-flex pt-2">
                             <img src="/assets/images/cover.jpg" alt="" class="profile-size me-2 border ">
                             <textarea placeholder="What's happening?" name="tweet_text"
@@ -49,7 +49,6 @@
                                 maxlength="300"></textarea>
                         </div>
                         <div id="iimg" class=" all-center flex-column">
-
                         </div>
                     </div>
                     <div class="d-flex justify-content-between" id="twt_btn_lnk">
@@ -66,7 +65,8 @@
 
                             </a>
                             <a href="#emojis">
-                                <i  class="fa-regular fa-face-smile  rounded-circle p-2  link-hover me-1 border border-3 border-primary" onclick="emoji_clk()"></i>
+                                <i class="fa-regular fa-face-smile  rounded-circle p-2  link-hover me-1 border border-3 border-primary"
+                                    onclick="emoji_clk()"></i>
                                 <!-- <img src="/assets/images/emojis.png" alt=" "
                                     id="emojiSelectorIcon" onclick="emoji_clk()"
                                     class="profile-size me-1"> -->
@@ -75,8 +75,8 @@
                         </div>
 
                         <div>
-                            <input type="submit" class="btn btn-primary bg-blue  rounded-pill me-3" id="sub_btn" value="Tweet"
-                                 data-bs-dismiss="modal"></input>
+                            <input type="submit" class="btn btn-primary bg-blue  rounded-pill me-3" id="sub_btn"
+                                value="Tweet" data-bs-dismiss="modal"></input>
                         </div>
                     </div>
                 </form>
@@ -84,6 +84,7 @@
         </div>
     </div>
     <!-- end modal working -->
+
 
     <div class="wrapper">
 
@@ -166,3 +167,13 @@
                         </ul>
                     </div>
                 </div>
+                <script>
+                    $('#commentModal').on('show.bs.modal', function (e) {
+
+                        //get data-id attribute of the clicked element
+                        var tweetId = $(e.relatedTarget).data('tweet-id');
+
+                        //populate the textbox
+                        $(e.currentTarget).find('input[name="tweetId"]').val(tweetId);
+                    });
+                </script>

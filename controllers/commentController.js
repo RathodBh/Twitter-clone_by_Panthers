@@ -85,7 +85,6 @@ const commentInfo = asyncHandler(async (req, res) => {
     let userId = req.session.user_id;
     let db = `twitter_clone`;
     try {
-
         let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name  FROM ${db}.tweets as t JOIN ${db}.users as u  WHERE t.id = ${tweet_id} && u.id = t.user_id `;
 
         const [tweet] = await queryExecuter(sel_tweets);
@@ -99,7 +98,6 @@ const commentInfo = asyncHandler(async (req, res) => {
             for(let x of sel_comments) {
                 comment_post_dates.push(getDate(x.created_at))
             }
-
         //i need to show the get request for register page
         res.render('tweet_details', { tweet_data: tweet, post_date: post_at,comments:sel_comments,comment_at:comment_post_dates});
         return;
@@ -110,4 +108,24 @@ const commentInfo = asyncHandler(async (req, res) => {
 })
 
 
-module.exports = { commentInfo }
+const addTweetComment = asyncHandler(async (req, res) => {
+
+    const token = req.session.email
+    if (!token) {
+        res.redirect('/user-login')
+        return;
+    }
+    const {tweetId,comment_text} = req.body;
+    const userId = req.session.user_id;
+
+
+    const q = `INSERT INTO comments(user_id,comment,tweet_id,created_at) VALUES(${userId},'${comment_text}',${tweetId},NOW() )`
+   
+    await queryExecuter(q);
+
+    const all_comments = await queryExecuter(`SELECT u.id as user_id, u.user_name,u.name,u.user_image,c.comment,c.created_at  FROM comments as c JOIN users as u ON c.user_id = u.id WHERE c.tweet_id = '${tweetId}' ORDER BY c.created_at DESC`);
+
+    res.json({all_comments,len:all_comments.length});
+})
+
+module.exports = { commentInfo,addTweetComment }

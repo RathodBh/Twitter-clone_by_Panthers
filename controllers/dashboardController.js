@@ -97,8 +97,6 @@ const getDashboard = asyncHandler(async (req, res) => {
             all_comments.push(sel_comments.tot);
             all_likes.push(sel_likes.tot);
         }
-        
-
 
         //i need to show the get request for register page
         let flag = false
