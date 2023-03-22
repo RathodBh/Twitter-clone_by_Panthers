@@ -19,6 +19,9 @@ app.use(session({
 
 }));
 
+
+
+
 const path = require('path');
 
 
@@ -40,8 +43,77 @@ app.use('/dashboard', dashboard)
 app.use("/profile", profile)
 app.use("/tweet", commentInfo)
 
+app.post("/dashboard/retweet", async function (req, res) {
+    var user_id = req.session.user_id;
+    console.log(user_id);
+    console.log("byee");
+    const data = req.body;
+    var tweet_id = data.tweet_id;
+    var a = data.a;
+    // var a = 0;
 
+    // var count_id = await queryExecuter(`select id,is_retweet from retweet where tweet_id=${tweet_id};`)
+    // console.log("total=", count_id)
+    // var lengthtweet = count_id;
+
+    // if (a == 1) {
+    var select_tweet = await queryExecuter(`SELECT * FROM twitter_clone.retweet WHERE tweet_id='${tweet_id}';`)
+    console.log("select tweet", select_tweet[0]);
+    var tweet_sel = await queryExecuter(`SELECT * FROM twitter_clone.tweets where id='${tweet_id}';`);
+    console.log("tweet=", tweet_sel[0].tweet_retweets);
+
+    var tot_re_tweet = tweet_sel[0].tweet_retweets;
+
+    console.log("total retweet=", tot_re_tweet);
+
+
+    if (select_tweet[0] == undefined) {
+        var re_tweet = await queryExecuter(`INSERT INTO twitter_clone.retweet(user_id,tweet_id,created_at,is_retweet)VALUES(${user_id},${tweet_id},NOW(),'1' );`);
+        console.log("retweeted");
+
+        tot_re_tweet += 1;
+
+        console.log("total retweet 1=", tot_re_tweet);
+        var up_tweet = await queryExecuter(`UPDATE twitter_clone.tweets SET tweet_retweets = ${tot_re_tweet} WHERE id =${tweet_id};`)
+        a = 0;
+        console.log("update tweet 0=", up_tweet[0]);
+    }
+    else if (select_tweet[0].is_retweet == 1) {
+        console.log("tweet id match");
+        tot_re_tweet -= 1;
+        console.log("new total=", tot_re_tweet);
+        var update_re_tweet = await queryExecuter(`UPDATE twitter_clone.retweet SET is_retweet = 0 WHERE tweet_id = '${tweet_id}';`)
+        var up_tweet2 = await queryExecuter(`UPDATE twitter_clone.tweets SET tweet_retweets = ${tot_re_tweet} WHERE id =${tweet_id};`)
+        console.log("new tweet update=", up_tweet2);
+    }
+    else {
+        console.log("tweet id not match");
+        tot_re_tweet += 1;
+        console.log("total retweet 2=", tot_re_tweet);
+        var update_re_tweet = await queryExecuter(`UPDATE twitter_clone.retweet SET is_retweet = '1' WHERE tweet_id = '${tweet_id}';`)
+        var up_tweet1 = await queryExecuter(`UPDATE twitter_clone.tweets SET tweet_retweets = ${tot_re_tweet} WHERE id =${tweet_id} ;`)
+        console.log(" update tweet 1=", up_tweet1);
+    }
+    // }
+    // else {
+    //     var update_re_tweet = await queryExecuter(`UPDATE twitter_clone.retweet SET is_retweet = '0' WHERE tweet_id = '${tweet_id}';`);
+    //     console.log("undo");
+    //     a = 1;
+    // }
+
+})
 
 app.listen(PORT, () => {
     console.log(`I am listining on ${PORT}`);
 })
+
+async function queryExecuter(query) {
+    return new Promise((resolve, rejects) => {
+        conn.query(query, (err, result) => {
+            if (err) {
+                rejects(err);
+            }
+            resolve(result);
+        });
+    })
+}

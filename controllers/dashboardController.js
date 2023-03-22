@@ -14,7 +14,22 @@ async function queryExecuter(query) {
         });
     })
 }
+// const retweet = asyncHandler(async (req, res) => {
+//     let db = `twitter_clone`;
+//     try {
+//         const token = req.session.email
+//         if (!token) {
+//             res.redirect('/user-login');
+//             return
+//         }
+//         console.log("retweet");
+//         res.redirect('/dashboard');
 
+//     }
+//     catch (err) {
+//         console.log("Error Dashboard:", err);
+//     }
+//     })
 
 const getDashboard = asyncHandler(async (req, res) => {
 
