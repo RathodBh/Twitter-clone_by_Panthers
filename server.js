@@ -33,11 +33,12 @@ app.post("/updateProfile",uploads.fields([{
   }]), async(req,res)=>{
     // const registerUser = asyncHandler(async (req, res) => {
         try {
-            const {name,user_email,user_bio, user_dob} = req.body;
+            const arr={name,user_email,user_bio, user_dob} = req.body;
             // async function edit(user_name, user_email,user_bio, user_dob) {
                 try {
+                    let uid = req.query.uid || 3;
                     const file = req.files;
-                    var users = await query(`select user_image as dp , cover_image as cover from users where id=6`);
+                    var users = await query(`select user_image as dp , cover_image as cover from users where id=${uid}`);
                     console.log(users[0].dp);
                     console.log(users[0].cover);
                      console.log("here");
@@ -65,8 +66,8 @@ app.post("/updateProfile",uploads.fields([{
                     console.log("Image uploaded")
                     
 
-                    await query(`update users set name = "${name}", bio="${user_bio}" ,birth_date="${user_dob}",email="${user_email}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id="6"`);
-                    res.render("profile")
+                    await query(`update users set  bio="${user_bio}" ,birth_date="${user_dob}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id=${uid}`);
+                    res.redirect("prof")
                     // const oldUser = await queryExecuter(qry1)
                     // res.render("dashboard", {cover_imgsrc,profile_imgsrc })
                     
@@ -87,7 +88,8 @@ app.post("/updateProfile",uploads.fields([{
 // my all end points
 
 app.get("/users",async(req,res)=>{
-    var getuser = await query(`select name,user_name,user_image,cover_image,birth_date,bio,email from users where id = 6`);
+    let uid = req.query.uid || 3;
+    var getuser = await query(`select uname,user_name,user_image,cover_image,birth_date,bio,email from users where id = ${uid}`);
     console.log(getuser);
     res.json(getuser);
 
@@ -96,9 +98,9 @@ app.get("/users",async(req,res)=>{
 
 
 app.get("/tweets",async(req,res)=>{
-
-    var tweets = await query(`select users.name as nm,users.user_name as unm,users.user_image as dp ,tweets.tweet as t,tweets.media_url as p,tweets.tweet_likes as l ,tweets.tweet_comments as c, tweets.tweet_retweets as r from users 
-    left join tweets on users.id = tweets.user_id where tweets.user_id=6`);
+    let uid = req.query.uid || 3;
+    var tweets = await query(`select users.uname as nm,users.user_name as unm,users.user_image as dp ,tweets.tweet as t,tweets.media_url as p,tweets.tweet_likes as l ,tweets.tweet_comments as c, tweets.tweet_retweets as r from users 
+    left join tweets on users.id = tweets.user_id where tweets.user_id=${uid}`);
     console.log(tweets);
     res.json(tweets);
 })

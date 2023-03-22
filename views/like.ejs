@@ -11,41 +11,51 @@
 
 
     <style>
-        .black{
-            color:black;
-            }
-
-         .red{
-            color: red;
-            }
+        
+        #followButton{
+            border: 2px solid #1D9BF0;
+            background: #1D9BF0;
+            border-radius: 16px;
+            padding: 10px 20px 10px 20px;
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+  
     </style>
 </head>
 
 <body>
     <div class="container bg-info">
-        <p>
-            <i class="fa-solid fa-heart"  id="like"></i>
-            
-        </p> 
+      
+       <div class="follow">
+        <a id="followButton">Follow</a>
+        
+       </div>          
+                 
+        
+         
+             
+        
     </div>
 
     
     <script>
-        var like = document.querySelector('#like');
+var count = 0;
+var countButton = document.getElementById("followButton");
+var displayCount = document.getElementById("followers");
+countButton.onclick = function() {
+if (countButton.innerText == "Follow") {
+    count++;
+    countButton.innerText = "Unfollow";
+  } else if (countButton.innerText == "Unfollow") {
+    count--;
+    countButton.innerText = "Follow";
+  }
+  followers.innerHTML = count;
+}
 
-            
-        like.addEventListener('click',function(){
-
-            if (like.classList.contains('red')) {
-                 like.classList.toggle('black');
-                  
-                 } 
-                
-                
-            this.classList.toggle('red');
-            
-        })
-    </script>
+</script>
 
 </body>
 </html>

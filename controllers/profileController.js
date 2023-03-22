@@ -8,8 +8,8 @@ var query = util.promisify(conn.query).bind(conn)
 
 const getProfile = asyncHandler(async(req, res) => {
     //i need to show the get request for register page
-   
-    var users = await query(`select * from users where id=6`);
+    let uid = req.query.uid || 3;
+    var users = await query(`select * from users where id=${uid }`);
 
     
     let flag = false;
