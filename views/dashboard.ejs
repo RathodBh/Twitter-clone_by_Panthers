@@ -84,12 +84,16 @@
                                                             <li class="col">
                                                                 <a class="like <%= t.id %>">
                                                                     <!-- <i class="fa-solid fa-heart" style="color: #f21c1c;" ></i> -->
-                                                                    <i class="fa-regular fa-heart"onclick="likepost(this)" id="<%= t.id %>""></i>
-                                                                    <%= t.tweet_likes %>
+                                                                    <i class="fa-regular fa-heart"
+                                                                        onclick="likepost(this)" id="<%= t.id %>"></i>
+                                                                    <span id="like<%= t.id %>">
+                                                                        <%= t.tweet_likes %>
+                                                                    </span>
+
 
                                                                 </a>
                                                             </li>
-                                                            <li class="col">
+                                                            <li class=" col">
                                                                 <a href="" class="chart">
                                                                     <i class="fa-solid fa-chart-simple"></i>
 
@@ -150,11 +154,19 @@
             loader.className += " hidden"; // class "loader hidden"
         });
         //done by jigar
+        // fetchDashboard()
+        // async function fetchDashboard(){
+
+        //     const save_req = await fetch(`http://localhost:3008/dashboard`)
+        // }
+
+
+
+
         async function likepost(e) {
-            let tweet_id= e.id 
+            let tweet_id = e.id
             console.log(tweet_id);
             if (e.classList.value == 'fa-regular fa-heart') {
-                console.log("here");
                 e.classList.value = 'fa-regular fa-heart text-danger';
                 let like = true
                 const save_req = await fetch(`http://localhost:3008/dashboard/like`, {
@@ -163,10 +175,18 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        data: {like,tweet_id}
+                        data: { like, tweet_id }
 
                     })
                 });
+                var resSave = await save_req.json();
+                console.log(resSave.flag);
+
+                if (resSave.flag == true) {
+                    let likeSpan = document.querySelector("#like" + tweet_id)
+                    likeSpan.innerHTML = resSave.alllikecount
+                }
+
             }
             else if (e.classList.value == 'fa-regular fa-heart text-danger') {
                 e.classList.value = 'fa-regular fa-heart'
@@ -177,14 +197,20 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        data: like
+                        data: { like, tweet_id }
 
                     })
                 });
+                var resSave = await save_req.json();
+                console.log(resSave.flag);
+
+                if (resSave.flag == false) {
+                    let likeSpan = document.querySelector("#like" + tweet_id)
+                    likeSpan.innerHTML = resSave.alllikecount
+                }
             }
 
         }
-
     </script>
     <style>
         .loader {
