@@ -22,7 +22,8 @@
     }
     .dp img{
         height: 7.5rem;
-
+        aspect-ratio: 1/1;
+        object-fit: cover;
         border: 4px solid var(--bg-blue);
         border-radius:50% ;
         

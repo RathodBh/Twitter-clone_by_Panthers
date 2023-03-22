@@ -33,20 +33,40 @@ app.post("/updateProfile",uploads.fields([{
   }]), async(req,res)=>{
     // const registerUser = asyncHandler(async (req, res) => {
         try {
-            const {user_name,user_email,user_bio, user_dob} = req.body;
+            const {name,user_email,user_bio, user_dob} = req.body;
             // async function edit(user_name, user_email,user_bio, user_dob) {
                 try {
                     const file = req.files;
-                    // console.log("here");
+                    var users = await query(`select user_image as dp , cover_image as cover from users where id=6`);
+                    console.log(users[0].dp);
+                    console.log(users[0].cover);
+                     console.log("here");
+                     console.log(req.files);
                     // console.log(file.cover_image[0].filename);
                     // console.log(file.profile_image[0].filename);
-                    var cover_imgsrc = 'http://localhost:3008/uploads/' + file.cover_image[0].filename;
-                    var profile_imgsrc = 'http://localhost:3008/uploads/' + file.profile_image[0].filename;
+                    // var cover_imgsrc =  'http://localhost:3008/uploads/' + file.cover_image[0].filename || users[0].cover ;
+                    // var profile_imgsrc = 'http://localhost:3008/uploads/' + file.profile_image[0].filename ||  users[0].dp ;
+                    var cover_imgsrc = req.files.cover_image;
+                    var profile_imgsrc = req.files.profile_image;
+                    console.log(cover_imgsrc);
+                    console.log(profile_imgsrc);
+                    if(cover_imgsrc){
+                        cover_imgsrc = 'http://localhost:3008/uploads/' + file.cover_image[0].filename;
+                    }else{
+                        cover_imgsrc = users[0].cover;
+                    }
+
+                    if(profile_imgsrc ){
+                        profile_imgsrc = 'http://localhost:3008/uploads/' + file.profile_image[0].filename
+                    }else{
+                        profile_imgsrc = users[0].dp 
+                    }
+
                     console.log("Image uploaded")
                     
 
-                    await query(`update users set name = "${user_name}", user_name="${user_name}", bio="${user_bio}" ,birth_date="${user_dob}",email="${user_email}" cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id="6"`);
-                    res.send("Update")
+                    await query(`update users set name = "${name}", bio="${user_bio}" ,birth_date="${user_dob}",email="${user_email}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id="6"`);
+                    res.render("profile")
                     // const oldUser = await queryExecuter(qry1)
                     // res.render("dashboard", {cover_imgsrc,profile_imgsrc })
                     

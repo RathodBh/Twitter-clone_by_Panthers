@@ -81,7 +81,7 @@
                             <div id="edit_image-section">
                                 <div class="cover d-flex border-dark">
                                     <img src="${user.cover_image}" alt="">
-                                    <label for="update_profile_image" class="edit_cover mt-5 " >
+                                    <label for="update_cover_image" class="edit_cover mt-5 " >
                                         <i class="fa-solid fa-2x fa-camera  rounded-circle text-light"
                                             id="edit_camera_icons">
                                         </i>
@@ -110,13 +110,13 @@
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" name="name" class="form-control" id="name" aria-describedby="emailHelp"
-                                        name="user_name" value="${user.name}">
+                                        name="name" value="${user.name}">
                                     <div id="text" class="form-text"></div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="username" class="form-label">User Email</label>
                                     <input type="text" class="form-control" id="username" name="user_email"
-                                    value="${user.email}">
+                                    value="${user.email}" readonly>
                                 </div>
                                 <div class="mb-3">
                                     <label for="bio" class="form-label">Bio</label>
@@ -127,7 +127,7 @@
                                     <label for="birth_date" class="form-label"></label>
                                     <label for="birth_date" class="form-label">Date Of Birth</label>
                                     <input type="date" class="form-control" id="biobirth_date" name="user_dob"
-                                    value="${user.birth_date.slice(0,10)}">
+                                    value="${user.birth_date.slice(0,10)}" readonly>
                                 </div>
                             </div>
                         </div>
