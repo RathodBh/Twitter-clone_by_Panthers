@@ -1,11 +1,188 @@
 <%- include("menu") -%>
-
-<!-- main panel  -->
-<div class="col-6 p-2">
-    <div class="inner-main">
-        <h4 class="text-black">Home</h4>
-
-    </div>
+<div class="loader">
+    <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
 </div>
+    <!-- main panel  -->
+    <div class="col-6 px-0 border">
+        <div class="inner-main home">
+            <div class="blur-ui p-3 pb-0">
+                <h4 class="text-black">Home</h4>
+                <ul class="nav nav-tabs">
+                    <li class="nav-item w-50 text-center all-center">
+                        <a class="nav-link w-100 fw-600 active" data-bs-toggle="tab" href="#for-you">
+                            <span>
+                                For you
+                            </span>
 
-<%- include("search") -%>
+                        </a>
+                    </li>
+                    <li class="nav-item w-50 text-center all-center">
+                        <a class="nav-link w-100 fw-600 " data-bs-toggle="tab" href="#following-home">
+                            <span>
+                                Following
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="all-data">
+                <div class="tab-content">
+                    <div id="for-you" class="tab-pane active">
+                        <div class="tweet-container all-center flex-column ">
+                            <% tweet_data.forEach((t,index)=>{ %>
+                                <div class="tweet w-100 p-3 row pt-4 border-bottom border-top">
+                                    <div class="col-1 p-0">
+                                        <img src="<%= t.user_image %>" alt="" class="profile-size me-2 border">
+                                    </div>
+                                    <div class="col-10 px-4">
+                                        <div class="d-flex align-items-center user-info">
+                                            <span class="text-black fs-16 me-1 fw-600">
+                                                <%= t.name %>
+                                            </span>
+                                            <span class="fs-16 text-gray me-1">
+                                                @<%= t.user_name %>
+                                            </span>
+                                            <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
+                                            <span class="date fs-16 me-1 text-gray">
+                                                <%= post_date[index] %>
+                                            </span>
+                                        </div>
+                                        <div class="tweet-content">
+                                            <a href="/tweet/tweet_details/<%= t.id %>">
+                                                <p class="text-black fs-16 fw-300">
+                                                    <%= t.tweet %>
+                                                </p>
+                                            </a>
+                                        </div>
+
+                                        <% if(t.media_type.includes("image")){ %>
+                                            <div class="tweet-img-container">
+                                                <img src="<%= t.media_url %>" alt="" class="w-100">
+                                            </div>
+                                            <% }else if(t.media_type.includes("video") ){ %>
+                                                <div class="tweet-video-container">
+                                                    <video controls loop>
+                                                        <source src="<%= t.media_url %>" type="video/mp4">
+                                                    </video>
+                                                </div>
+                                                <% } %>
+                                                    <div class="tweet-reactions-container mt-3">
+                                                        <ul class="list-unstyled row">
+                                                            <li class="col">
+                                                                <a href="/tweet/tweet_details/<%= t.id %>"
+                                                                    class="comment">
+                                                                    <i class="fa-regular fa-comment"></i>
+                                                                    <%= t.tweet_comments %>
+                                                                </a>
+                                                            </li>
+                                                            <li class="col">
+                                                                <a href="" class="retweet">
+                                                                    <i class="fa-solid fa-retweet"></i>
+                                                                    <%= t.tweet_retweets %>
+                                                                </a>
+                                                            </li>
+                                                            <li class="col">
+                                                                <a href="" class="like">
+                                                                    <i class="fa-regular fa-heart"></i>
+                                                                    <%= t.tweet_likes %>
+
+                                                                </a>
+                                                            </li>
+                                                            <li class="col">
+                                                                <a href="" class="chart">
+                                                                    <i class="fa-solid fa-chart-simple"></i>
+
+                                                                </a>
+                                                            </li>
+                                                            <li class="col">
+                                                                <a href="" class="share">
+                                                                    <i class="fa-solid fa-arrow-up-from-bracket"></i>
+
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                    </div>
+                                    <div class="col-1 dropstart">
+                                        <a href="" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false">
+                                            •••
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li class="d-flex">
+                                                <a class="dropdown-item" href="#"><i
+                                                        class="fa-solid fa-user-plus me-2"></i>
+                                                    Follow <span class="text-blue">@<%= t.user_name %></span>
+
+                                                </a>
+                                            </li>
+
+
+                                            <li class="d-flex">
+                                                <a class="dropdown-item" href="#"><i
+                                                        class="fa-solid fa-user-minus me-2"></i> Unfollow <span
+                                                        class="text-blue">@<%= t.user_name %></span>
+
+                                                </a>
+                                            </li>
+
+                                            <li class="d-flex">
+                                                <a class="dropdown-item" href="#"><i class="fa-regular fa-eye me-2"></i>
+                                                    Visit profile <span class="text-blue">@<%= t.user_name %></span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <% }) %>
+                        </div>
+                    </div>
+                    <div id="following-home" class="tab-pane container">
+                        Part 2
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+      window.addEventListener("load", function () {
+            const loader = document.querySelector(".loader");
+            loader.className += " hidden"; // class "loader hidden"
+        });
+</script>
+<style>
+    .loader {
+        position: fixed;
+        z-index: 99;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .loader>img {
+        width: 100px;
+    }
+
+    .loader.hidden {
+        animation: fadeOut 1s;
+        animation-fill-mode: forwards;
+    }
+
+    @keyframes fadeOut {
+        100% {
+            opacity: 0;
+            visibility: hidden;
+        }
+    }
+
+    .thumb {
+        height: 100px;
+        border: 1px solid black;
+        margin: 10px;
+    }
+</style>
+    <%- include("search") -%>

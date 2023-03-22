@@ -1,75 +1,136 @@
 <%- include("menu") -%>
-
-<link rel="stylesheet" href="/stylesheets/profile.css">
-
-
+    <div class="loader">
+        <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
+    </div>
+    <link rel="stylesheet" href="/stylesheets/profile.css">
     <div class="col-6 p-2">
         <div class="inner-main">
 
-            <div class="card">
-                <div class="cover">
-                    
-                </div>
-                <div class="row ">
-                    <div class="col">
-                        <div class="dp">
-                            <img src="/assets/images/logo-t.png" class="card-img-left" alt="">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="mt-2 ms-5 follow">
-                            <p><a href="">Edit Profile</a></p>
-                        </div>
-                    </div>
-
-                </div>
-                <div class="card-body">
-                    <div class="user-data">
-                        <label for="" class="bold">Username</label>
-                        <p class="text-secondary">@username</p>
-                    </div>
-                    <p class="card-text ">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus in voluptatum
-                        minima nisi ipsum </p>
-
-
-                    <div class="info d-flex ">
-                        <p class="text-secondary ms-1"><i class="fa-solid fa-location-dot"></i> everywhere</p>
-
-                        <p class="text-secondary ms-2"><i class="fa-solid fa-link"></i>
-                        <p class="text-info">username.com</p>
-                        </p>
-
-                        <p class="text-secondary ms-2"><i class="fa-solid fa-cake-candles"></i> Date Of Birth: March 21
-                        </p>
-                    </div>
-                    <div class="join">
-                        <p class="text-secondary"><i class="fa-solid fa-calendar-days"></i> Join Date</p>
-                    </div>
-
-                    <div class="d-flex">
-                        <p>
-                            67
-                        <p class="ms-2">Following</p>
-
-                        </p>
-                        <p class="ms-3">
-                            67K
-                        <p class="ms-2">Followers</p>
-
-                        </p>
-                    </div>
-
-                </div>
-
+            <div class="card" id="card">
 
 
 
 
 
             </div>
+            <div class="all-data">
+                <div class="tab-content">
+                    <div id="for-you" class="tab-pane active">
+                        <div class="tweet-container all-center flex-column ">
+                            <% tweet_data.forEach((t,index)=>{ %>
+                                <div class="tweet w-100 p-3 row pt-4 border-bottom border-top">
+                                    <div class="col-1 p-0">
+                                        <img src="<%= t.user_image %>" alt="" class="profile-size me-2 border">
+                                    </div>
+                                    <div class="col-10 px-4">
+                                        <div class="d-flex align-items-center user-info">
+                                            <span class="text-black fs-16 me-1 fw-600">
+                                                <%= t.name %>
+                                            </span>
+                                            <span class="fs-16 text-gray me-1">
+                                                @<%= t.user_name %>
+                                            </span>
+                                            <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
+                                            <span class="date fs-16 me-1 text-gray">
+                                                <%= post_date[index] %>
+                                            </span>
+                                        </div>
+                                        <div class="tweet-content">
+                                            <a href="/tweet/tweet_details/<%= t.id %>">
+                                                <p class="text-black fs-16 fw-300">
+                                                    <%= t.tweet %>
+                                                </p>
+                                            </a>
+                                        </div>
+
+                                        <% if(t.media_type=="image" ){ %>
+                                            <div class="tweet-img-container">
+                                                <img src="<%= t.media_url %>" alt="" class="w-100">
+                                            </div>
+                                            <% }else if(t.media_type=="video" ){ %>
+                                                <div class="tweet-video-container">
+                                                    <video controls>
+                                                        <source src="<%= t.media_url %>" type="video/mp4">
+                                                    </video>
+                                                </div>
+                                                <% } %>
+                                                    <div class="tweet-reactions-container mt-3">
+                                                        <ul class="list-unstyled row">
+                                                            <li class="col">
+                                                                <a href="/tweet/tweet_details/<%= t.id %>"
+                                                                    class="comment">
+                                                                    <i class="fa-regular fa-comment"></i>
+                                                                    <%= t.tweet_comments %>
+                                                                </a>
+                                                            </li>
+                                                            <li class="col">
+                                                                <a href="" class="retweet">
+                                                                    <i class="fa-solid fa-retweet"></i>
+                                                                    <%= t.tweet_retweets %>
+                                                                </a>
+                                                            </li>
+                                                            <li class="col">
+                                                                <a href="" class="like">
+                                                                    <i class="fa-regular fa-heart"></i>
+                                                                    <%= t.tweet_likes %>
+
+                                                                </a>
+                                                            </li>
+                                                            <li class="col">
+                                                                <a href="" class="chart">
+                                                                    <i class="fa-solid fa-chart-simple"></i>
+
+                                                                </a>
+                                                            </li>
+                                                            <li class="col">
+                                                                <a href="" class="share">
+                                                                    <i class="fa-solid fa-arrow-up-from-bracket"></i>
+
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                    </div>
+                                    <div class="col-1 dropstart">
+                                        <a href="" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false">
+                                            •••
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li class="d-flex">
+                                                <a class="dropdown-item" href="#"><i
+                                                        class="fa-solid fa-user-plus me-2"></i>
+                                                    Follow <span class="text-blue">@<%= t.user_name %></span>
+
+                                                </a>
+                                            </li>
 
 
-            <div class="card text-dark bg-white mb-3 mt-2">
+                                            <li class="d-flex">
+                                                <a class="dropdown-item" href="#"><i
+                                                        class="fa-solid fa-user-minus me-2"></i> Unfollow <span
+                                                        class="text-blue">@<%= t.user_name %></span>
+
+                                                </a>
+                                            </li>
+
+                                            <li class="d-flex">
+                                                <a class="dropdown-item" href="#"><i class="fa-regular fa-eye me-2"></i>
+                                                    Visit profile <span class="text-blue">@<%= t.user_name %></span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <% }) %>
+                        </div>
+                    </div>
+                    <div id="following-home" class="tab-pane container">
+                        Part 2
+                    </div>
+                </div>
+            </div>
+
+            <!-- <div class="card text-dark bg-white mb-3 mt-2">
                 <div class="card-header">
                     <div class="row">
                         <div class="col">
@@ -93,7 +154,7 @@
                     </div>
 
                     <div class="activity d-flex mt-4 ms-5">
-                        <p class="text-secondary"><i class="fa-regular fa-heart"></i> 88</p>
+                        <p class="text-secondary"><i class="fa-solid fa-heart text-danger"></i> 88</p>
 
                         <p class="text-secondary ms-5"><i class="fa-solid fa-retweet"></i> 23</p>
 
@@ -101,8 +162,126 @@
                     </div>
                 </div>
 
-            </div>
+            </div> -->
 
         </div>
     </div>
+    <script>
+        window.addEventListener("load", function () {
+            const loader = document.querySelector(".loader");
+            loader.className += " hidden"; // class "loader hidden"
+        });
+        demo();
+        async function demo() {
+            let data1 = await fetch("http://localhost:3008/profile");
+            let data = await data1.json();
+            // Converting received data to JSON
+            console.log("data::::", data);
+
+            //    let data1= await fetch("http://localhost:3008/profile");
+            //    let data =await data1.json();
+            //    // Converting received data to JSON
+            //    console.log("data::::",data);
+            let udata = ``;
+
+            data.forEach(users => {
+                udata += `<div class="cover">
+                    <img src="${users.cover_image}" alt="">
+                </div>
+                <div class="row ">
+                    <div class="col">
+                        <div class="dp">
+                            <img src="${users.user_image}" class="card-img-left" alt="">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mt-2 ms-5 follow">
+                            <p><a href="">Edit Profile</a></p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-body">
+                    <div class="user-data">
+                        
+                        <label for="" class="bold">${users.name}</label>
+                        <img src="./uploads/red_verified.png" alt="" height="20px" width="20px">
+                        
+                        <p class="text-secondary">@${users.user_name}</p>
+                    </div>
+                    <p class="card-text text-dark ">${users.bio}  <i class="fa-regular fa-face-laugh-beam"></i></p>
+
+
+                    <div class="info d-flex ">
+                        <p class="text-secondary ms-1"><i class="fa-solid fa-location-dot"></i> everywhere</p>
+
+                        <p class="text-secondary ms-2"><i class="fa-solid fa-link"></i>
+                        <p class="text-info">username.com</p>
+                        </p>
+
+                        <p class="text-secondary ms-2"><i class="fa-solid fa-cake-candles"></i> Date Of Birth:  ${users.birth_date.slice(0, 10)}
+                        </p>
+                    </div>
+                    <div class="join">
+                        <p class="text-secondary"><i class="fa-solid fa-calendar-days"></i> Joined at:   ${users.created_at.slice(0, 10)}</p>
+                    </div>
+
+                    <div class="d-flex">
+                        <p>
+                            ${users.following}
+                        <p class="ms-2">Following</p>
+
+                        </p>
+                        <p class="ms-3">
+                            ${users.followers}
+                        <p class="ms-2">Followers</p>
+
+                        </p>
+                    </div>
+
+                </div>
+                `;
+            });
+
+            document.getElementById("card").innerHTML = udata;
+
+        }
+    </script>
+    <style>
+        .loader {
+            position: fixed;
+            z-index: 99;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader>img {
+            width: 100px;
+        }
+
+        .loader.hidden {
+            animation: fadeOut 1s;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadeOut {
+            100% {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+
+        .thumb {
+            height: 100px;
+            border: 1px solid black;
+            margin: 10px;
+        }
+    </style>
+
     <%- include("search") -%>
