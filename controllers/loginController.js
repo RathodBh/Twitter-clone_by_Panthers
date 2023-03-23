@@ -66,7 +66,7 @@ const loginHandler = async (req, res) => {
         req.session.cookie.expires = new Date(Date.now() + hour)
         req.session.cookie.maxAge = hour
 
-        return res.render('getting_login')
+        return res.redirect('/dashboard')
        
     } catch (error) {
         throw error;

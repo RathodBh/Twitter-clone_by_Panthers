@@ -1,10 +1,23 @@
 const conn = require('../connection/connectdb');
-const queryExecuter = require('../queryExecute/queryExecuter')
+
 const express = require('express')
 const app = express();
 const util = require('util')
 const asyncHandler = require("express-async-handler");
 var query = util.promisify(conn.query).bind(conn)
+
+async function queryExecuter(query) {
+    return new Promise((resolve, rejects) => {
+        conn.query(query, (err, result) => {
+            if (err) {
+                rejects(err);
+            }
+            resolve(result);
+        });
+    })
+}
+
+
 
 
 const getProfiledata = asyncHandler(async(req, res) => {
@@ -17,6 +30,7 @@ const getProfiledata = asyncHandler(async(req, res) => {
     // res.json(users)
 });
 const getProfile = asyncHandler(async(req, res) => {
+  
     //i need to show the get request for register page
     let db = `twitter_clone`;
     try {
@@ -80,9 +94,46 @@ const getProfile = asyncHandler(async(req, res) => {
             }
         })
 
+
+        const alltweetids = `select id from tweets`
+        const alltweet_ids = await queryExecuter(alltweetids);
+
+        let value = alltweet_ids.length
+        var arr_of_liked = []
+        var done = []
+        for (let i = 0; i < value; i++) {
+
+            const qrt = `SELECT *  FROM twitter_clone.likes where tweet_id=${alltweet_ids[i].id} and user_id=${user_id} and is_deleted=0;`
+
+            const likeddata = await queryExecuter(qrt);
+            arr_of_liked[i]=likeddata
+
+        }
+
+        let ispostlikebyuser = []
+        ispostlikebyuser = arr_of_liked
+        let arrtruefalse = []
+        let arrlikeid = [];
+        for (let j = 0; j < ispostlikebyuser.length; j++) {
+            if (ispostlikebyuser[j].length) {
+                let flaga = true
+                arrtruefalse.push(flaga)
+              
+                var userlikedpost = ispostlikebyuser[j][0].tweet_id
+                arrlikeid.push(userlikedpost)
+
+            }
+            else {
+                let flaga = false
+                arrtruefalse.push(flaga)
+            }
+
+        }
+        console.log(arrlikeid);
+
         //i need to show the get request for register page
         let flag = false
-        res.render('profile', { tweet_data: all_tweet_data, post_date: post_at });
+        res.render('profile', { tweet_data: all_tweet_data, post_date: post_at,arrlikeid });
 
     } catch (err) {
         console.log("Error Dashboard:", err);

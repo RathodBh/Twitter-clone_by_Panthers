@@ -66,13 +66,18 @@
                                                                 </a>
                                                             </li>
                                                             <li class="col">
-                                                                <a href="" class="like">
-                                                                    <i class="fa-regular fa-heart"></i>
-                                                                    <%= t.tweet_likes %>
+                                                                <a class="like <%= t.id %>">
+                                                                        <i class="fa-regular fa-heart"onclick="likepost(this)" id="<%= t.id %>"></i>
+       
+
+                                                                              <span id="like<%= t.id %>">
+                                                                                 <%= t.tweet_likes %>
+                                                                            </span>
+
 
                                                                 </a>
                                                             </li>
-                                                            <li class="col">
+                                                            <li class=" col">
                                                                 <a href="" class="chart">
                                                                     <i class="fa-solid fa-chart-simple"></i>
 
@@ -125,41 +130,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- <div class="card text-dark bg-white mb-3 mt-2">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col">
-                            <div class="d-flex">
-                                <div class="comp-logo">
-                                    <img src="/assets/images/logo-t.png" alt="">
-                                </div>
-                                <p class="bold ms-3">Username</p>
-                                <p class="text-secondary ms-3">@username</p>
-                                <p class="text-secondary ms-2">Posted</p>
-                            </div>
-                            <h6 class="card-title mt-1">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Minus
-                                in voluptatum minima nisi ipsum</h6>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-
-                    <div class="post-type ms-2 ">
-                        <img src="" class="img-fluid " alt="">
-                    </div>
-
-                    <div class="activity d-flex mt-4 ms-5">
-                        <p class="text-secondary"><i class="fa-solid fa-heart text-danger"></i> 88</p>
-
-                        <p class="text-secondary ms-5"><i class="fa-solid fa-retweet"></i> 23</p>
-
-                        <p class="text-secondary ms-5"><i class="fa-regular fa-comment"></i> 50</p>
-                    </div>
-                </div>
-
-            </div> -->
-
         </div>
     </div>
     <script>
@@ -167,17 +137,10 @@
             const loader = document.querySelector(".loader");
             loader.className += " hidden"; // class "loader hidden"
         });
-        demo();
+        demo()
         async function demo() {
             let data1 = await fetch("http://localhost:3008/profile");
             let data = await data1.json();
-            // Converting received data to JSON
-            console.log("data::::", data);
-
-            //    let data1= await fetch("http://localhost:3008/profile");
-            //    let data =await data1.json();
-            //    // Converting received data to JSON
-            //    console.log("data::::",data);
             let udata = ``;
 
             data.forEach(users => {
@@ -242,7 +205,71 @@
             document.getElementById("card").innerHTML = udata;
 
         }
+
+   
+        async function likepost(e) {
+            let tweet_id = e.id
+            console.log(tweet_id);
+            if (e.classList.value == 'fa-regular fa-heart') {
+                e.classList.value = 'fa-regular fa-heart text-danger';
+                let like = true
+                const save_req = await fetch(`http://localhost:3008/dashboard/like`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: { like, tweet_id }
+
+                    })
+                });
+                var resSave = await save_req.json();
+                console.log(resSave.flag);
+
+                if (resSave.flag == true) {
+                    let likeSpan = document.querySelector("#like" + tweet_id)
+                    likeSpan.innerHTML = resSave.alllikecount
+                }
+
+            }
+            else if (e.classList.value == 'fa-regular fa-heart text-danger') {
+                e.classList.value = 'fa-regular fa-heart'
+                let like = false;
+                const save_req = await fetch(`http://localhost:3008/dashboard/like`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: { like, tweet_id }
+
+                    })
+                });
+                var resSave = await save_req.json();
+                console.log(resSave.flag);
+
+                if (resSave.flag == false) {
+                    let likeSpan = document.querySelector("#like" + tweet_id)
+                    likeSpan.innerHTML = resSave.alllikecount
+                }
+            }
+
+        }
+
+        var userLike = [];
+        '<%for(let i=0;i<arrlikeid.length;i++){%>'
+        userLike.push('<%=arrlikeid[i]%>');
+        '<%}%>'
+
+        userLike.forEach(element => {
+            // console.log(element);
+            document.getElementById(element).classList = "fa-regular fa-heart text-danger";
+        });
+
+
     </script>
+
+
     <style>
         .loader {
             position: fixed;
