@@ -89,7 +89,7 @@ app.post("/updateProfile",uploads.fields([{
 
 app.get("/users",async(req,res)=>{
     let uid = req.query.uid || 3;
-    var getuser = await query(`select uname,user_name,user_image,cover_image,birth_date,bio,email from users where id = ${uid}`);
+    var getuser = await query(`select name,user_name,user_image,cover_image,birth_date,bio,email from users where id = ${uid}`);
     console.log(getuser);
     res.json(getuser);
 
@@ -97,9 +97,11 @@ app.get("/users",async(req,res)=>{
 })
 
 
+
+
 app.get("/tweets",async(req,res)=>{
     let uid = req.query.uid || 3;
-    var tweets = await query(`select users.uname as nm,users.user_name as unm,users.user_image as dp ,tweets.tweet as t,tweets.media_url as p,tweets.tweet_likes as l ,tweets.tweet_comments as c, tweets.tweet_retweets as r from users 
+    var tweets = await query(`select users.name as nm,users.user_name as unm,users.user_image as dp ,tweets.tweet as t,tweets.media_url as p,tweets.tweet_likes as l ,tweets.tweet_comments as c, tweets.tweet_retweets as r from users 
     left join tweets on users.id = tweets.user_id where tweets.user_id=${uid}`);
     console.log(tweets);
     res.json(tweets);
@@ -113,11 +115,16 @@ app.use("/profile",profile)
 app.get("/prof",async(req,res)=>{
 
     
+    let uid = req.query.uid || 3;
+    var getuser = await query(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(3) limit 3`);
+    var getfollowerId = await query(`select follower_id from followers where user_id =${uid}`);
+    var followers =[];
+    getfollowerId.forEach(id => {
+        followers.push(id.follower_id);
+    });
 
-    
-
-
-    res.render('profile')
+console.log("Getfolloerid :::::::",followers);
+    res.render('profile',{fuser:getuser,followers})
 })
 
 app.get("/login",(req,res)=>{
@@ -166,6 +173,18 @@ app.get("/like",(req,res)=>{
     res.render('like')
 })
 
+
+app.get("/addfollow",async (req,res)=>{
+    console.log(":::::::::::::::::::::::",req.query);
+    
+    if(req.query.flag == 0){
+        await query(`insert into  twitter_clone.followers (user_id,follower_id,isdelete) values("${3}","${req.query.followerId}","${0}");`);
+      }else{
+        await query(`delete from twitter_clone.followers  where user_id = ${3} AND follower_id = ${req.query.followerId};`);
+    }
+
+    res.send({message:"update"});    
+})
 
 app.listen(PORT,()=>{ console.log(`I am listining on ${PORT}`);
 })
