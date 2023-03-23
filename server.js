@@ -19,11 +19,7 @@ app.use(session({
 
 }));
 
-
-
-
 const path = require('path');
-
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -50,10 +46,8 @@ app.post("/dashboard/retweet", async function (req, res) {
     const data = req.body;
     var tweet_id = data.tweet_id;
     var a = data.a;
-
-
     // retweet data table
-    var re_tweet_data=await queryExecuter(`SELECT * FROM twitter_clone.retweet ;`) 
+    var re_tweet_data = await queryExecuter(`SELECT * FROM twitter_clone.retweet ;`)
 
     // re-tweet count
     var select_tweet = await queryExecuter(`SELECT * FROM twitter_clone.retweet WHERE tweet_id='${tweet_id}' AND user_id='${user_id}';`)
@@ -72,7 +66,8 @@ app.post("/dashboard/retweet", async function (req, res) {
         // console.log("update tweet 0=", up_tweet[0]);
         res.json(select_tweet);
     }
-    else if (select_tweet[0].is_retweet == 1 ) {
+
+    else if (select_tweet[0].is_retweet == 1) {
         console.log("tweet id match");
         tot_re_tweet -= 1;
         // console.log("new total=", tot_re_tweet);
@@ -81,6 +76,7 @@ app.post("/dashboard/retweet", async function (req, res) {
         // console.log("new tweet update=", up_tweet2);
         res.json(select_tweet);
     }
+
     else {
         console.log("tweet id not match");
         tot_re_tweet += 1;
@@ -90,9 +86,8 @@ app.post("/dashboard/retweet", async function (req, res) {
         // console.log(" update tweet 1=", up_tweet1);
         res.json(select_tweet);
     }
+
 });
-
-
 
 
 

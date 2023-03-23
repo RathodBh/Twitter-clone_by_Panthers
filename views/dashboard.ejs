@@ -155,13 +155,11 @@
 
         var a = 1;
         function retweet_clk(retweet_id) {
-
-
             var tweet_id = retweet_id.id;
 
             if (a == 1) {
                 console.log("clicked"+tweet_id);
-                // alert("iff"+tweet_id);
+                alert("iff"+tweet_id);
 
                 const retweet = fetch("http://localhost:3008/dashboard/retweet", {
                     method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -172,7 +170,6 @@
                         "Content-type": "application/json; charset=UTF-8"
                     }
                 }).then(response => response.json())
-
                     // Displaying results to console
                     .then(json => {
                         document.getElementById('re_tweet').style.color='green';
@@ -196,7 +193,7 @@
                     .then(json => {
                         if (tweet_id == json[0].tweet_id) {
                             console.log("jsonnn", json)
-                            document.getElementById('re_tweet').style.color='gray';
+                            document.getElementById('re_tweet').style.color='blue';
                         }
                         else{
                             console.log("ok else");
