@@ -1,77 +1,72 @@
 
-window.onload = () => {
-    $('#myModal').modal('show');
-}
-var ff=0;
+// window.onload = () => {
+//     $('#myModal').modal('show');
+// }
+var ff = 0;
 
-function emoji_clk(){
-if(ff==0){
-    document.getElementById('emojis_img').style.display="block";
-    document.querySelector('emoji-picker')
-    .addEventListener('emoji-click', event =>document.getElementById('twt-area').value += event.detail.unicode);
-ff=1;
+function emoji_clk() {
+    if (ff == 0) {
+        document.getElementById('emojis_img').style.display = "block";
+        document.querySelector('emoji-picker')
+            .addEventListener('emoji-click', event => document.getElementById('twt-area').value += event.detail.unicode);
+        ff = 1;
+    }
+    else {
+        document.getElementById('emojis_img').style.display = "none";
+        document.querySelector('emoji-picker')
+            .addEventListener('emoji-click', event => document.getElementById('twt-area').value += event.detail.unicode);
+        ff = 0;
+    }
+    // document.getElementById('emojiSelectorIcon').style.display="none"
 }
-else{
-    document.getElementById('emojis_img').style.display="none";
-    document.querySelector('emoji-picker')
-    .addEventListener('emoji-click', event =>document.getElementById('twt-area').value += event.detail.unicode);
-ff=0;
-}
-// document.getElementById('emojiSelectorIcon').style.display="none"
-}
+// document.querySelector("#sub_btn").disabled = 'false'
 
-function sub_btn(){
-    
-}
+var limit_img = 0;
 const previewImage = (event) => {
-    // const img=document.getElementById('images');
-    /**
-         * Get the selected files.
-         */
     const imageFiles = event.target.files;
-    /**
-         * Count the number of files selected.
-         */
-    const imageFilesLength = imageFiles.length;
-    /**
-     * If at least one image is selected, then proceed to display the preview.
-     */
-    if (imageFilesLength > 0) {
-        /**
-         * Get the image path.
-         */
-        var imageSrc;
-        for (const imageFile of imageFiles) {
-            // imageSrc = URL.createObjectURL(imageFiles);
+    limit_img+=imageFiles.length;
+    document.querySelector("#sub_btn").disabled = "false"
+
+    console.log(limit_img);
+    //limit upload files
+    if(limit_img > 5){
+        document.querySelector("#errLimit").innerHTML = `<div class="alert alert-danger alert-dismissible fade show my-1" role="alert">
+        <strong>Error!</strong> You can't upload more than five files at a time <a href="#" onclick="location.reload()">try again</a>
+        
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>`;
+        document.querySelector("#sub_btn").disabled = "true"
+    }else{
+        document.querySelector("#errLimit").innerHTML = ``;
+        document.querySelector("#sub_btn").disabled = false
+    }
+    for (var i = 0; i < imageFiles.length; i++) {
+        if (imageFiles[i].type == "video/mp4") {
             const reader = new FileReader();
-            reader.readAsDataURL(imageFile);
-
-
+            reader.readAsDataURL(imageFiles[i]);
             reader.addEventListener('load', () => {
                 // Create new <img> element and add it to the DOM
-                document.getElementById("iimg").innerHTML += `<div class="image_box"><img src='${reader.result}'></div>`;
+                document.getElementById("iimg").innerHTML += `<div class="image_box"><video width="320" height="240" src="${reader.result}" controls>
+        Your browser does not support the video tag.
+        </video>
+        </div>`;
             });
-
-            /**
-             * Select the image preview element.
-             */
-
-            //   const imagePreviewElement = document.querySelector("#preview-selected-image");
-            // // const imagePreviewElement1 = document.querySelector("#preview-selected-image1");
-            // /**
-            //  * Assign the path to the image preview element.
-            //  */
-            // // imagePreviewElement1.src = imageSrc;
-            // imagePreviewElement.src = imageSrc;
-            // /**
-            //  * Show the element by changing the display value to "block".
-            //  */
-            // imagePreviewElement.style.display = "block";
-            // // imagePreviewElement1.style.display = "block";
-
-
         }
+        else {
+            if (imageFiles.length > 0) {
+                /**
+                * Get the image path.
+                */
+                var imageSrc;
+                const reader = new FileReader();
+                reader.readAsDataURL(imageFiles[i]);
+                reader.addEventListener('load', () => {
+                    // Create new <img> element and add it to the DOM
+                    document.getElementById("iimg").innerHTML += `<div class="image_box"><img src='${reader.result}'></div>`;
+                });
 
+            }
+        }
     }
 }
 
@@ -90,7 +85,7 @@ function twt_clk() {
                 .then(function (responseData) {
                     // console.log(responseData[0].us_email == us_email_l1.value);
 
-                    console.log("Done");
+                    // console.log("Done");
                 })
         } catch (error) {
             console.log(error);
@@ -102,25 +97,3 @@ function twt_clk() {
 function twt_clk1() {
     window.location = "http://localhost:3008/dashboard/tweet";
 }
-function btn_close() {
-    window.location = "http://localhost:3008/dashboard";
-
-}
-
-
-
-
-
-
-// $("#modalTrigger").click(function (event) {
-//     event.preventDefault();
-//     $.ajax({
-//         type: "GET",
-//         url: "http://localhost:3008/dashboard/tweet" // Modify the url according to your application logic
-//     }).done(function (yourData) {
-//         // Now open the modal! (Assuming you are using bootstrap.js)
-//         $("#myModal").modal("show");
-//         // If you used 'res.json' then you can use yourData here
-//         $("#paragraphInModal").html(yourData);
-//     });
-// })
