@@ -1,3 +1,5 @@
+
+
 <%- include("menu") -%>
     <div class="loader">
         <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
@@ -79,7 +81,7 @@
                                                             <li class="col">
                                                                 <a href="" onclick="retweet_clk(this);return false"
                                                                     id="<%= t.id %>" class="retweet">
-                                                                    <i class="fa-solid fa-retweet"></i>
+                                                                    <i class="fa-solid fa-retweet" id="re_tweet"></i>
                                                                     <%= t.tweet_retweets %>
                                                                 </a>
                                                             </li>
@@ -149,13 +151,17 @@
             const loader = document.querySelector(".loader");
             loader.className += " hidden"; // class "loader hidden"
         });
+
+
         var a = 1;
         function retweet_clk(retweet_id) {
 
-           var tweet_id=retweet_id.id;
+
+            var tweet_id = retweet_id.id;
+
             if (a == 1) {
-                // console.log("clicked");
-                alert("iff"+tweet_id);
+                console.log("clicked"+tweet_id);
+                // alert("iff"+tweet_id);
 
                 const retweet = fetch("http://localhost:3008/dashboard/retweet", {
                     method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -168,12 +174,14 @@
                 }).then(response => response.json())
 
                     // Displaying results to console
-                    .then(json => console.log("json", json));
+                    .then(json => {
+                        document.getElementById('re_tweet').style.color='green';
+                        console.log("json", json)});
                 a = 0;
             }
 
             else {
-                alert("else");
+                alert("else"+tweet_id);
                 const retweet = fetch("http://localhost:3008/dashboard/retweet", {
                     method: "POST", // *GET, POST, PUT, DELETE, etc.
                     mode: "cors", // no-cors, *cors, same-origin
@@ -185,8 +193,16 @@
                 }).then(response => response.json())
 
                     // Displaying results to console
-                    .then(json => console.log("json", json));
-            a = 1;
+                    .then(json => {
+                        if (tweet_id == json[0].tweet_id) {
+                            console.log("jsonnn", json)
+                            document.getElementById('re_tweet').style.color='gray';
+                        }
+                        else{
+                            console.log("ok else");
+                        }
+                    });
+                a = 1;
             }
         }
 
