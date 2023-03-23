@@ -13,6 +13,7 @@ const { getDashboard,postTweet } = require("../controllers/dashboardController")
 //get request
 router.route('/').get(getDashboard)
 router.route('/search').get()
+// router.route('/retweet').get(retweet)
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
