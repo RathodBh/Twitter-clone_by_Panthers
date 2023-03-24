@@ -107,7 +107,7 @@ const getpostRetweet = asyncHandler(async (req, res) => {
         var tweet_id = data.tweet_id
         tweet_ids = data.tweet_id
         if (data.like == true) {
-            const qrt = `SELECT  * FROM twitter_clone.likes where tweet_id=${data.tweet_id} and user_id=${user_id} and is_deleted=0;`
+            const qrt = `SELECT  * FROM twitter_clone.likes where tweet_id=${data.retweet} and user_id=${user_id} and is_deleted=0;`
    
             const like_data = await queryExecuter(qrt);
       
