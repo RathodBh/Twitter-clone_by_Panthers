@@ -94,7 +94,80 @@ const getpostLike1 = asyncHandler(async (req, res) => {
 })
 
 
+const getpostRetweet = asyncHandler(async (req, res) => {
+    // console.log("herer");
+    try {
+        const token = req.session.email
+        const user_id = req.session.user_id
+        if (!token) {
+            res.redirect('/user-login');
+            return
+        }
+        const { data } = req.body;
+        var tweet_id = data.tweet_id
+        tweet_ids = data.tweet_id
+        if (data.like == true) {
+            const qrt = `SELECT  * FROM twitter_clone.likes where tweet_id=${data.tweet_id} and user_id=${user_id} and is_deleted=0;`
+   
+            const like_data = await queryExecuter(qrt);
+      
 
+            if (like_data.length == 0) {
+                const ins_qrt = `INSERT INTO likes (user_id,tweet_id,created_at) values (${user_id},${data.tweet_id},NOW())`
+        
+                const like_entry = await queryExecuter(ins_qrt);
+
+                const select_tweet_like = `select tweet_likes from tweets where id=${data.tweet_id}`
+                const tweet_like_count = await queryExecuter(select_tweet_like);
+
+                var alllikecount = tweet_like_count[0].tweet_likes
+                alllikecount = alllikecount + 1
+
+                const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount} where id=${data.tweet_id}`
+                const Update_entry_tweet = await queryExecuter(up_tweets_tweetlike);
+                let flag = true
+                res.json({ flag, alllikecount })
+            }
+            else if (like_data.length >= 1) {
+
+                const select_tweet_like = `select tweet_likes from tweets where id=${data.tweet_id}`
+                const tweet_like_count = await queryExecuter(select_tweet_like);
+                alllikecount = tweet_like_count[0].tweet_likes
+                alllikecount = alllikecount - 1
+
+                const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount}  where id=${data.tweet_id}`
+                const Update_entry_tweet = await queryExecuter(up_tweets_tweetlike);
+
+
+                const Update_unlike = `Update likes Set  updated_at= Now(),is_deleted=1  where tweet_id=${data.tweet_id}`
+                const Update_unlike_entry = await queryExecuter(Update_unlike);
+                let flag = false
+                res.json({ flag, alllikecount })
+            }
+
+        }
+
+        else {
+            const select_tweet_like = `select tweet_likes from tweets where id=${data.tweet_id}`
+            const tweet_like_count = await queryExecuter(select_tweet_like);
+            alllikecount = tweet_like_count[0].tweet_likes
+            alllikecount = alllikecount - 1
+
+            const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount}  where id=${data.tweet_id}`
+            const Update_entry_tweet = await queryExecuter(up_tweets_tweetlike);
+
+
+            const Update_unlike = `Update likes Set  updated_at= Now(),is_deleted=1  where tweet_id=${data.tweet_id}`
+            const Update_unlike_entry = await queryExecuter(Update_unlike);
+            let flag = false
+            res.json({ flag, alllikecount })
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+
+})
 const getDashboard = asyncHandler(async (req, res) => {
     const user_id = req.session.user_id
     let db = `twitter_clone`;
@@ -260,4 +333,4 @@ const postTweet = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { getDashboard, postTweet, getpostLike1 }
+module.exports = { getDashboard, postTweet, getpostLike1,getpostRetweet }

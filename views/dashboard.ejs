@@ -77,18 +77,24 @@
                                                             </li>
                                                             <li class="col">
                                                                 <a href="" class="retweet">
-                                                                    <i class="fa-solid fa-retweet"></i>
-                                                                    <%= t.tweet_retweets %>
+                                                                    <i class="fa-solid fa-retweet" onclick="retweet(this)"></i>
+                                                                   
+                                                                  
+                                                                    <span id="retweet<%= t.id %>">
+                                                                        <%= t.tweet_retweets %>
+                                                                    </span>
+
                                                                 </a>
                                                             </li>
                                                             <li class="col">
                                                                 <a class="like <%= t.id %>">
-                                                                        <i class="fa-regular fa-heart"onclick="likepost(this)" id="<%= t.id %>"></i>
-       
+                                                                    <i class="fa-regular fa-heart"
+                                                                        onclick="likepost(this)" id="<%= t.id %>"></i>
 
-                                                                              <span id="like<%= t.id %>">
-                                                                                 <%= t.tweet_likes %>
-                                                                            </span>
+
+                                                                    <span id="like<%= t.id %>">
+                                                                        <%= t.tweet_likes %>
+                                                                    </span>
 
 
                                                                 </a>
@@ -131,7 +137,7 @@
                                             </li>
 
                                             <li class="d-flex">
-                                                <a class="dropdown-item" href="#"><i class="fa-regular fa-eye me-2"></i>
+                                                <a class="dropdown-item" href="/profile/user"><i class="fa-regular fa-eye me-2"></i>
                                                     Visit profile <span class="text-blue">@<%= t.user_name %></span>
                                                 </a>
                                             </li>
@@ -222,6 +228,56 @@
             document.getElementById(element).classList = "fa-regular fa-heart text-danger";
         });
 
+
+ 
+        async function retweet(e) {
+            let retweet_id = e.id
+            console.log(tweet_id);
+            if (e.classList.value == 'fa-regular fa-heart') {
+                e.classList.value = 'fa-regular fa-heart text-danger';
+                let like = true
+                const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: { like, retweet_id }
+
+                    })
+                });
+                var resSave = await save_req.json();
+                console.log(resSave.flag);
+
+                if (resSave.flag == true) {
+                    let likeSpan = document.querySelector("#retweet" + tweet_id)
+                    likeSpan.innerHTML = resSave.alllikecount
+                }
+
+            }
+            else if (e.classList.value == 'fa-regular fa-heart text-danger') {
+                e.classList.value = 'fa-regular fa-heart'
+                let like = false;
+                const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: { like, retweet_id }
+
+                    })
+                });
+                var resSave = await save_req.json();
+                console.log(resSave.flag);
+
+                if (resSave.flag == false) {
+                    let likeSpan = document.querySelector("#retweet" + tweet_id)
+                    likeSpan.innerHTML = resSave.alllikecount
+                }
+            }
+
+        }
     </script>
     <style>
         .loader {

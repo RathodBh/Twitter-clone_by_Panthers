@@ -39,3 +39,128 @@ app.use("/tweet", commentInfo)
 app.listen(PORT, () => {
     console.log(`I am listining on ${PORT}`);
 })
+
+const multer = require('multer');
+
+async function queryExecuter(query) {
+    return new Promise((resolve, rejects) => {
+        conn.query(query, (err, result) => {
+            if (err) {
+                rejects(err);
+            }
+            resolve(result);
+        });
+    })
+}
+app.set('view engine', 'ejs')
+// const conn = require('../connection/connectdb');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "./public/assets/images")
+    },
+    filename: (req, file, cb) => {
+        console.log(file);
+        cb(null, Date.now() + path.extname(file.originalname))
+    }
+})
+const uploads = multer({ storage: storage })
+
+
+app.post("/updateProfile", uploads.fields([{
+
+    name: 'cover_image', maxCount: 1
+}, {
+    name: 'profile_image', maxCount: 1
+}]), async (req, res) => {
+
+    try {
+        const { name } = req.body;
+        const arr = { user_email, user_bio, user_dob } = req.body;
+
+        try {
+            let uid = req.session.user_id
+            const file = req.files;
+            var users = await queryExecuter(`select user_image as dp , cover_image as cover from users where id=${uid}`);
+            console.log(users[0].dp);
+            console.log(users[0].cover);
+            console.log("here");
+            console.log(req.files);
+
+            var cover_imgsrc = req.files.cover_image;
+            var profile_imgsrc = req.files.profile_image;
+            console.log(cover_imgsrc);
+            console.log(profile_imgsrc);
+            if (cover_imgsrc) {
+                cover_imgsrc = 'http://localhost:3008/assets/images/' + file.cover_image[0].filename;
+            } else {
+                cover_imgsrc = users[0].cover;
+            }
+
+            if (profile_imgsrc) {
+                profile_imgsrc = 'http://localhost:3008/assets/images/' + file.profile_image[0].filename
+            } else {
+                profile_imgsrc = users[0].dp
+            }
+
+            console.log("Image uploaded")
+
+
+            await queryExecuter(`update users set name="${name}" , bio="${user_bio}" ,birth_date="${user_dob}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id=${uid}`);
+
+            res.redirect('/profile/user')
+
+
+        } catch (error) {
+            throw error;
+        }
+
+
+    } catch (error) {
+        throw error;
+    }
+})
+
+
+app.get("/srch?", async (req, res) => {
+    var srchval = req.query.val;
+    var sql = `select name from twitter_clone.users `;
+    var names = await queryExecuter(sql);
+    var arr = [];
+    var newArr = [];
+    for (let i = 0; i < names.length; i++) {
+        arr.push(names[i].name)
+    }
+    var counter = 0;
+    var arrVal;
+    for (let j = 0; j < arr.length; j++) {
+        var arrValLength = arr[j].length;
+        arrVal = arr[j];
+        for (let k = 0; k < srchval.length; k++) {
+            if (arrVal.includes(srchval[k])) {
+                var firstIndex = arr[j].indexOf(srchval[k]);
+                arrVal = arrVal.substr(firstIndex + 1, arrValLength)
+                counter++;
+            }
+        }
+        if (counter == srchval.length) {
+            newArr.push(arr[j])
+        }
+        counter = 0;
+    }
+    var matchedResult = [];
+    for (let m = 0; m < newArr.length; m++) {
+        var sql2 = `SELECT name,user_name,user_image FROM twitter_clone.users where name="${newArr[m]}";`;
+        resultantName = await queryExecuter(sql2);
+        matchedResult.push(resultantName)
+    }
+    res.json(matchedResult)
+
+})
+
+
+
+
+
+
+
