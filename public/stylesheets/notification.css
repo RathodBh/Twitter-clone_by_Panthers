@@ -1,0 +1,18 @@
+.col-4:hover{
+    background-color: rgba(128, 128, 128, 0.137);
+    text-decoration: underline;
+    text-decoration-color: aqua;
+    text-decoration-thickness: 3px ;
+    text-underline-offset: 1rem;
+    
+}
+
+.col-4 {
+   
+    /* text-decoration-color: aqua; */
+}
+
+.col-4 a{
+    text-decoration: none;
+    color: black;
+}
