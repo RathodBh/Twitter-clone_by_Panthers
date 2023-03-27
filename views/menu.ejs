@@ -101,7 +101,7 @@
                                 </a>
                             </li>
                             <li class="link-hover">
-                                <a href="" class="menu-link active">
+                                <a href="/dashboard" class="menu-link active">
                                     <i class="fa-solid fa-house link-icon "></i>
                                     <span>Home</span>
                                 </a>
@@ -113,7 +113,7 @@
                                 </a>
                             </li>
                             <li class="link-hover">
-                                <a href="" class="menu-link">
+                                <a href="/profile/user" class="menu-link">
                                     <i class="fa-regular fa-user link-icon"></i>
                                     <span>Profile</span>
                                 </a>
@@ -139,17 +139,17 @@
                         <div class="bottom-menu dropup" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <ul class="list-unstyled menu-ul">
                                 <li class="link-hover w-100 all-center">
-                                    <div class="all-center">
+                                    <div class="all-center" id="status">
                                         <img src="" alt="" class="bottom-pic me-2 border">
-                                        <div class="info">
-                                            <h6>Bhavesh Rathod</h6>
-                                            <span class="text-gray">@BH836246637534545</span>
+                                        <div class="info" id="userData">
+                                            <h6></h6>
+                                            <span class="text-gray"></span>
                                         </div>
                                     </div>
-                                    <span class="all-center flex-row dropup">
-                                        <a href="" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false">
-                                            ••• </a>
-
+                                    <span class="all-center flex-row">
+                                        <i class="fa-solid fa-circle bottom-dots"></i>
+                                        <i class="fa-solid fa-circle bottom-dots"></i>
+                                        <i class="fa-solid fa-circle bottom-dots"></i>
                                     </span>
                                 </li>
                             </ul>
@@ -159,7 +159,7 @@
                             <li class="d-flex">
                                 <a class="dropdown-item" href="/user-logout"><i
                                         class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout <span
-                                        class="text-blue">@BH836246637534545</span>
+                                        class="text-blue" id="userDataId"></span>
 
                                 </a>
                             </li>
@@ -168,12 +168,44 @@
                     </div>
                 </div>
                 <script>
-                    $('#commentModal').on('show.bs.modal', function (e) {
+                    // $('#commentModal').on('show.bs.modal', function (e) {
 
-                        //get data-id attribute of the clicked element
-                        var tweetId = $(e.relatedTarget).data('tweet-id');
+                    //     //get data-id attribute of the clicked element
+                    //     var tweetId = $(e.relatedTarget).data('tweet-id');
 
-                        //populate the textbox
-                        $(e.currentTarget).find('input[name="tweetId"]').val(tweetId);
-                    });
+                    //     //populate the textbox
+                    //     $(e.currentTarget).find('input[name="tweetId"]').val(tweetId);
+                    // });
+
+                    window.onload = async () => {
+                        let userData = await fetch("/profile/getUserData");
+                        let ans = await userData.json();
+
+                        document.querySelector("#status img").setAttribute("src", ans.user_img);
+                        document.querySelector("#status h6").innerText = ans.name
+                        document.querySelector("#status span").innerText = ans.username
+                        document.querySelector("#userDataId").innerText = ans.username
+                    }
+
                 </script>
+
+                <div class="modal fade " id="settingsModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog ">
+                        <div class="modal-content border-dark">
+                            <!-- <div class="modal-header">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div> -->
+                            <div class="modal-body d-flex flex-column">
+                                <button type="button" class="btn btn-light " data-bs-toggle="modal"
+                                    data-bs-target="#edit_profile" id="button1">
+                                    Edit Profile
+                                </button>
+
+
+                                <a href="/user-logout"><button style="width: 100%;" type="button"
+                                        class="btn btn-light">Logout</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>

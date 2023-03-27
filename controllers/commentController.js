@@ -21,7 +21,7 @@ function getDate(dt){
     let post_at = []
     let hover_post_at = []
     //set month name and date
-    
+
         const d = new Date(dt);
        
         const d2 = new Date()
@@ -92,7 +92,7 @@ const commentInfo = asyncHandler(async (req, res) => {
 
         let post_at = getDate(tweet.created_at)
      
-            let sel_comments = await queryExecuter(`SELECT u.id as user_id, u.user_name,u.name,u.user_image,c.comment,c.created_at  FROM ${db}.comments as c JOIN ${db}.users as u ON c.user_id = u.id WHERE c.tweet_id = '${tweet_id}'`);
+            let sel_comments = await queryExecuter(`SELECT u.id as user_id, u.user_name,u.name,u.user_image,c.comment,c.created_at  FROM ${db}.comments as c JOIN ${db}.users as u ON c.user_id = u.id WHERE c.tweet_id = '${tweet_id}' ORDER BY c.created_at DESC`);
             // let sel_likes = await queryExecuter(`SELECT * FROM ${db}.likes WHERE tweet_id = '${tweet_id}'`);
             let comment_post_dates = []
             for(let x of sel_comments) {
@@ -125,7 +125,12 @@ const addTweetComment = asyncHandler(async (req, res) => {
 
     const all_comments = await queryExecuter(`SELECT u.id as user_id, u.user_name,u.name,u.user_image,c.comment,c.created_at  FROM comments as c JOIN users as u ON c.user_id = u.id WHERE c.tweet_id = '${tweetId}' ORDER BY c.created_at DESC`);
 
-    res.json({all_comments,len:all_comments.length});
+    let comment_post_dates = []
+            for(let x of all_comments) {
+                comment_post_dates.push(getDate(x.created_at))
+            }
+
+    res.json({all_comments,len:all_comments.length,comment_at:comment_post_dates});
 })
 
 module.exports = { commentInfo,addTweetComment }

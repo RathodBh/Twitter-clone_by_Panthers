@@ -146,6 +146,7 @@
                                                                             <i
                                                                                 class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
                                                                             <span class="date fs-16 me-1 text-gray">
+                                                                                <%= comment_at[i] %>
                                                                             </span>
                                                                         </div>
                                                                         <div class="sub-info">
@@ -229,6 +230,8 @@
 
                 allComments = ans.all_comments;
                 allCommentsLen = ans.len;
+                allCommentAt = ans.comment_at;
+                console.log(allCommentAt);
                 var comment_section = document.querySelector("#commentSection");
 
                 if(allComments.length <= 0){
@@ -255,6 +258,7 @@
                                                                             <i
                                                                                 class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
                                                                             <span class="date fs-16 me-1 text-gray">
+                                                                               ${allCommentAt[i]}
                                                                             </span>
                                                                         </div>
                                                                         <div class="sub-info">

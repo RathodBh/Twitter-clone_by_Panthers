@@ -66,11 +66,8 @@ const loginHandler = async (req, res) => {
         req.session.cookie.expires = new Date(Date.now() + hour)
         req.session.cookie.maxAge = hour
 
-
-        return res.redirect("/dashboard");
-
-
-
+        return res.redirect('/dashboard')
+       
     } catch (error) {
         throw error;
     }
@@ -91,7 +88,6 @@ const loginGet = asyncHandler(async (req, res) => {
 const getEmailCheckLogin = asyncHandler(async (req, res) => {
     //i need to show the post request for checkEmail fetch request
     const { data } = req.body
-    console.log(data);
     const qry1 = `select * from users where email='${data}'`
     const oldUser = await queryExecuter(qry1)
     if (oldUser.length == 0) {
