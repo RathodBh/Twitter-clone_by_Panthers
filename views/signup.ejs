@@ -15,16 +15,18 @@
     <link rel="stylesheet" href="/stylesheets/style.css">
     <link rel="stylesheet" href="/stylesheets/signup.css">
 
-    <title>Twitter | Home</title>
+    <title>Twitter | Sign-up</title>
 
 </head>
 
 <body>
-
+    <div class="loader">
+        <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
+    </div>
     <!-- Modal  -->
-    <div class="modal" id="signup">
+    <div class="modal fade" id="signup">
         <div class="modal-dialog container">
-            <div class="modal-content rounded">
+            <div id="jobImage" class="modal-content rounded">
 
                 <div class="modal-header bg-blue top-radius  d-flex flex-column jcc">
                         <i class="fa-brands fa-twitter twitter-logo"></i>
@@ -51,7 +53,7 @@
                             </div>
                         </div>
                         <div class="col-6">
-                            <form action="" class="w-100">
+                            <form action="/user/sign-up" class="w-100" method="post">
                                 <div class="data">
                                     <div class="candidate">
                                         <div id="part1">
@@ -62,26 +64,27 @@
 
                                                 <div class="mb-3 w100">
                                                     <label for="name" class="form-label text-dark">Name</label>
-                                                    <input type="text" class="form-control rounded" id="name" placeholder="Enter name">
+                                                    <input type="text" class="form-control rounded" name="name" id="name" placeholder="Enter name">
                                                   </div>
                                                 <div class="mb-3 w100">
                                                     <label for="email" class="form-label text-dark">Email address</label>
-                                                    <input type="email" class="form-control rounded" id="email" placeholder="name@example.com">
+                                                    <input type="email" class="form-control rounded" id="email" name="email" onkeyup="checkuserEmail(this)"  placeholder="name@example.com">
+                                                    <span class="w-100 text-danger fs-14" id="emailError"></span>
                                                 </div>
 
                                                 <label for="year" class="form-label w-100 text-dark">Date of Birth</label>
                                                 <p class="text-gray fs-14 w-100">This will be shown publicly. Confirm your own age.</p>
                                                 <div class="d-flex jcsb control">
                                                     <div class="w30">
-                                                        <select class="form-select rounded" id ="year" name = "yyyy" onchange="change_year(this)">
+                                                        <select class="form-select rounded" id ="year" name = "yyyy" onchange="change_year(this)" onmousedown="if(this.options.length>8){this.size=8;}" >
                                                         </select>
                                                     </div>
                                                     <div class="w30">
-                                                        <select class="form-select rounded"  id ="month" name = "mm" onchange="change_month(this)">
+                                                        <select class="form-select rounded"  id ="month" name = "mm" onchange="change_month(this)" onmousedown="if(this.options.length>8){this.size=8;}">
                                                         </select>
                                                     </div>
                                                     <div class="w30">
-                                                        <select class="form-select rounded" id ="day" name = "dd" >
+                                                        <select class="form-select rounded" id ="day" name = "dd"   >
                                                         </select>
                                                     </div>
                                                 </div>
@@ -97,30 +100,31 @@
                                                         <span class="text-dark" id="usernameLimit">
                                                         </span>
                                                     </div>
-                                                        <input type="text" class="form-control rounded" id="username" placeholder="Enter username">
+                                                        <input type="text" class="form-control rounded" name="uname" onkeyup="checkusername(this)" id="username" placeholder="Enter username">
                                                     <span class="w-100 text-danger fs-14" id="usernameError"></span>
                                                   </div>
-                                                <div class="mb-3 w100">
+                                                  <div class="mb-3 w100 position-relative">
                                                     <label for="password" class="form-label text-dark">Password</label>
-                                                    <input type="password" class="form-control rounded" id="password" placeholder="Enter password">
-                                                    <span class="w-100" id="pwdError"></span>
-                                                    
+                                                    <div class="position-relative">
+                                                        <input type="password" class="form-control rounded" id="password"
+                                                            placeholder="Enter password" name="password">
+                                                        <i class="far fa-eye text-secondary" id="togglePassword"></i>
+                                                    </div>
+            
                                                 </div>
-                                                <div class="mb-3 w100">
-                                                    <label for="cpassword" class="form-label text-dark">Confirm password</label>
-                                                    <input type="cpassword" class="form-control rounded" id="password" placeholder="Enter confirm password">
-                                                    <span class="w-100" id="cpwdError"></span>
-                                                 
+                                                <div class="mb-3 w100 position-relative">
+                                                    <label for="password" class="form-label text-dark">Confirm Password</label>
+                                                    <div class="position-relative">
+                                                        <input type="password" class="form-control rounded" id="password"
+                                                            placeholder="retype password" name="cpassword">
+                                                        <i class="far fa-eye text-secondary" id="togglePassword"></i>
+                                                    </div>
+            
                                                 </div>
                                             </div>
                                         </div>
 
 
-                                        <div id="part5">
-                                            <!-- <h1 class="text-blue txt-center m-20 ">Authentication</h1> -->
-
-                                            
-                                        </div>
                                     </div>
                                     <div class="w100 control d-flex bottom">
                                         <input type="button" value="PREVIOUS" class="w50 " id="prev">
@@ -135,7 +139,7 @@
                 </div>
 
                 <div class="modal-footer bottom-radius py-4">
-                    <p class="text-center w-100">Already have an account? <a href="/login" class="text-light fw-600">Login now</a></p>
+                    <p class="text-center w-100">Already have an account? <a href="/user-login" class="text-light fw-600">Login now</a></p>
                 </div>
             </div>
         </div>
@@ -161,8 +165,69 @@
         
         //auto show the modal
         myModal.show();
+        const togglePassword = document.querySelector('#togglePassword');
+        const password = document.querySelector('#password');
 
+        togglePassword.addEventListener('click', function (e) {
+            // toggle the type attribute
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+
+            // toggle the eye slash icon
+            if(this.classList.contains('fa-eye-slash')){
+                this.classList.remove('fa-eye-slash');
+                this.classList.add('fa-eye');
+            }else{
+                this.classList.remove('fa-eye');
+                this.classList.add('fa-eye-slash');
+            }
+        });
+        window.addEventListener("load", function () {
+    const loader = document.querySelector(".loader");
+    loader.className += " hidden"; // class "loader hidden"
+});
+
+
+        
     </script>
+         
+        </script>
+        <style>
+          .loader {
+      position: fixed;
+      z-index: 99;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+  }
+  
+  .loader > img {
+      width: 100px;
+  }
+  
+  .loader.hidden {
+      animation: fadeOut 1s;
+      animation-fill-mode: forwards;
+  }
+  
+  @keyframes fadeOut {
+      100% {
+          opacity: 0;
+          visibility: hidden;
+      }
+  }
+  
+  .thumb {
+      height: 100px;
+      border: 1px solid black;
+      margin: 10px;
+  }
+      </style>
 </body>
 
 </html>
