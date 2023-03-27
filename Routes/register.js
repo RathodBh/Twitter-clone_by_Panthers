@@ -15,6 +15,8 @@ router.route('/sign-up/checkusername').post(getUserNameCheck)
 router.route('/actiivateUser').get(activeUser)
 
 
+
+
 // router.route('/sign-up').post(authUser)
 
 module.exports=router
