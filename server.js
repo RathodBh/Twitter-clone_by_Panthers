@@ -9,6 +9,7 @@ const profile = require('./Routes/profile')
 const commentInfo = require('./Routes/commentInfo')
 const dashboard = require('./Routes/dashboard')
 const logout = require('./Routes/logout')
+const forgetPassword = require('./Routes/forgetPassword');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 app.use(cookieParser());
@@ -38,6 +39,7 @@ app.use('/user-logout', logout)
 app.use('/dashboard', dashboard)
 app.use("/profile", profile)
 app.use("/tweet", commentInfo)
+app.use("/forget",forgetPassword)
 
 const multer = require('multer');
 
@@ -120,10 +122,9 @@ app.post("/updateProfile", uploads.fields([{
     }
 })
 
-
 app.get("/srch?", async (req, res) => {
     var srchval = req.query.val;
-    var sql = `select user_name from twitter_clone.users `;
+    var sql = `select user_name from twitter_clone.users`;
     var names = await queryExecuter(sql);
     var arr = [];
     var newArr = [];
@@ -137,8 +138,8 @@ app.get("/srch?", async (req, res) => {
         arrVal = arr[j];
         for (let k = 0; k < srchval.length; k++) {
             if (arrVal.includes(srchval[k])) {
-                var firstIndex = arr[j].indexOf(srchval[k]);
-                arrVal = arrVal.substr(firstIndex + 1, arrValLength)
+                var firstIndex = arrVal.indexOf(srchval[k]);
+                arrVal = arrVal.substr(firstIndex + 1, arrValLength + 1)
                 counter++;
             }
         }
@@ -149,14 +150,15 @@ app.get("/srch?", async (req, res) => {
     }
     var matchedResult = [];
     for (let m = 0; m < newArr.length; m++) {
-        var sql2 = `SELECT name,user_name,user_image FROM twitter_clone.users where user_name="${newArr[m]}";`;
+        var sql2 = `SELECT name,user_name,user_image FROM twitter_clone.users where user_name="${newArr[m]}"`;;
         resultantName = await queryExecuter(sql2);
         matchedResult.push(resultantName)
     }
     res.json(matchedResult)
 
 })
-app.get("*",(req, res) => {
+
+app.get("*", (req, res) => {
     res.render("404")
 })
 app.listen(PORT, () => {

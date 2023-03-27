@@ -101,25 +101,25 @@
                                 </a>
                             </li>
                             <li class="link-hover">
-                                <a href="/dashboard" class="menu-link active">
+                                <a href="/dashboard" class="menu-link" id="homeLink">
                                     <i class="fa-solid fa-house link-icon "></i>
                                     <span>Home</span>
                                 </a>
                             </li>
                             <li class="link-hover">
-                                <a href="" class="menu-link">
+                                <a href="" class="menu-link" id="notificationLink">
                                     <i class="fa-regular fa-bell link-icon"></i>
                                     <span>Notifications</span>
                                 </a>
                             </li>
                             <li class="link-hover">
-                                <a href="/profile/user" class="menu-link">
+                                <a href="/profile/user" class="menu-link" id="profileLink">
                                     <i class="fa-regular fa-user link-icon"></i>
                                     <span>Profile</span>
                                 </a>
                             </li>
                             <li class="link-hover">
-                                <a href="" class="menu-link">
+                                <a href="" class="menu-link" id="settingsLink">
                                     <i class="fa-solid fa-gear link-icon"></i>
                                     <span>Settings</span>
                                 </a>
@@ -168,14 +168,12 @@
                     </div>
                 </div>
                 <script>
-                    // $('#commentModal').on('show.bs.modal', function (e) {
+                    if(location.href.includes("dashboard")){
 
-                    //     //get data-id attribute of the clicked element
-                    //     var tweetId = $(e.relatedTarget).data('tweet-id');
-
-                    //     //populate the textbox
-                    //     $(e.currentTarget).find('input[name="tweetId"]').val(tweetId);
-                    // });
+                    }
+                    else if(location.href.includes("profile")){
+                        document.querySelector("#profileLink").classList.add("active")
+                    }
 
                     window.onload = async () => {
                         let userData = await fetch("/profile/getUserData");
