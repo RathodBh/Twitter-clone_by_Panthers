@@ -122,14 +122,14 @@
     display: inline-block;
 }
 
-.candidate label {
+.user label {
     margin-bottom: 5px;
     display: block;
     color: var(--white)
 }
 
-.candidate input,.candidate textarea ,
-.candidate select {
+.user input,.user textarea ,
+.user select {
     margin-bottom: 5px;
     display: inline-block;
     padding: 7px 10px;
@@ -139,7 +139,7 @@
     color: var(--dark);
 }
 
-.candidate input[type=radio] {
+.user input[type=radio] {
     margin: 10px;
     margin-left: 0px;
 }
@@ -156,8 +156,8 @@ body {
     transition:all 0.3s linear ;
 }
 
-/* .candidate{ */
-form,.candidate {
+/* .user{ */
+form,.user {
     width: 32vw;
     min-height: 30vh;
     /* background: var(--dark); */
@@ -169,7 +169,7 @@ form,.candidate {
 .data{
     overflow: hidden;
 }
-.candidate{
+.user{
     position: relative;
     display: flex;
     /* flex-wrap: wrap; */
@@ -178,7 +178,7 @@ form,.candidate {
     padding: 0;
 }
 
-.candidate > div{
+.user > div{
     transition: all 1s;
     width: 100%;
     /* position: relative; */

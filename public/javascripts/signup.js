@@ -1,18 +1,20 @@
 
 //variables
 const allBtns = document.querySelectorAll(".next");
-const allParts = document.querySelectorAll(".candidate > div");
+const allParts = document.querySelectorAll(".user > div");
 const allPrevBtns = document.querySelectorAll(".prev");
+let prev = document.querySelector("#prev")
+let next = document.querySelector("#next")
 
 //set width
 const updateLength = () => {
-    let allParts = document.querySelectorAll(".candidate > div");
-    document.querySelector(".candidate").style.width = `${allParts.length * 100}%`;
+    let allParts = document.querySelectorAll(".user > div");
+    document.querySelector(".user").style.width = `${allParts.length * 100}%`;
 }
 updateLength();
 
 const updateTransition = (i) => {
-    let allParts = document.querySelectorAll(".candidate > div");
+    let allParts = document.querySelectorAll(".user > div");
     allParts.forEach((cur) => {
         cur.style.transform = `translateX(-${i * 100}%)`;
     });
@@ -25,7 +27,6 @@ next.addEventListener("click", (e) => {
     updateTransition(i);
     checkStatus(i)
 })
-
 prev.addEventListener("click", (e) => {
     --i;
     updateTransition(i);
@@ -33,22 +34,31 @@ prev.addEventListener("click", (e) => {
 })
 
 function checkStatus(i) {
-    let allParts = document.querySelectorAll(".candidate > div");
+  
+    let allParts = document.querySelectorAll(".user > div");
 
+    next.classList.toggle("w-50");
+    next.classList.toggle("w-100");
     if (i == 0) {
         prev.style.display = "none";
-        next.style.width = "100%";
+        next.setAttribute("id", "next")
+        next.setAttribute("type", "button")
+        next.setAttribute("value", "NEXT")
+
     }
     else if (i == allParts.length - 1 || i == allParts.length) {
-        next.setAttribute("value", "SUBMIT")
+        prev.style.display = "block";
+        next.setAttribute("value", "SIGN UP")
         setTimeout(() => {
             // debugger
             next.setAttribute("type", "submit")
+            next.setAttribute("id", "submit")
         }, 1)
     }
     else {
         prev.style.display = "block";
         prev.style.width = "100%";
+        next.setAttribute("id", "next")
         next.setAttribute("value", "NEXT")
         next.setAttribute("type", "button")
     }

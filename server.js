@@ -39,7 +39,7 @@ app.use('/user-logout', logout)
 app.use('/dashboard', dashboard)
 app.use("/profile", profile)
 app.use("/tweet", commentInfo)
-app.use("/forget",forgetPassword)
+app.use("/forget", forgetPassword)
 
 const multer = require('multer');
 
@@ -61,7 +61,6 @@ const storage = multer.diskStorage({
         cb(null, "./public/assets/images")
     },
     filename: (req, file, cb) => {
-        console.log(file);
         cb(null, Date.now() + path.extname(file.originalname))
     }
 })
@@ -83,15 +82,9 @@ app.post("/updateProfile", uploads.fields([{
             let uid = req.session.user_id
             const file = req.files;
             var users = await queryExecuter(`select user_image as dp , cover_image as cover from users where id=${uid}`);
-            console.log(users[0].dp);
-            console.log(users[0].cover);
-            console.log("here");
-            console.log(req.files);
 
             var cover_imgsrc = req.files.cover_image;
             var profile_imgsrc = req.files.profile_image;
-            console.log(cover_imgsrc);
-            console.log(profile_imgsrc);
             if (cover_imgsrc) {
                 cover_imgsrc = 'http://localhost:3008/assets/images/' + file.cover_image[0].filename;
             } else {
@@ -104,7 +97,6 @@ app.post("/updateProfile", uploads.fields([{
                 profile_imgsrc = users[0].dp
             }
 
-            console.log("Image uploaded")
 
 
             await queryExecuter(`update users set name="${name}" , bio="${user_bio}" ,birth_date="${user_dob}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id=${uid}`);
@@ -157,6 +149,55 @@ app.get("/srch?", async (req, res) => {
     res.json(matchedResult)
 
 })
+
+//vivek (Follow-Unfollow)
+app.get("/addfollow", async (req, res) => {
+    let cnt = 0;
+    let userId = req.session.user_id
+    let followerId = req.query.followerId
+    if (req.query.flag == 0) {
+        cnt++;
+        await queryExecuter(`insert into  twitter_clone.followers (user_id,follower_id,isdelete) values("${followerId}","${userId}","${0}");`);
+
+        await queryExecuter(`insert into twitter_clone.following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
+
+        await queryExecuter(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
+        await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
+    } else {
+        cnt--;
+        await queryExecuter(`delete from twitter_clone.followers  where user_id = ${followerId} AND follower_id = ${userId};`);
+        await queryExecuter(`delete from twitter_clone.following  where user_id = ${userId} AND following_id = ${followerId} ;`);
+        await queryExecuter(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
+        await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
+    }
+
+    res.send({ message: "update" });
+})
+
+app.get('/getFollowUserData', async (req, res) => {
+
+    let uid = req.session.user_id;
+    var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${uid})`);
+
+    var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
+    var followers = [];
+    getfollowerId.forEach(id => {
+        followers.push(id.follower_id);
+    });
+
+    let notFollow = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(SELECT following_id FROM following WHERE user_id='${uid}')`);
+    
+
+    // var notgetfollowerId = await queryExecuter(`SELECT f.follower_id from followers as f JOIN users as u ON u.id where`);
+    // var notFollowers = [];
+    // notgetfollowerId.forEach(id => {
+    //     notFollowers.push(id.follower_id);
+    // });
+
+    res.json( { fuser: getuser, followers, unfollowers:notFollow});
+    // res.render('profile',)
+})
+
 
 app.get("*", (req, res) => {
     res.render("404")
