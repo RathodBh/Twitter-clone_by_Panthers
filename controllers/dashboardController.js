@@ -338,12 +338,14 @@ const getDashboard = asyncHandler(async (req, res) => {
 
 
 
+        let followuser = await queryExecuter(`select * from users where id not in(${user_id}) limit 3`)
+        var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${user_id}`);
 
 
         //i need to show the get request for register page
         let flag = false;
 
-        return res.render('dashboard', { tweet_data: all_tweet_data, post_date: post_at, all_comments, all_likes, arrtruefalse, arrlikeid ,arrretweetid});
+        return res.render('dashboard', { tweet_data: all_tweet_data, post_date: post_at, all_comments, all_likes, arrtruefalse, arrlikeid ,arrretweetid,fuser:followuser,followers:getfollowerId});
     }
 
 

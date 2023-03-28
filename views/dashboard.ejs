@@ -162,7 +162,7 @@
             let tweet_id = e.id
 
             if (e.classList.value == 'fa-regular fa-heart') {
-                e.classList.value = 'fa-regular fa-heart text-danger';
+                e.classList.value = 'fa-solid fa-heart text-danger';
                 let like = true
                 const save_req = await fetch(`http://localhost:3008/dashboard/like`, {
                     method: "POST",
@@ -180,7 +180,7 @@
                     likeSpan.innerHTML = resSave.alllikecount
                 }
             }
-            else if (e.classList.value == 'fa-regular fa-heart text-danger') {
+            else if (e.classList.value == 'fa-solid fa-heart text-danger') {
                 e.classList.value = 'fa-regular fa-heart'
                 let like = false;
                 const save_req = await fetch(`http://localhost:3008/dashboard/like`, {
@@ -207,7 +207,7 @@
         '<%}%>'
         userLike.forEach(element => {
 
-            document.getElementById(element).classList = "fa-regular fa-heart text-danger";
+            document.getElementById(element).classList = "fa-solid fa-heart text-danger";
         });
 
         async function retweetpost(e){

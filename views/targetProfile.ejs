@@ -12,109 +12,6 @@
 
         </div>
 
-        <% if(changepass){  %>
-            <% let timerInterval
-            Swal.fire({
-              title: 'Auto close alert!',
-              html: 'I will close in <b></b> milliseconds.',
-              timer: 2000,
-              timerProgressBar: true,
-              didOpen: () => {
-                Swal.showLoading()
-                const b = Swal.getHtmlContainer().querySelector('b')
-                timerInterval = setInterval(() => {
-                  b.textContent = Swal.getTimerLeft()
-                }, 100)
-              },
-              willClose: () => {
-                clearInterval(timerInterval)
-              }
-            }).then((result) => {
-              /* Read more about handling dismissals below */
-              if (result.dismiss === Swal.DismissReason.timer) {
-                console.log('I was closed by the timer')
-              }
-            }) %>
-           <%} %>
-
-        <form action="/updateProfile" method="post" enctype="multipart/form-data">
-            <div class="modal fade ms-2" id="edit_profile" tabindex="-1" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content border-dark">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-
-                        <div class="modal-body">
-                            <div id="edit_image-section">
-                                <div class="cover d-flex border-dark">
-                                    <img src="<%= users[0].cover_image %>" alt="" id="img_prof">
-                                    <label for="update_cover_image" class="edit_cover mt-5 ">
-                                        <i class="fa-solid fa-2x fa-camera  rounded-circle text-light"
-                                            id="edit_camera_icons">
-                                        </i>
-                                    </label>
-                                    <input type="file" name="cover_image" id="update_cover_image"
-                                        style="display: none;">
-                                </div>
-                                <div class="row ">
-                                    <div class="col">
-                                        <div class="dp d-flex">
-                                            <img src="<%= users[0].profile_image %>" class="card-img-left" alt="">
-                                            <label for="update_profile_image" class="edit_icon mt-5">
-                                                <i class="fa-solid fa-camera  rounded-circle text-light "
-                                                    id="edit_camera_icons">
-                                                </i>
-                                            </label>
-
-                                            <input type="file" name="profile_image" id="update_profile_image"
-                                                style="display: none;">
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div id="edit_content">
-
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Name</label>
-                                    <input type="text" name="name" class="form-control" id="name"
-                                        aria-describedby="emailHelp" name="name" value="<%= users[0].name %>">
-                                    <div id="text" class="form-text"></div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="username" class="form-label">User Email</label>
-                                    <input type="text" class="form-control" id="username" name="user_email"
-                                        value="<%= users[0].email %>" readonly>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="bio" class="form-label">Bio</label>
-                                    <input type="text" class="form-control" id="bio" name="user_bio"
-                                        value="<%= users[0].bio %>">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="birth_date" class="form-label"></label>
-                                    <label for="birth_date" class="form-label">Date Of Birth</label>
-                                    <input type="text" class="form-control" id="biobirth_date" name="user_dob"
-                                        value="<%= users[0].birth_date %>" readonly>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <input type="submit" class="btn btn-primary" value="Update">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-
-       
-
-
 
         </form>
         <div class="all-data">
@@ -259,19 +156,19 @@
 
                 data.forEach(users => {
                     udata += `<div class="cover">
-                    <img src="${users.cover_image}" alt="">
+                    <img src="<%= users[0].cover_image %>" alt="">
                 </div>
                 <div class="row ">
                     <div class="col">
                         <div class="dp">
-                            <img src="${users.user_image}" class="card-img-left" alt="">
+                            <img src="<%= users[0].user_image %>" class="card-img-left" alt="">
                         </div>
                     </div>
                     <div class="col">
                         <div class="mt-2 ms-5 follow">
-                            <p>      <a href="" class="menu-link rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#settingsModal"
+                            <p>      <a href="" class="menu-link rounded-pill px-3"
                                >
-                                Edit Profile
+                               Follow
                             </a>
                             </p>
                         </div>
@@ -280,30 +177,31 @@
                 <div class="card-body">
                     <div class="user-data">
                         
-                        <label for="" class="bold">${users.name}</label>
+                        <label for="" class="bold"><%= users[0].name %></label>
                         <img src="./uploads/red_verified.png" alt="" height="20px" width="20px">
                         
-                        <p class="text-secondary">@${users.user_name}</p>
+                        <p class="text-secondary">@<%= users[0].user_name %></p>
                     </div>
-                    <p class="card-text text-dark ">${users.bio}  <i class="fa-regular fa-face-laugh-beam"></i></p>
+                    <p class="card-text text-dark "><%= users[0].bio %>  <i class="fa-regular fa-face-laugh-beam"></i></p>
                     <div class="info d-flex ">
                         <p class="text-secondary ms-1"><i class="fa-solid fa-location-dot"></i> everywhere</p>
                         <p class="text-secondary ms-2"><i class="fa-solid fa-link"></i>
                         <p class="text-info">username.com</p>
                         </p>
-                        <p class="text-secondary ms-2"><i class="fa-solid fa-cake-candles"></i> Date Of Birth:  ${users.birth_date.slice(0, 10)}
+                        <p class="text-secondary ms-2"><i class="fa-solid fa-cake-candles"></i> Date Of Birth: <%= users[0].birth_date.slice(0, 10) %>
                         </p>
                     </div>
                     <div class="join">
-                        <p class="text-secondary"><i class="fa-solid fa-calendar-days"></i> Joined at:   ${users.created_at.slice(0, 10)}</p>
+                        <p class="text-secondary"><i class="fa-solid fa-calendar-days"></i> Joined at: <%= users[0].created_at.slice(0, 10) %></p>
                     </div>
                     <div class="d-flex">
                         <p>
-                            ${users.following}
+                            <%= users[0].following %>
+                      
                         <p class="ms-2">Following</p>
                         </p>
                         <p class="ms-3">
-                            ${users.followers}
+                            <%= users[0].followers %>
                         <p class="ms-2">Followers</p>
                         </p>
                     </div>
@@ -375,6 +273,11 @@
                 document.getElementById(element).classList = "fa-solid fa-heart text-danger";
             });
 
+
+
+
+
+            
             async function retweetpost(e){
             let temp=e.id
             let id = temp.slice(1);
@@ -431,7 +334,7 @@
             document.getElementById("k"+element).classList = "fa-solid fa-retweet text-success";
         });
 
-
+    
         </script>
 
 
