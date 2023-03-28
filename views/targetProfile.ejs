@@ -71,10 +71,140 @@
 
 
         </form>
+<!-- for retweet -->
+
+<div class="all-data">
+    <div class="tab-content">
+        <div id="for-you" class="tab-pane active">
+            <div class="tweet-container all-center flex-column ">
+                
+                <% all_retweet.forEach((t,index)=>{ %>
+                    <div class="tweet w-100 p-3 row pt-4 border-bottom border-top">
+                        <div class="col-1 p-0">
+                            <img src="<%= users[0].user_image %>" alt="" class="profile-size me-2 border">
+                        </div>
+                        <div class="col-10 px-4">
+                            <div class="d-flex align-items-center user-info">
+                                <span class="text-black fs-16 me-1 fw-600">
+                                    <%= users[0].name %>
+                                </span>
+                                <span class="fs-16 text-gray me-1">
+                                    @  <%= users[0].user_name %>
+                                </span>
+                                <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
+                                <span class="date fs-16 me-1 text-gray">
+                                    <%= post_date[index] %>
+                                </span>
+                               
+                            </div>
+                            <div class="tweet-content">
+                          
+                                <a href="/tweet/tweet_details/<%= t.id %>">
+                            
+                                    <p class="text-black fs-16 fw-300">
+                              
+                                        <%= t.tweet %>
+                                    </p>
+                                </a>
+                            </div>
+
+                            <% if(t.media_type.includes("image")){ %>
+                                <div class="tweet-img-container">
+                                    <img src="<%= t.media_url %>" alt="" class="w-100">
+                                </div>
+                                <% }else if(t.media_type.includes("video") ){ %>
+                                    <div class="tweet-video-container">
+                                        <video controls loop>
+                                            <source src="<%= t.media_url %>" type="video/mp4">
+                                        </video>
+                                    </div>
+                                    <% } %>
+                                        <div class="tweet-reactions-container mt-3">
+                                            <ul class="list-unstyled row">
+                                                <li class="col">
+                                                    <a href="/tweet/tweet_details/<%= t.id %>" class="comment">
+                                                        <i class="fa-regular fa-comment"></i>
+                                                        <%= t.tweet_comments %>
+                                                    </a>
+                                                </li>
+                                                <li class="col">
+                                                    <a href="" class="retweet">
+                                                        <i class="fa-solid fa-retweet"></i>
+                                                        <%= t.tweet_retweets %>
+                                                        
+                                                    </a>
+                                                </li>
+                                                <li class="col">
+                                                    <a class="like <%= t.id %>">
+                                                        <i class="fa-regular fa-heart" onclick="likepost(this)"
+                                                            id="<%= t.id %>"></i>
+
+
+                                                        <span id="like<%= t.id %>">
+                                                            <%= t.tweet_likes %>
+                                                        </span>
+
+
+                                                    </a>
+                                                </li>
+                                                <li class=" col">
+                                                    <a href="" class="chart">
+                                                        <i class="fa-solid fa-chart-simple"></i>
+
+                                                    </a>
+                                                </li>
+                                                <li class="col">
+                                                    <a href="" class="share">
+                                                        <i class="fa-solid fa-arrow-up-from-bracket"></i>
+
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                        </div>
+                        <div class="col-1 dropstart">
+                            <a href="" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false">
+                                •••
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="d-flex">
+                                    <a class="dropdown-item" href="#"><i class="fa-solid fa-user-plus me-2"></i>
+                                        Follow <span class="text-blue">@  <%= users[0].user_name %></span>
+
+                                    </a>
+                                </li>
+
+
+                                <li class="d-flex">
+                                    <a class="dropdown-item" href="#"><i
+                                            class="fa-solid fa-user-minus me-2"></i> Unfollow <span
+                                            class="text-blue">@<%= t.user_name %></span>
+
+                                    </a>
+                                </li>
+
+                                <li class="d-flex">
+                                    <a class="dropdown-item" href="#"><i class="fa-regular fa-eye me-2"></i>
+                                        Visit profile <span class="text-blue">@<%= t.user_name %></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <% }) %>
+            </div>
+        </div>
+        
+    </div>
+</div> 
+<!-- for retweet end -->
+
         <div class="all-data">
             <div class="tab-content">
                 <div id="for-you" class="tab-pane active">
                     <div class="tweet-container all-center flex-column ">
+                    
                         <% tweet_data.forEach((t,index)=>{ %>
                             <div class="tweet w-100 p-3 row pt-4 border-bottom border-top">
                                 <div class="col-1 p-0">
@@ -95,6 +225,7 @@
                                     </div>
                                     <div class="tweet-content">
                                         <a href="/tweet/tweet_details/<%= t.id %>">
+                                         
                                             <p class="text-black fs-16 fw-300">
                                                 <%= t.tweet %>
                                             </p>
@@ -184,6 +315,7 @@
                                     </ul>
                                 </div>
                             </div>
+                       
                             <% }) %>
                     </div>
                 </div>

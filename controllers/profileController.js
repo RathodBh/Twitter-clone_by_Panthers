@@ -47,7 +47,9 @@ const getProfile = asyncHandler(async (req, res) => {
         // let sel_q = `SELECT id,name,user_image,user_name FROM ${db}.users `;
         let sel_tweets = `select * from tweets where user_id=${user_id} order by id DESC`;
         const all_tweet_data = await query(sel_tweets);
-
+        // for retweet
+        let sel_retweets = `SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id=tweets.id where retweet.user_id='${user_id}'AND retweet.is_deleted='0' order by retweet.id DESC`;
+        const all_retweet_data = await query(sel_retweets);
 
 
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -165,9 +167,19 @@ const getProfile = asyncHandler(async (req, res) => {
         var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${user_id}`);
         console.log(arrlikeid);
         console.log(arrretweetid);
+
+// for retweeted user get  
+for (let b = 0; b < all_retweet_data.length; b++) {
+    var twt_user = await query(`SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id=tweets.id inner join twitter_clone.users on tweets.user_id=users.id where retweet.user_id='${user_id}' AND retweet.is_deleted='0' order by retweet.id DESC ;`);
+} 
+// for retweeted user get end
+
+
+        var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${user_id}`);
+console.log("user data"+twt_user[0].user_name);
         //i need to show the get request for register page
         let changepass = false
-        res.render('profile', { tweet_data: all_tweet_data, post_date: post_at, arrlikeid, users, changepass, arrretweetid, fuser: followuser, followers: getfollowerId });
+        res.render('profile', { twt_user: twt_user, all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, users, changepass, arrretweetid, fuser: followuser, followers: getfollowerId });
 
     } catch (err) {
         console.log("Error Dashboard:", err);
@@ -288,6 +300,7 @@ const getTargetProfile1 = async (req, res) => {
             if (likes != "")
                 sessionLikes.push(tweet.id)
         }
+
 
 
 
@@ -427,6 +440,10 @@ const getTargetProfile = asyncHandler(async (req, res) => {
         let sel_tweets = `select * from tweets where user_id=${user_id} order by id DESC`;
         const all_tweet_data = await query(sel_tweets);
 
+        // for retweet
+        let sel_retweets = `SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id=tweets.id where retweet.user_id='${user_id}'AND retweet.is_deleted='0' order by retweet.id DESC`;
+        const all_retweet_data = await query(sel_retweets);
+
 
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -479,7 +496,7 @@ const getTargetProfile = asyncHandler(async (req, res) => {
         })
 
 
-        var uid  =  req.session.user_id
+        var uid = req.session.user_id
         const alltweetids = `select id from tweets where user_id=${user_id}`
         const alltweet_ids = await queryExecuter(alltweetids);
 
@@ -539,12 +556,12 @@ const getTargetProfile = asyncHandler(async (req, res) => {
             }
         }
 
- 
+
         var users = await query(`select * from users where id=${user_id}`);
         let followuser = await queryExecuter(`select * from users where id not in(${user_id}) limit 3`)
         var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${user_id}`);
 
-        res.render('targetProfile',{ tweet_data: all_tweet_data, post_date: post_at, arrlikeid, users,  arrretweetid, fuser: followuser, followers: getfollowerId })
+        res.render('targetProfile', { all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, users, arrretweetid, fuser: followuser, followers: getfollowerId })
 
     }
     catch (err) {
