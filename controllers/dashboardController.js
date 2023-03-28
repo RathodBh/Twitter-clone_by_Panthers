@@ -14,23 +14,6 @@ async function queryExecuter(query) {
         });
     })
 }
-// const retweet = asyncHandler(async (req, res) => {
-//     let db = `twitter_clone`;
-//     try {
-//         const token = req.session.email
-//         if (!token) {
-//             res.redirect('/user-login');
-//             return
-//         }
-//         console.log("retweet");
-//         res.redirect('/dashboard');
-
-//     }
-//     catch (err) {
-//         console.log("Error Dashboard:", err);
-//     }
-//     })
-
 
 var tweet_ids
 const getpostLike1 = asyncHandler(async (req, res) => {
@@ -189,9 +172,6 @@ const getpostRetweet = asyncHandler(async (req, res) => {
 })
 
 
-
-
-
 const getDashboard = asyncHandler(async (req, res) => {
     const user_id = req.session.user_id
     let db = `twitter_clone`;
@@ -201,8 +181,11 @@ const getDashboard = asyncHandler(async (req, res) => {
             res.redirect('/user-login');
             return
         }
-        // let sel_q = `SELECT id,name,user_image,user_name FROM ${db}.users `;
-        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name  FROM ${db}.tweets as t LEFT JOIN ${db}.users u ON t.user_id = u.id ORDER BY  t.id DESC `;
+        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name FROM ${db}.tweets as t LEFT JOIN ${db}.users u ON t.user_id = u.id ORDER BY t.id DESC `;
+
+        //get comments of every tweet
+        let comments = 0;
+
 
         const all_tweet_data = await queryExecuter(sel_tweets);
 
@@ -210,7 +193,10 @@ const getDashboard = asyncHandler(async (req, res) => {
 
         let post_at = []
         //set month name and date
-        all_tweet_data.forEach((tweet) => {
+        all_tweet_data.forEach(async (tweet) => {
+
+
+
             const d = new Date(tweet.created_at);
             const d2 = new Date()
 
@@ -255,6 +241,7 @@ const getDashboard = asyncHandler(async (req, res) => {
                 }
             }
         })
+        
         let all_comments = []
         let all_likes = []
         let all_retweets = []
@@ -341,6 +328,19 @@ const getDashboard = asyncHandler(async (req, res) => {
         let followuser = await queryExecuter(`select * from users where id not in(${user_id}) limit 3`)
         var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${user_id}`);
 
+
+
+        // let all_comments = []
+        // let all_likes = []
+        // let all_retweets = []
+        // for (let x of all_tweet_data) {
+        //     let tweet_id = x.id;
+        //     let [sel_comments] = await queryExecuter(`SELECT count(*) as tot FROM ${db}.comments WHERE tweet_id = '${tweet_id}'`);
+        //     let [sel_likes] = await queryExecuter(`SELECT count(*) as tot FROM ${db}.likes WHERE tweet_id = '${tweet_id}'`);
+
+        //     all_comments.push(sel_comments.tot);
+        //     all_likes.push(sel_likes.tot);
+        // }
 
         //i need to show the get request for register page
         let flag = false;

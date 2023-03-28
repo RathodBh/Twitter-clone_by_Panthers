@@ -6,8 +6,8 @@
                 id="searchInput">
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
         </div>
-        <div class="mt-3 follow-right bg-gray p-2 border-radius-12">
-            <h5 class="mt-2 mb-3">Related Search</h5>
+        <div class="mt-3 follow-right bg-gray p-2 border-radius-12 d-none" id="searchRes">
+            <h5 class="mt-2 mb-3">Search result</h5>
             <div id="addHere">
 
             </div>
@@ -87,6 +87,12 @@
     async function search() {
 
         var val = document.getElementById("searchInput").value;
+    
+        if(val == ""){
+            document.querySelector("#searchRes").classList.add("d-none");
+        }else{
+            document.querySelector("#searchRes").classList.remove("d-none");
+        }
 
         let data1 = await fetch(`/srch?val=${val}`)
         let data = await data1.json();

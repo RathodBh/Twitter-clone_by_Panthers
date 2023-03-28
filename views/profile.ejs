@@ -11,32 +11,6 @@
             </div>
 
         </div>
-
-        <% if(changepass){  %>
-            <% let timerInterval
-            Swal.fire({
-              title: 'Auto close alert!',
-              html: 'I will close in <b></b> milliseconds.',
-              timer: 2000,
-              timerProgressBar: true,
-              didOpen: () => {
-                Swal.showLoading()
-                const b = Swal.getHtmlContainer().querySelector('b')
-                timerInterval = setInterval(() => {
-                  b.textContent = Swal.getTimerLeft()
-                }, 100)
-              },
-              willClose: () => {
-                clearInterval(timerInterval)
-              }
-            }).then((result) => {
-              /* Read more about handling dismissals below */
-              if (result.dismiss === Swal.DismissReason.timer) {
-                console.log('I was closed by the timer')
-              }
-            }) %>
-           <%} %>
-
         <form action="/updateProfile" method="post" enctype="multipart/form-data">
             <div class="modal fade ms-2" id="edit_profile" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
@@ -112,11 +86,7 @@
             </div>
         </form>
 
-       
-
-
-
-        </form>
+        
         <div class="all-data">
             <div class="tab-content">
                 <div id="for-you" class="tab-pane active">
@@ -132,7 +102,7 @@
                                             <%= users[0].name %>
                                         </span>
                                         <span class="fs-16 text-gray me-1">
-                                            @  <%= users[0].user_name %>
+                                            @ <%= users[0].user_name %>
                                         </span>
                                         <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
                                         <span class="date fs-16 me-1 text-gray">
@@ -168,11 +138,12 @@
                                                         </li>
                                                         <li class="col">
                                                             <a class="retweet">
-                                                                <i class="fa-solid fa-retweet"  onclick="retweetpost(this)"  id="k<%= t.id %>"></i>
+                                                                <i class="fa-solid fa-retweet"
+                                                                    onclick="retweetpost(this)" id="k<%= t.id %>"></i>
                                                                 <span id="retweet<%= t.id %>">
                                                                     <%= t.tweet_retweets %>
                                                                 </span>
-                                                                
+
                                                             </a>
                                                         </li>
                                                         <li class="col">
@@ -210,7 +181,8 @@
                                     <ul class="dropdown-menu">
                                         <li class="d-flex">
                                             <a class="dropdown-item" href="#"><i class="fa-solid fa-user-plus me-2"></i>
-                                                Follow <span class="text-blue">@  <%= users[0].user_name %></span>
+                                                Follow <span class="text-blue">@ <%= users[0].user_name %>
+                                                </span>
 
                                             </a>
                                         </li>
@@ -226,7 +198,8 @@
 
                                         <li class="d-flex">
                                             <a class="dropdown-item" href="#"><i class="fa-regular fa-eye me-2"></i>
-                                                Visit profile <span class="text-blue">@<%= t.user_name %></span>
+                                                Visit profile <span class="text-blue">@<%= t.user_name %>
+                                                </span>
                                             </a>
                                         </li>
                                     </ul>
@@ -375,61 +348,61 @@
                 document.getElementById(element).classList = "fa-solid fa-heart text-danger";
             });
 
-            async function retweetpost(e){
-            let temp=e.id
-            let id = temp.slice(1);
-            let tweet_id =parseInt(id)
+            async function retweetpost(e) {
+                let temp = e.id
+                let id = temp.slice(1);
+                let tweet_id = parseInt(id)
 
-            if (e.classList.value == 'fa-solid fa-retweet') {
-                e.classList.value = 'fa-solid fa-retweet text-success';
-                let retweet = true
-                const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        data: { retweet, tweet_id }
-                    })
-                });
-                var resSave = await save_req.json();
-            
-                if (resSave.flag == true) {
-                    let retweetSpan = document.querySelector("#retweet" + tweet_id)
-                    retweetSpan.innerHTML = resSave.allretweetcount
-                }
-            }
-            else if (e.classList.value == 'fa-solid fa-retweet text-success') {
-                e.classList.value = 'fa-solid fa-retweet'
-                let retweet = false;
-                const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        data: { retweet, tweet_id }
-                    })
-                });
-                var resSave = await save_req.json();
-                if (resSave.flag == false) {
-                    let retweetSpan = document.querySelector("#retweet" + tweet_id)
-                    retweetSpan.innerHTML = resSave.allretweetcount
-                }
-            }
-         
-            
-        }
+                if (e.classList.value == 'fa-solid fa-retweet') {
+                    e.classList.value = 'fa-solid fa-retweet text-success';
+                    let retweet = true
+                    const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { retweet, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
 
-        var userretweet = [];
-        '<%for(let i=0;i<arrretweetid.length;i++){%>'
+                    if (resSave.flag == true) {
+                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                        retweetSpan.innerHTML = resSave.allretweetcount
+                    }
+                }
+                else if (e.classList.value == 'fa-solid fa-retweet text-success') {
+                    e.classList.value = 'fa-solid fa-retweet'
+                    let retweet = false;
+                    const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { retweet, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    if (resSave.flag == false) {
+                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                        retweetSpan.innerHTML = resSave.allretweetcount
+                    }
+                }
+
+
+            }
+
+            var userretweet = [];
+            '<%for(let i=0;i<arrretweetid.length;i++){%>'
             userretweet.push('<%=arrretweetid[i]%>');
-        '<%}%>'
-        console.log(userretweet);
-        userretweet.forEach(element => {
-            console.log(element);
-            document.getElementById("k"+element).classList = "fa-solid fa-retweet text-success";
-        });
+            '<%}%>'
+            console.log(userretweet);
+            userretweet.forEach(element => {
+                console.log(element);
+                document.getElementById("k" + element).classList = "fa-solid fa-retweet text-success";
+            });
 
 
         </script>
