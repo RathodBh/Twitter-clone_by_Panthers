@@ -116,7 +116,7 @@ app.get("/prof",async(req,res)=>{
 
     
     let uid = req.query.uid || 3;
-    var getuser = await query(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(3) limit 3`);
+    var getuser = await query(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(3)`);
     var getfollowerId = await query(`select follower_id from followers where user_id =${uid}`);
     var followers =[];
     getfollowerId.forEach(id => {
@@ -169,18 +169,43 @@ const storage=multer.diskStorage({
 app.get("/multer",(req,res)=>{
     res.render('multer')
 })
-app.get("/like",(req,res)=>{
-    res.render('like')
+app.get("/user-dash",async(req,res)=>{
+    let uid = req.query.uid || 3;
+    var getuser = await query(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(3)`);
+    var getfollowerId = await query(`select follower_id from followers where user_id =${uid}`);
+    var followers =[];
+    getfollowerId.forEach(id => {
+        followers.push(id.follower_id);
+    });
+
+    var following = await query(`select users.id,users.name,users.user_name,users.user_image from users left join following on users.id = following.user_id where following_id = ${uid}`)
+
+    var follower = await query(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.user_id where follower_id = ${uid}`)
+
+console.log("Getfolloerid :::::::",followers);
+    res.render('follow_following',{fuser:getuser,followers,following,follower})
 })
+
+
 
 
 app.get("/addfollow",async (req,res)=>{
     console.log(":::::::::::::::::::::::",req.query);
-    
+        let cnt = 0;
     if(req.query.flag == 0){
+        cnt ++;
         await query(`insert into  twitter_clone.followers (user_id,follower_id,isdelete) values("${3}","${req.query.followerId}","${0}");`);
-      }else{
+
+        await query(`insert into twitter_clone.following (user_id,following_id,isdelete) values("${req.query.followerId}","${3}","${0}")`);
+
+        await query(`UPDATE users SET following = following + ${cnt} WHERE id = ${3}`);
+        await query(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${req.query.followerId}`);
+    }else{
+        cnt--;
         await query(`delete from twitter_clone.followers  where user_id = ${3} AND follower_id = ${req.query.followerId};`);
+        await query(`delete from twitter_clone.following  where user_id = ${req.query.followerId} AND following_id = ${3} ;`);
+        await query(`UPDATE users SET following = following + ${cnt} WHERE id = ${3}`);
+        await query(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${req.query.followerId}`);
     }
 
     res.send({message:"update"});    
