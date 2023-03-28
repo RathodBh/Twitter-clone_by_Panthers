@@ -27,6 +27,7 @@ const commentInfo = asyncHandler(async (req, res) => {
     let userId = req.session.user_id;
     let db = `twitter_clone`;
     try {
+        
         // let sel_q = `SELECT id,name,user_image,user_name FROM ${db}.users `;
         let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name  FROM ${db}.tweets as t JOIN ${db}.users as u  WHERE t.id = ${tweet_id} && u.id = ${userId} `;
 
@@ -88,10 +89,12 @@ const commentInfo = asyncHandler(async (req, res) => {
             }
             hover_post_at.push(post_at.push(`${hover_hours}:${d.getMinutes()} ${hover_is_am_pm} • ${month[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`))
         })
+        let followuser = await queryExecuter(`select * from users where id not in(${userId}) limit 3`)
+        var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${userId}`);
         
         //i need to show the get request for register page
         let flag = false
-        res.render('tweet_details', { tweet_data: all_tweet_data, post_date: post_at, hover_post_date: hover_post_at });
+        res.render('tweet_details', { tweet_data: all_tweet_data, post_date: post_at, hover_post_date: hover_post_at ,fuser:followuser,followers:getfollowerId});
         return;
     } catch (err) {
         console.log("Error Dashboard:", err);

@@ -134,15 +134,12 @@ const getProfile = asyncHandler(async(req, res) => {
 
         }
 
-
-        const allretweertids = `select id from retweet where user_id=${user_id}`
-        const allretweert_id = await queryExecuter(allretweertids);
-        let some = allretweert_id.length
+        let some = alltweet_ids.length
         var arr_of_retweet = [];
 
         for (let i = 0; i < some; i++) {
 
-            const qrt = `SELECT *  FROM retweet where tweet_id=${allretweert_id[i].id} and user_id=${user_id} and is_deleted=0;`
+            const qrt = `SELECT *  FROM retweet where tweet_id=${alltweet_ids[i].id} and user_id=${user_id} and is_deleted=0;`
     
             const retweetdata = await queryExecuter(qrt);
             arr_of_retweet[i] = retweetdata
@@ -356,14 +353,14 @@ const getTargetProfile = async (req, res) => {
         }
 
 
-        const allretweertids = `select id from retweet where user_id=${user_id}`
-        const allretweert_id = await queryExecuter(allretweertids);
-        let some = allretweert_id.length
+        
+        
+        let some = alltweet_ids.length
         var arr_of_retweet = [];
 
         for (let i = 0; i < some; i++) {
 
-            const qrt = `SELECT *  FROM retweet where tweet_id=${allretweert_id[i].id} and user_id=${user_id} and is_deleted=0;`
+            const qrt = `SELECT *  FROM retweet where tweet_id=${alltweet_ids[i].id} and user_id=${user_id} and is_deleted=0;`
     
             const retweetdata = await queryExecuter(qrt);
             arr_of_retweet[i] = retweetdata
@@ -385,8 +382,9 @@ const getTargetProfile = async (req, res) => {
         var users = await query(`select * from users where id=${user_id}`);
         let followuser = await queryExecuter(`select * from users where id not in(${user_id}) limit 3`)
         var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${user_id}`);
-        console.log(getfollowerId);
-    
+
+        console.log(use);
+
 
         //i need to show the get request for register page
         let changepass = false
