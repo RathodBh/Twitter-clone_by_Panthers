@@ -33,8 +33,9 @@
                         <div id="for-you" class="tab-pane active">
                             <div class="tweet-container all-center flex-column ">
                                 <% tweet_data.forEach((t,index)=>{ %>
-                                    
-                                    <div onclick="test(`<%=t.id%>`)" class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
+
+                                    <div onclick="test(`<%=t.id%>`)"
+                                        class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
                                         <div class="col-1 p-0">
                                             <img src="<%= t.user_image %>" alt="" class="profile-size me-2 border">
                                         </div>
@@ -52,11 +53,11 @@
                                                 </span>
                                             </div>
                                             <div class="tweet-content">
-                                              
-                                                    <p class="text-black fs-16 fw-300 word-wrap">
-                                                        <%= t.tweet %>
-                                                    </p>
-                                            
+
+                                                <p class="text-black fs-16 fw-300 word-wrap">
+                                                    <%= t.tweet %>
+                                                </p>
+
                                             </div>
 
                                             <% if(t.media_type.includes("image")){ %>
@@ -73,7 +74,8 @@
                                                         <div class="tweet-reactions-container mt-3">
                                                             <ul class="list-unstyled row">
                                                                 <li class="col">
-                                                                    <a href="" data-bs-toggle="modal" class="comment clickComment"
+                                                                    <a href="" data-bs-toggle="modal"
+                                                                        class="comment clickComment"
                                                                         data-bs-target="#commentModal"
                                                                         data-id="<%= t.id %>" id="clickComment">
                                                                         <i class="fa-regular fa-comment"></i>
@@ -182,9 +184,18 @@
                 loader.className += " hidden"; // class "loader hidden"
             });
 
+            let allClicks = document.querySelectorAll(".clickComment")
+            allClicks.forEach((cur) => {
+                // let linkModal = document.querySelector("#clickComment");
+                cur.addEventListener("click", (e) => {
+                    let id = e.currentTarget.getAttribute("data-id");
+                    document.querySelector(".modal-body #tweetId").value = id;
+                })
+            })
+            
 
             //done by jigar
-            async function likepost(e,t_id) {
+            async function likepost(e, t_id) {
                 console.log('e', e)
 
                 e.stopPropagation()
@@ -239,7 +250,7 @@
                 document.getElementById(element).classList = "fa-solid fa-heart text-danger";
             });
 
-            async function retweetpost(e,t_id) {
+            async function retweetpost(e, t_id) {
                 e.stopPropagation();
                 let temp = t_id.id
                 let id = temp.slice(1);
@@ -320,9 +331,9 @@
             //copy to clipboard
 
 
-            async function copyContent(e,text){
+            async function copyContent(e, text) {
                 e.stopPropagation();
-                console.log(e,text);
+                console.log(e, text);
                 alert("Copy to clipboard")
                 try {
                     await navigator.clipboard.writeText(text);
@@ -330,10 +341,10 @@
                     console.error('Failed to copy: ', err);
                 }
             }
-            const test=(id)=>{
-                window.location.href=(`/tweet/tweet_details/${id}`)
+            const test = (id) => {
+                window.location.href = (`/tweet/tweet_details/${id}`)
             }
 
-            
+
         </script>
         <%- include("search") -%>
