@@ -1,0 +1,511 @@
+<%- include("menu") -%>
+    <div class="loader">
+        <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
+    </div>
+    <link rel="stylesheet" href="/stylesheets/profile.css">
+    <div class="col-6 p-2">
+        <div class="inner-main">
+
+            <div class="card" id="card">
+                <div class="cover">
+                    <img src="<%= users[0].cover_image%>" alt="">
+                </div>
+                <div class="row ">
+                    <div class="col">
+                        <div class="dp">
+                            <img src="<%= users[0].user_image %>" class="card-img-left" alt="">
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="mt-2 ms-5 follow">
+                            <p> <a href="" class="menu-link rounded-pill px-3">
+                                    Follow
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="user-data">
+
+                        <label for="" class="bold">
+                            <%= users[0].name %>
+                        </label>
+                        <img src="./uploads/red_verified.png" alt="" height="20px" width="20px">
+
+                        <p class="text-secondary">@<%= users[0].user_name %>
+                        </p>
+                    </div>
+                    <p class="card-text text-dark ">
+                        <%= users[0].bio %> <i class="fa-regular fa-face-laugh-beam"></i>
+                    </p>
+                    <div class="info d-flex ">
+                        <p class="text-secondary ms-1"><i class="fa-solid fa-location-dot"></i> everywhere</p>
+                        <p class="text-secondary ms-2"><i class="fa-solid fa-link"></i>
+                        <p class="text-info">username.com</p>
+                        </p>
+                        <p class="text-secondary ms-2"><i class="fa-solid fa-cake-candles"></i> Date Of Birth: <%=
+                                users[0].birth_date.slice(0, 10) %>
+                        </p>
+                    </div>
+                    <div class="join">
+                        <p class="text-secondary"><i class="fa-solid fa-calendar-days"></i> Joined at: <%=
+                                users[0].created_at.slice(0, 10) %>
+                        </p>
+                    </div>
+                    <div class="d-flex">
+                        <p>
+                            <%= users[0].following %>
+
+                                <p class="ms-2">Following</p>
+                        </p>
+                        <p class="ms-3">
+                            <%= users[0].followers %>
+                                <p class="ms-2">Followers</p>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        </form>
+<!-- for retweet -->
+
+<div class="all-data">
+    <div class="tab-content">
+        <div id="for-you" class="tab-pane active">
+            <div class="tweet-container all-center flex-column ">
+                
+                <% all_retweet.forEach((t,index)=>{ %>
+                    <div class="tweet w-100 p-3 row pt-4 border-bottom border-top">
+                        <div class="col-1 p-0">
+                            <img src="<%= users[0].user_image %>" alt="" class="profile-size me-2 border">
+                        </div>
+                        <div class="col-10 px-4">
+                            <div class="d-flex align-items-center user-info">
+                                <span class="text-black fs-16 me-1 fw-600">
+                                    <%= users[0].name %>
+                                </span>
+                                <span class="fs-16 text-gray me-1">
+                                    @  <%= users[0].user_name %>
+                                </span>
+                                <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
+                                <span class="date fs-16 me-1 text-gray">
+                                    <%= post_date[index] %>
+                                </span>
+                               
+                            </div>
+                            <div class="tweet-content">
+                          
+                                <a href="/tweet/tweet_details/<%= t.id %>">
+                            
+                                    <p class="text-black fs-16 fw-300">
+                              
+                                        <%= t.tweet %>
+                                    </p>
+                                </a>
+                            </div>
+
+                            <% if(t.media_type.includes("image")){ %>
+                                <div class="tweet-img-container">
+                                    <img src="<%= t.media_url %>" alt="" class="w-100">
+                                </div>
+                                <% }else if(t.media_type.includes("video") ){ %>
+                                    <div class="tweet-video-container">
+                                        <video controls loop>
+                                            <source src="<%= t.media_url %>" type="video/mp4">
+                                        </video>
+                                    </div>
+                                    <% } %>
+                                        <div class="tweet-reactions-container mt-3">
+                                            <ul class="list-unstyled row">
+                                                <li class="col">
+                                                    <a href="/tweet/tweet_details/<%= t.id %>" class="comment">
+                                                        <i class="fa-regular fa-comment"></i>
+                                                        <%= t.tweet_comments %>
+                                                    </a>
+                                                </li>
+                                                <li class="col">
+                                                    <a href="" class="retweet">
+                                                        <i class="fa-solid fa-retweet"></i>
+                                                        <%= t.tweet_retweets %>
+                                                        
+                                                    </a>
+                                                </li>
+                                                <li class="col">
+                                                    <a class="like <%= t.id %>">
+                                                        <i class="fa-regular fa-heart" onclick="likepost(this)"
+                                                            id="<%= t.id %>"></i>
+
+
+                                                        <span id="like<%= t.id %>">
+                                                            <%= t.tweet_likes %>
+                                                        </span>
+
+
+                                                    </a>
+                                                </li>
+                                                <li class=" col">
+                                                    <a href="" class="chart">
+                                                        <i class="fa-solid fa-chart-simple"></i>
+
+                                                    </a>
+                                                </li>
+                                                <li class="col">
+                                                    <a href="" class="share">
+                                                        <i class="fa-solid fa-arrow-up-from-bracket"></i>
+
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                        </div>
+                        <div class="col-1 dropstart">
+                            <a href="" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false">
+                                •••
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="d-flex">
+                                    <a class="dropdown-item" href="#"><i class="fa-solid fa-user-plus me-2"></i>
+                                        Follow <span class="text-blue">@  <%= users[0].user_name %></span>
+
+                                    </a>
+                                </li>
+
+
+                                <li class="d-flex">
+                                    <a class="dropdown-item" href="#"><i
+                                            class="fa-solid fa-user-minus me-2"></i> Unfollow <span
+                                            class="text-blue">@<%= t.user_name %></span>
+
+                                    </a>
+                                </li>
+
+                                <li class="d-flex">
+                                    <a class="dropdown-item" href="#"><i class="fa-regular fa-eye me-2"></i>
+                                        Visit profile <span class="text-blue">@<%= t.user_name %></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <% }) %>
+            </div>
+        </div>
+        
+    </div>
+</div> 
+<!-- for retweet end -->
+
+        <div class="all-data">
+            <div class="tab-content">
+                <div id="for-you" class="tab-pane active">
+                    <div class="tweet-container all-center flex-column ">
+                    
+                        <% tweet_data.forEach((t,index)=>{ %>
+                            <div class="tweet w-100 p-3 row pt-4 border-bottom border-top">
+                                <div class="col-1 p-0">
+                                    <img src="<%= users[0].user_image %>" alt="" class="profile-size me-2 border">
+                                </div>
+                                <div class="col-10 px-4">
+                                    <div class="d-flex align-items-center user-info">
+                                        <span class="text-black fs-16 me-1 fw-600">
+                                            <%= users[0].name %>
+                                        </span>
+                                        <span class="fs-16 text-gray me-1">
+                                            @ <%= users[0].user_name %>
+                                        </span>
+                                        <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
+                                        <span class="date fs-16 me-1 text-gray">
+                                            <%= post_date[index] %>
+                                        </span>
+                                    </div>
+                                    <div class="tweet-content">
+                                        <a href="/tweet/tweet_details/<%= t.id %>">
+                                         
+                                            <p class="text-black fs-16 fw-300">
+                                                <%= t.tweet %>
+                                            </p>
+                                        </a>
+                                    </div>
+
+                                    <% if(t.media_type.includes("image")){ %>
+                                        <div class="tweet-img-container">
+                                            <img src="<%= t.media_url %>" alt="" class="w-100">
+                                        </div>
+                                        <% }else if(t.media_type.includes("video") ){ %>
+                                            <div class="tweet-video-container">
+                                                <video controls loop>
+                                                    <source src="<%= t.media_url %>" type="video/mp4">
+                                                </video>
+                                            </div>
+                                            <% } %>
+                                                <div class="tweet-reactions-container mt-3">
+                                                    <ul class="list-unstyled row">
+                                                        <li class="col">
+                                                            <a href="/tweet/tweet_details/<%= t.id %>" class="comment">
+                                                                <i class="fa-regular fa-comment"></i>
+                                                                <%= t.tweet_comments %>
+                                                            </a>
+                                                        </li>
+                                                        <li class="col">
+                                                            <a class="retweet">
+                                                                <i class="fa-solid fa-retweet"
+                                                                    onclick="retweetpost(this)" id="k<%= t.id %>"></i>
+                                                                <span id="retweet<%= t.id %>">
+                                                                    <%= t.tweet_retweets %>
+                                                                </span>
+
+                                                            </a>
+                                                        </li>
+                                                        <li class="col">
+
+                                                            <a class="like <%= t.id %>">
+                                                                <i class="fa-regular fa-heart" onclick="likepost(this)"
+                                                                    id="<%= t.id %>"></i>
+                                                                <span id="like<%= t.id %>">
+                                                                    <%= t.tweet_likes %>
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                        <li class=" col">
+                                                            <a href="" class="chart">
+                                                                <i class="fa-solid fa-chart-simple"></i>
+
+                                                            </a>
+                                                        </li>
+                                                        <li class="col">
+                                                            <a href="" class="share">
+                                                                <i class="fa-solid fa-arrow-up-from-bracket"></i>
+
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                </div>
+                                <div class="col-1 dropstart">
+                                    <a href="" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false">
+                                        •••
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li class="d-flex">
+                                            <a class="dropdown-item" href="#"><i class="fa-solid fa-user-plus me-2"></i>
+                                                Follow <span class="text-blue">@ <%= users[0].user_name %></span>
+
+                                            </a>
+                                        </li>
+
+
+                                        <li class="d-flex">
+                                            <a class="dropdown-item" href="#"><i
+                                                    class="fa-solid fa-user-minus me-2"></i> Unfollow <span
+                                                    class="text-blue">@<%= t.user_name %></span>
+
+                                            </a>
+                                        </li>
+
+                                        <li class="d-flex">
+                                            <a class="dropdown-item" href="#"><i class="fa-regular fa-eye me-2"></i>
+                                                Visit profile <span class="text-blue">@<%= t.user_name %></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                       
+                            <% }) %>
+                    </div>
+                </div>
+                <div id="following-home" class="tab-pane container">
+                    Part 2
+                </div>
+            </div>
+        </div>
+    </div>
+    <%- include("search") -%>
+        </div>
+
+        <script>
+            window.addEventListener("load", function () {
+                const loader = document.querySelector(".loader");
+                loader.className += " hidden"; // class "loader hidden"
+            });
+            // demo()
+            var result
+            async function demo() {
+                let data1 = await fetch("http://localhost:3008/profile");
+                let data = await data1.json();
+                result = data;
+                let udata = ``;
+
+                data.forEach(users => {
+                    udata += `
+                `;
+                });
+                document.getElementById("card").innerHTML = udata;
+                // console.log("udata=",udata);
+
+            }
+
+
+            async function likepost(e) {
+                let tweet_id = e.id
+                console.log(tweet_id);
+                if (e.classList.value == 'fa-regular fa-heart') {
+                    e.classList.value = 'fa-solid fa-heart text-danger';
+                    let like = true
+                    const save_req = await fetch(`http://localhost:3008/dashboard/like`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { like, tweet_id }
+
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    console.log(resSave.flag);
+
+                    if (resSave.flag == true) {
+                        let likeSpan = document.querySelector("#like" + tweet_id)
+                        likeSpan.innerHTML = resSave.alllikecount
+                    }
+
+                }
+                else if (e.classList.value == 'fa-solid fa-heart text-danger') {
+                    e.classList.value = 'fa-regular fa-heart'
+                    let like = false;
+                    const save_req = await fetch(`http://localhost:3008/dashboard/like`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { like, tweet_id }
+
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    console.log(resSave.flag);
+
+                    if (resSave.flag == false) {
+                        let likeSpan = document.querySelector("#like" + tweet_id)
+                        likeSpan.innerHTML = resSave.alllikecount
+                    }
+                }
+
+            }
+
+            var userLike = [];
+
+
+            '<%for(let i=0;i<arrlikeid.length;i++){%>'
+            userLike.push('<%=arrlikeid[i]%>');
+            '<%}%>'
+            userLike.forEach(element => {
+
+                document.getElementById(element).classList = "fa-solid fa-heart text-danger";
+            });
+
+
+
+
+            async function retweetpost(e) {
+                let temp = e.id
+                let id = temp.slice(1);
+                let tweet_id = parseInt(id)
+
+                if (e.classList.value == 'fa-solid fa-retweet') {
+                    e.classList.value = 'fa-solid fa-retweet text-success';
+                    let retweet = true
+                    const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { retweet, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+
+                    if (resSave.flag == true) {
+                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                        retweetSpan.innerHTML = resSave.allretweetcount
+                    }
+                }
+                else if (e.classList.value == 'fa-solid fa-retweet text-success') {
+                    e.classList.value = 'fa-solid fa-retweet'
+                    let retweet = false;
+                    const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { retweet, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    if (resSave.flag == false) {
+                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                        retweetSpan.innerHTML = resSave.allretweetcount
+                    }
+                }
+
+
+            }
+
+            var userretweet = [];
+            '<%for(let i=0;i<arrretweetid.length;i++){%>'
+            userretweet.push('<%=arrretweetid[i]%>');
+            '<%}%>'
+            userretweet.forEach(element => {
+
+                document.getElementById("k" + element).classList = "fa-solid fa-retweet text-success";
+            });
+
+
+        </script>
+
+
+        <style>
+            .loader {
+                position: fixed;
+                z-index: 99;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: white;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .loader>img {
+                width: 100px;
+            }
+
+            .loader.hidden {
+                animation: fadeOut 1s;
+                animation-fill-mode: forwards;
+            }
+
+            @keyframes fadeOut {
+                100% {
+                    opacity: 0;
+                    visibility: hidden;
+                }
+            }
+
+            .thumb {
+                height: 100px;
+                border: 1px solid black;
+                margin: 10px;
+            }
+        </style>

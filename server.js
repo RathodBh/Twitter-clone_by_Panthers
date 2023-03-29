@@ -142,7 +142,7 @@ app.get("/srch?", async (req, res) => {
     }
     var matchedResult = [];
     for (let m = 0; m < newArr.length; m++) {
-        var sql2 = `SELECT name,user_name,user_image FROM twitter_clone.users where user_name="${newArr[m]}"`;;
+        var sql2 = `SELECT id,name,user_name,user_image FROM twitter_clone.users where user_name="${newArr[m]}"`;;
         resultantName = await queryExecuter(sql2);
         matchedResult.push(resultantName)
     }

@@ -18,36 +18,7 @@
 
             </div>
 
-            <!-- <div class="my-4 d-flex justify-content-between align-items-center w-100">
-                <div class="d-flex">
-                    <img src="" alt="" class="profile-size me-2 border">
-                    <div class="info">
-                        <h6>Bhavesh Rathod</h6>
-                        <span class="text-gray">@BH836sas</span>
-                    </div>
-                </div>
-                <a href="" class="btn btn-dark rounded-pill px-3">Follow</a>
-            </div>
-            <div class="my-4 d-flex justify-content-between align-items-center w-100">
-                <div class="d-flex">
-                    <img src="" alt="" class="profile-size me-2 border">
-                    <div class="info">
-                        <h6>Bhavesh Rathod</h6>
-                        <span class="text-gray">@BH836sas</span>
-                    </div>
-                </div>
-                <a href="" class="btn btn-dark rounded-pill px-3">Follow</a>
-            </div>
-            <div class="my-4 d-flex justify-content-between align-items-center w-100">
-                <div class="d-flex">
-                    <img src="" alt="" class="profile-size me-2 border">
-                    <div class="info">
-                        <h6>Bhavesh Rathod</h6>
-                        <span class="text-gray">@BH836sas</span>
-                    </div>
-                </div>
-                <a href="" class="btn btn-dark rounded-pill px-3">Follow</a>
-            </div> -->
+     
 
             <a href="" class="p-2 fs-14 text-blue">Show more</a>
         </div>
@@ -107,7 +78,7 @@
         let user_details = ``;
         for (let i = 0; i < data.length; i++) {
             user_details += `
-<div class="my-4 d-flex justify-content-between align-items-center w-100">
+<div class="my-4 d-flex justify-content-between align-items-center w-100" id="${data[i][0].id}" onclick="getTargetProfile(this)" style="cursor: pointer;">
         <div class="d-flex">
             <img src="${data[i][0].user_image}" alt="" class="profile-size me-2 border">
             <div class="info"> 
@@ -123,6 +94,14 @@
         }
         document.getElementById("addHere").innerHTML = user_details;
     }
+    async function getTargetProfile(e) {
+        console.log(e.id);
+        const save_req = await fetch(`http://localhost:3008/profile/user/search/?id=${e.id}`);
+        const data = await save_req.json();
+        location.href = `/profile/user/${e.id}`;
+    }
+
+    
 
 
     async function follow(follower_id, flag) {

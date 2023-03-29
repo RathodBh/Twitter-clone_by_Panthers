@@ -119,10 +119,11 @@ const addTweetComment = asyncHandler(async (req, res) => {
         return;
     }
     const { tweetId, comment_text } = req.body;
+    console.log(req.body);
     const userId = req.session.user_id;
 
 
-    const q = `INSERT INTO comments(user_id,comment,tweet_id,created_at) VALUES(${userId},'${comment_text}',${tweetId},NOW() )`
+    const q = `INSERT INTO comments(user_id,comment,tweet_id,created_at) VALUES(${userId},'${comment_text}',${tweetId},NOW())`
 
     await queryExecuter(q);
 
