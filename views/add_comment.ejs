@@ -3,12 +3,12 @@
         <div class="modal-content ps-3 pb-2">
             <form action="" method="post" id="addCommentForm">
                 <div class="d-flex p-2">
-                    <button type="button" class="btn-close"  data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
                 <div class="modal-body" id="modal_body">
                     <div id="errLimitComment" class="my-1"></div>
-                    
+
                     <div class="d-flex pt-2">
                         <img src="/assets/images/cover.jpg" alt="" class="profile-size me-2 border ">
                         <input type="hidden" name="tweetId" id="tweetId">
@@ -23,30 +23,19 @@
                 <div class="d-flex justify-content-between" id="twt_btn_lnk">
                     <div>
                         <a href="#emojis">
-                            <i  class="fa-regular fa-face-smile  rounded-circle p-2  link-hover me-1 border border-3 border-primary" onclick="emoji_picker1()"></i>
-                            
+                            <i class="fa-regular fa-face-smile  rounded-circle p-2  link-hover me-1 border border-3 border-primary"
+                                onclick="emoji_picker1()"></i>
+
                             <emoji-picker id="comment_add" style="display:none;"></emoji-picker>
                         </a>
                     </div>
 
                     <div>
-                        <input type="submit" class="btn btn-primary bg-blue  rounded-pill me-3" id="sub_btn" value="Add Comment"
-                             data-bs-dismiss="modal"></input>
+                        <input type="submit" class="btn btn-primary bg-blue  rounded-pill me-3" id="sub_btn"
+                            value="Add Comment" data-bs-dismiss="modal"></input>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<script>
-
-
-$(document).on("click", ".clickComment", function () {
-    // e.stopPropagation();/
-    var myTweetId = $(this).data('id');
-    $(".modal-body #tweetId").val( myTweetId );
-});
-
-    
-//fetch request of data
-</script>

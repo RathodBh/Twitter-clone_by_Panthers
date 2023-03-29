@@ -6,8 +6,7 @@
             <div class="inner-main commentInfo ">
                 <div class="blur-ui p-3">
                     <div class="d-flex align-items-center my-2">
-                        <a href="/dashboard" class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "
-                            ></a>
+                        <a href="/dashboard" class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "></a>
                         <h5 class="text-black d-inline-block mb-0">Tweet</h5>
                     </div>
 
@@ -92,8 +91,8 @@
                                                 <div class="tweet-reactions-container py-2 border-bottom">
                                                     <ul class="list-unstyled row my-0">
                                                         <li class="col">
-                                                            <a href="" class="comment clickComment" data-bs-toggle="modal"
-                                                                data-bs-target="#commentModal"
+                                                            <a href="" class="comment clickComment"
+                                                                data-bs-toggle="modal" data-bs-target="#commentModal"
                                                                 data-id="<%= tweet_data.id %>" id="clickComment">
                                                                 <i class="fa-regular fa-comment"></i>
                                                             </a>
@@ -181,7 +180,8 @@
                                                                                 <a class="dropdown-item" href="#"><i
                                                                                         class="fa-solid fa-user-minus me-2"></i>
                                                                                     Unfollow <span class="text-blue">@
-                                                                                        <%= c.user_name %></span>
+                                                                                        <%= c.user_name %>
+                                                                                    </span>
 
                                                                                 </a>
                                                                             </li>
@@ -211,6 +211,11 @@
         </div>
 
         <script>
+            let linkModal = document.querySelector("#clickComment");
+            linkModal.addEventListener("click", (e) => {
+                let id = e.currentTarget.getAttribute("data-id");
+                document.querySelector(".modal-body #tweetId").value = id;
+            })
 
             let form = document.querySelector('#addCommentForm')
             form.addEventListener('submit', async (e) => {
@@ -220,7 +225,7 @@
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body:JSON.stringify({
+                    body: JSON.stringify({
                         tweetId: document.querySelector("#tweetId").value,
                         comment_text: document.querySelector("#comment_area").value
                     })
@@ -234,14 +239,14 @@
                 console.log(allCommentAt);
                 var comment_section = document.querySelector("#commentSection");
 
-                if(allComments.length <= 0){
+                if (allComments.length <= 0) {
                     comment_section.innerHTML = `<span class="d-inline-block mt-2 text-secondary">No Comments yet.</span>`;
                 }
-                else{
+                else {
                     let comment_data = ""
-                    for(let i=0; i< allComments.length; i++){
-                        comment_data += 
-                        `<div class="comment row border py-2">
+                    for (let i = 0; i < allComments.length; i++) {
+                        comment_data +=
+                            `<div class="comment row border py-2">
                                                                     <div class="col-1">
                                                                         <img src="${allComments[i].user_image}" alt=""
                                                                             class="profile-size me-2 border">
@@ -312,9 +317,9 @@
 
                     comment_section.innerHTML = comment_data;
                 }
-                
+
             })
-                
-            
+
+
         </script>
         <%- include("search") -%>

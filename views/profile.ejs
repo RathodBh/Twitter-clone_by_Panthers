@@ -1,4 +1,6 @@
 <%- include("menu") -%>
+<%- include("add_comment") -%>
+
     <div class="loader">
         <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
     </div>
@@ -12,7 +14,7 @@
 
         </div>
 
-       
+
 
         <form action="/updateProfile" method="post" enctype="multipart/form-data">
             <div class="modal fade ms-2" id="edit_profile" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -89,7 +91,7 @@
             </div>
         </form>
 
-       
+
 
 
         <div class="all-data">
@@ -107,7 +109,7 @@
                                             <%= users[0].name %>
                                         </span>
                                         <span class="fs-16 text-gray me-1">
-                                            @  <%= users[0].user_name %>
+                                            @ <%= users[0].user_name %>
                                         </span>
                                         <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
                                         <span class="date fs-16 me-1 text-gray">
@@ -136,30 +138,35 @@
                                                 <div class="tweet-reactions-container mt-3">
                                                     <ul class="list-unstyled row">
                                                         <li class="col">
-                                                            <a href="/tweet/tweet_details/<%= t.id %>" class="comment">
+                                                            <a href="" data-bs-toggle="modal"
+                                                                class="comment clickComment"
+                                                                data-bs-target="#commentModal" data-id="<%= t.id %>"
+                                                                id="clickComment">
                                                                 <i class="fa-regular fa-comment"></i>
-                                                                <%= t.tweet_comments %>
+                                                                <span id="allComment<%= t.id %>">
+                                                                    <%= t.tweet_comments %>
+                                                                </span>
+
                                                             </a>
                                                         </li>
                                                         <li class="col">
                                                             <a class="retweet">
                                                                 <i class="fa-solid fa-retweet"
-                                                                onclick="retweetpost(event,this)"
-                                                                id="k<%= t.id %>"></i>
-                                                            <span id="retweet<%= t.id %>">
-                                                                <%= t.tweet_retweets %>
-                                                            </span>
-                                                                
+                                                                    onclick="retweetpost(event,this)"
+                                                                    id="k<%= t.id %>"></i>
+                                                                <span id="retweet<%= t.id %>">
+                                                                    <%= t.tweet_retweets %>
+                                                                </span>
+
                                                             </a>
                                                         </li>
                                                         <li class="col">
                                                             <a class="like <%= t.id %>">
                                                                 <i class="fa-regular fa-heart"
-                                                                onclick="likepost(event,this)"
-                                                                id="<%= t.id %>"></i>
-                                                            <span id="like<%= t.id %>">
-                                                                <%= t.tweet_likes %>
-                                                            </span>
+                                                                    onclick="likepost(event,this)" id="<%= t.id %>"></i>
+                                                                <span id="like<%= t.id %>">
+                                                                    <%= t.tweet_likes %>
+                                                                </span>
 
 
                                                             </a>
@@ -186,7 +193,7 @@
                                     <ul class="dropdown-menu">
                                         <li class="d-flex">
                                             <a class="dropdown-item" href="#"><i class="fa-solid fa-user-plus me-2"></i>
-                                                Follow <span class="text-blue">@  <%= users[0].user_name %></span>
+                                                Follow <span class="text-blue">@ <%= users[0].user_name %></span>
 
                                             </a>
                                         </li>
@@ -225,6 +232,33 @@
                 const loader = document.querySelector(".loader");
                 loader.className += " hidden"; // class "loader hidden"
             });
+
+            let linkModal = document.querySelector("#clickComment");
+            linkModal.addEventListener("click", (e) => {
+                let id = e.currentTarget.getAttribute("data-id");
+                document.querySelector(".modal-body #tweetId").value = id;
+            })
+
+            let form = document.querySelector('#addCommentForm')
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                let data = await fetch(`/tweet/tweet_comment`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        tweetId: document.querySelector("#tweetId").value,
+                        comment_text: document.querySelector("#comment_area").value
+                    })
+                })
+                let ans = await data.json();
+                allCommentsLen = ans.len;
+                var comment_section = document.querySelector("#allComment" + document.querySelector("#tweetId").value);
+                comment_section.innerHTML = allCommentsLen
+                // loadComments()
+            })
+            
             demo()
             var result
             async function demo() {
@@ -291,7 +325,7 @@
 
             }
 
-            async function likepost(e,t_id) {
+            async function likepost(e, t_id) {
                 console.log('e', e)
 
                 e.stopPropagation()
@@ -346,7 +380,7 @@
                 document.getElementById(element).classList = "fa-solid fa-heart text-danger";
             });
 
-            async function retweetpost(e,t_id) {
+            async function retweetpost(e, t_id) {
                 e.stopPropagation();
                 let temp = t_id.id
                 let id = temp.slice(1);
