@@ -102,7 +102,27 @@ const commentInfo = asyncHandler(async (req, res) => {
         for (let x of sel_comments) {
             comment_post_dates.push(getDate(x.created_at))
         }
-        res.render('tweet_details', { tweet_data: tweet, post_date: post_at, comments: sel_comments, comment_at: comment_post_dates });
+
+        let arrlikeid = []
+        let arrretweetid= []
+
+        let qry = await queryExecuter(`select * from likes where user_id=${userId} and tweet_id=${tweet_id} and is_deleted=0`)
+        if(qry.length){
+            arrlikeid.push(tweet_id)
+        }
+        let qry1 = await queryExecuter(`select * from retweet where user_id=${userId} and tweet_id=${tweet_id} and is_deleted=0`)
+        if(qry1.length){
+            arrretweetid.push(tweet_id)
+        }
+        
+
+        var users = await queryExecuter(`select * from users where id=${userId}`);
+        let followuser = await queryExecuter(`select * from users where id not in(${userId}) limit 3`)
+        var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${userId}`);
+
+
+
+        res.render('tweet_details', { tweet_data: tweet, post_date: post_at, comments: sel_comments, comment_at: comment_post_dates,fuser:followuser,followers:getfollowerId,arrretweetid, arrlikeid });
         return;
     } catch (err) {
         console.log("Error Dashboard:", err);

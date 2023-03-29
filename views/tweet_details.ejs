@@ -6,7 +6,8 @@
             <div class="inner-main commentInfo ">
                 <div class="blur-ui p-3">
                     <div class="d-flex align-items-center my-2">
-                        <a onclick="window.history.back()" class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "></a>
+                        <a href="/dashboard"
+                            class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "></a>
                         <h5 class="text-black d-inline-block mb-0">Tweet</h5>
                     </div>
 
@@ -98,13 +99,23 @@
                                                             </a>
                                                         </li>
                                                         <li class="col">
-                                                            <a href="" class="retweet">
-                                                                <i class="fa-solid fa-retweet"></i>
+                                                            <a class="retweet">
+                                                                <i class="fa-solid fa-retweet"
+                                                                onclick="retweetpost(event,this)"
+                                                                id="k<%= tweet_data.id %>"></i>
+                                                            <span id="retweet<%= tweet_data.id %>">
+                                                                <%= tweet_data.tweet_retweets %>
+                                                            </span>
                                                             </a>
                                                         </li>
                                                         <li class="col">
-                                                            <a href="" class="like">
-                                                                <i class="fa-regular fa-heart"></i>
+                                                            <a class="like">
+                                                                <i class="fa-regular fa-heart"
+                                                                onclick="likepost(event,this)"
+                                                                id="<%= tweet_data.id %>"></i>
+                                                            <span id="like<%= tweet_data.id %>">
+                                                                <%= tweet_data.tweet_likes %>
+                                                            </span>
                                                             </a>
                                                         </li>
                                                         <li class="col">
@@ -136,7 +147,8 @@
                                                                     <div class="col-10">
                                                                         <div
                                                                             class="d-flex align-items-center user-info">
-                                                                            <a href="/profile/user/<%= c.user_id %>" class="text-black fs-16 me-1 fw-600">
+                                                                            <a href="/profile/user/<%= c.user_id %>"
+                                                                                class="text-black fs-16 me-1 fw-600">
                                                                                 <%= c.name %>
                                                                             </a>
                                                                             <span class="fs-16 text-gray me-1">
@@ -321,6 +333,109 @@
 
             })
 
+
+            async function likepost(e, t_id) {
+
+                e.stopPropagation()
+                let tweet_id = t_id.id
+                if (t_id.classList.value == 'fa-regular fa-heart') {
+                    t_id.classList.value = 'fa-solid fa-heart text-danger';
+                    let like = true
+                    const save_req = await fetch(`/dashboard/like`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { like, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    if (resSave.flag == true) {
+                        let likeSpan = document.querySelector("#like" + tweet_id)
+                        likeSpan.innerHTML = resSave.alllikecount
+                    }
+                }
+                else if (t_id.classList.value == 'fa-solid fa-heart text-danger') {
+                    t_id.classList.value = 'fa-regular fa-heart'
+                    let like = false;
+                    const save_req = await fetch(`/dashboard/like`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { like, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    if (resSave.flag == false) {
+                        let likeSpan = document.querySelector("#like" + tweet_id)
+                        likeSpan.innerHTML = resSave.alllikecount
+                    }
+                }
+            }
+
+            var userLike = [];
+            '<%for(let i=0;i<arrlikeid.length;i++){%>'
+            userLike.push('<%=arrlikeid[i]%>');
+            '<%}%>'
+            userLike.forEach(element => {
+
+                document.getElementById(element).classList = "fa-solid fa-heart text-danger";
+            });
+
+            async function retweetpost(e, t_id) {
+                e.stopPropagation();
+                let temp = t_id.id
+                let id = temp.slice(1);
+                let tweet_id = parseInt(id)
+                if (t_id.classList.value == 'fa-solid fa-retweet') {
+                    t_id.classList.value = 'fa-solid fa-retweet text-success';
+                    let retweet = true
+                    const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { retweet, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    if (resSave.flag == true) {
+                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                        retweetSpan.innerHTML = resSave.allretweetcount
+                    }
+                }
+                else if (t_id.classList.value == 'fa-solid fa-retweet text-success') {
+                    t_id.classList.value = 'fa-solid fa-retweet'
+                    let retweet = false;
+                    const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { retweet, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    if (resSave.flag == false) {
+                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                        retweetSpan.innerHTML = resSave.allretweetcount
+                    }
+                }
+            }
+
+            var userretweet = [];
+            '<%for(let i=0;i<arrretweetid.length;i++){%>'
+            userretweet.push('<%=arrretweetid[i]%>');
+            '<%}%>'
+            userretweet.forEach(element => {
+
+                document.getElementById("k" + element).classList = "fa-solid fa-retweet text-success";
+            });
 
         </script>
         <%- include("search") -%>
