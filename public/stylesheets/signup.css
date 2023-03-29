@@ -294,3 +294,14 @@ form,.user {
     text-align: center;
     color: #222831
 }
+
+
+#next,#prev,#submit{
+    transition: all 0.5s;
+    cursor: pointer;
+}
+
+#next[disabled="true"],#submit[disabled="true"]{
+    opacity: 0.4;
+    cursor: not-allowed;
+}

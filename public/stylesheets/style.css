@@ -376,3 +376,8 @@ a {
     max-height: 40vh;
     overflow: auto;
 }
+
+.cp{
+    cursor: pointer;
+}
+

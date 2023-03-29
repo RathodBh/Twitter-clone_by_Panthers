@@ -41,8 +41,8 @@
 <script>
 
 
-$(document).on("click", "#clickComment", function () {
-    
+$(document).on("click", ".clickComment", function (e) {
+    // e.stopPropagation();/
     var myTweetId = $(this).data('id');
     $(".modal-body #tweetId").val( myTweetId );
 });

@@ -34,7 +34,7 @@
                             <div class="tweet-container all-center flex-column ">
                                 <% tweet_data.forEach((t,index)=>{ %>
                                     
-                                    <div onclick="test(`<%=t.id%>`)" class="tweet w-100 p-3 row pt-4 border-bottom border-top">
+                                    <div onclick="test(`<%=t.id%>`)" class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
                                         <div class="col-1 p-0">
                                             <img src="<%= t.user_image %>" alt="" class="profile-size me-2 border">
                                         </div>
@@ -73,7 +73,7 @@
                                                         <div class="tweet-reactions-container mt-3">
                                                             <ul class="list-unstyled row">
                                                                 <li class="col">
-                                                                    <a href="" data-bs-toggle="modal" class="comment"
+                                                                    <a href="" data-bs-toggle="modal" class="comment clickComment"
                                                                         data-bs-target="#commentModal"
                                                                         data-id="<%= t.id %>" id="clickComment">
                                                                         <i class="fa-regular fa-comment"></i>
@@ -86,7 +86,7 @@
                                                                 <li class="col">
                                                                     <a class="retweet">
                                                                         <i class="fa-solid fa-retweet"
-                                                                            onclick="retweetpost(this)"
+                                                                            onclick="retweetpost(event,this)"
                                                                             id="k<%= t.id %>"></i>
                                                                         <span id="retweet<%= t.id %>">
                                                                             <%= t.tweet_retweets %>
@@ -119,8 +119,8 @@
                                                                     </a>
                                                                     <ul class="dropdown-menu p-0">
                                                                         <li class="d-flex">
-                                                                            <a class="dropdown-item text-dark" href="#"
-                                                                                onclick="copyContent(`http:/localhost:3008/tweet/tweet_details/<%= t.id %>`)">
+                                                                            <a class="dropdown-item text-dark"
+                                                                                onclick="copyContent(event,`http:/localhost:3008/tweet/tweet_details/<%= t.id %>`)">
                                                                                 <i
                                                                                     class="fa-regular fa-clipboard me-2"></i>
 
@@ -184,14 +184,14 @@
 
 
             //done by jigar
-            async function likepost(e,twitte) {
+            async function likepost(e,t_id) {
                 console.log('e', e)
 
                 e.stopPropagation()
-                let tweet_id = e.id
+                let tweet_id = t_id.id
 
-                if (e.classList.value == 'fa-regular fa-heart') {
-                    e.classList.value = 'fa-solid fa-heart text-danger';
+                if (t_id.classList.value == 'fa-regular fa-heart') {
+                    t_id.classList.value = 'fa-solid fa-heart text-danger';
                     let like = true
                     const save_req = await fetch(`/dashboard/like`, {
                         method: "POST",
@@ -209,8 +209,8 @@
                         likeSpan.innerHTML = resSave.alllikecount
                     }
                 }
-                else if (e.classList.value == 'fa-solid fa-heart text-danger') {
-                    e.classList.value = 'fa-regular fa-heart'
+                else if (t_id.classList.value == 'fa-solid fa-heart text-danger') {
+                    t_id.classList.value = 'fa-regular fa-heart'
                     let like = false;
                     const save_req = await fetch(`/dashboard/like`, {
                         method: "POST",
@@ -239,14 +239,14 @@
                 document.getElementById(element).classList = "fa-solid fa-heart text-danger";
             });
 
-            async function retweetpost(e) {
+            async function retweetpost(e,t_id) {
                 e.stopPropagation();
-                let temp = e.id
+                let temp = t_id.id
                 let id = temp.slice(1);
                 let tweet_id = parseInt(id)
 
-                if (e.classList.value == 'fa-solid fa-retweet') {
-                    e.classList.value = 'fa-solid fa-retweet text-success';
+                if (t_id.classList.value == 'fa-solid fa-retweet') {
+                    t_id.classList.value = 'fa-solid fa-retweet text-success';
                     let retweet = true
                     const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
                         method: "POST",
@@ -264,8 +264,8 @@
                         retweetSpan.innerHTML = resSave.allretweetcount
                     }
                 }
-                else if (e.classList.value == 'fa-solid fa-retweet text-success') {
-                    e.classList.value = 'fa-solid fa-retweet'
+                else if (t_id.classList.value == 'fa-solid fa-retweet text-success') {
+                    t_id.classList.value = 'fa-solid fa-retweet'
                     let retweet = false;
                     const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
                         method: "POST",
@@ -320,7 +320,10 @@
             //copy to clipboard
 
 
-            const copyContent = async (text) => {
+            async function copyContent(e,text){
+                e.stopPropagation();
+                console.log(e,text);
+                alert("Copy to clipboard")
                 try {
                     await navigator.clipboard.writeText(text);
                 } catch (err) {
@@ -328,11 +331,9 @@
                 }
             }
             const test=(id)=>{
-                console.log('id', id)
-                // href="/tweet/tweet_details/"
-                //  t.id %>
                 window.location.href=(`/tweet/tweet_details/${id}`)
-                console.log('"caljfru"', "caljfru")
             }
+
+            
         </script>
         <%- include("search") -%>

@@ -187,6 +187,13 @@
 
     getFollowUser();
 
+
+    //add Comment func for stopPropagation
+    document.querySelectorAll(".clickComment").forEach((cur) => {
+        cur.addEventListener("click", (e) => {
+            e.stopPropagation();
+        })
+    })
 </script>
 </body>
 
