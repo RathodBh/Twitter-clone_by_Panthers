@@ -43,7 +43,7 @@ const getProfile = asyncHandler(async(req, res) => {
             res.redirect('/user-login')
         }
         const user_id = req.session.user_id
-        // let sel_q = `SELECT id,name,user_image,user_name FROM ${db}.users `;
+        // let sel_q = `SELECT id,name,user_image,user_name FROM   users `;
         let sel_tweets = `select * from tweets where user_id=${user_id} order by id DESC`;
         const all_tweet_data = await query(sel_tweets);
 
@@ -107,7 +107,7 @@ const getProfile = asyncHandler(async(req, res) => {
         var done = []
         for (let i = 0; i < value; i++) {
 
-            const qrt = `SELECT *  FROM twitter_clone.likes where tweet_id=${alltweet_ids[i].id} and user_id=${user_id} and is_deleted=0;`
+            const qrt = `SELECT *  FROM  likes where tweet_id=${alltweet_ids[i].id} and user_id=${user_id} and is_deleted=0;`
 
             const likeddata = await queryExecuter(qrt);
             arr_of_liked[i]=likeddata
@@ -273,7 +273,7 @@ const getTargetProfile = asyncHandler(async (req, res) => {
         const all_tweet_data = await query(sel_tweets);
 
         // for retweet
-        let sel_retweets = `SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id=tweets.id where retweet.user_id='${user_id}'AND retweet.is_deleted='0' order by retweet.id DESC`;
+        let sel_retweets = `SELECT * FROM  retweet inner join  tweets on retweet.tweet_id=tweets.id where retweet.user_id='${user_id}'AND retweet.is_deleted='0' order by retweet.id DESC`;
         const all_retweet_data = await query(sel_retweets);
 
 
@@ -337,7 +337,7 @@ const getTargetProfile = asyncHandler(async (req, res) => {
         var done = []
         for (let i = 0; i < value; i++) {
 
-            const qrt = `SELECT *  FROM twitter_clone.likes where tweet_id=${alltweet_ids[i].id} and user_id=${uid} and is_deleted=0;`
+            const qrt = `SELECT *  FROM  likes where tweet_id=${alltweet_ids[i].id} and user_id=${uid} and is_deleted=0;`
 
             const likeddata = await queryExecuter(qrt);
             arr_of_liked[i] = likeddata

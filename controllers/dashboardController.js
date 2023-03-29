@@ -46,7 +46,7 @@ const getpostLike1 = asyncHandler(async (req, res) => {
         var tweet_id = data.tweet_id
         tweet_ids = data.tweet_id
         if (data.like == true) {
-            const qrt = `SELECT  * FROM twitter_clone.likes where tweet_id=${data.tweet_id} and user_id=${user_id} and is_deleted=0;`
+            const qrt = `SELECT  * FROM  likes where tweet_id=${data.tweet_id} and user_id=${user_id} and is_deleted=0;`
 
             const like_data = await queryExecuter(qrt);
 
@@ -201,7 +201,7 @@ const getDashboard = asyncHandler(async (req, res) => {
             res.redirect('/user-login');
             return
         }
-        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name FROM ${db}.tweets as t LEFT JOIN ${db}.users u ON t.user_id = u.id ORDER BY t.id DESC `;
+        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name FROM   tweets as t LEFT JOIN   users u ON t.user_id = u.id ORDER BY t.id DESC `;
 
         //get comments of every tweet
         let comments = 0;
@@ -269,8 +269,8 @@ const getDashboard = asyncHandler(async (req, res) => {
 
         for (let x of all_tweet_data) {
             let tweet_id = x.id;
-            let [sel_comments] = await queryExecuter(`SELECT count(*) as tot FROM ${db}.comments WHERE tweet_id = '${tweet_id}'`);
-            let [sel_likes] = await queryExecuter(`SELECT count(*) as tot FROM ${db}.likes WHERE tweet_id = '${tweet_id}'`);
+            let [sel_comments] = await queryExecuter(`SELECT count(*) as tot FROM   comments WHERE tweet_id = '${tweet_id}'`);
+            let [sel_likes] = await queryExecuter(`SELECT count(*) as tot FROM   likes WHERE tweet_id = '${tweet_id}'`);
 
             all_comments.push(sel_comments.tot);
             all_likes.push(sel_likes.tot);
@@ -287,7 +287,7 @@ const getDashboard = asyncHandler(async (req, res) => {
         var done = []
         for (let i = 0; i < value; i++) {
 
-            const qrt = `SELECT *  FROM twitter_clone.likes where tweet_id=${alltweet_ids[i].id} and user_id=${user_id} and is_deleted=0;`
+            const qrt = `SELECT *  FROM  likes where tweet_id=${alltweet_ids[i].id} and user_id=${user_id} and is_deleted=0;`
 
             const likeddata = await queryExecuter(qrt);
             arr_of_liked[i] = likeddata
@@ -353,8 +353,8 @@ const getDashboard = asyncHandler(async (req, res) => {
         // let all_retweets = []
         // for (let x of all_tweet_data) {
         //     let tweet_id = x.id;
-        //     let [sel_comments] = await queryExecuter(`SELECT count(*) as tot FROM ${db}.comments WHERE tweet_id = '${tweet_id}'`);
-        //     let [sel_likes] = await queryExecuter(`SELECT count(*) as tot FROM ${db}.likes WHERE tweet_id = '${tweet_id}'`);
+        //     let [sel_comments] = await queryExecuter(`SELECT count(*) as tot FROM   comments WHERE tweet_id = '${tweet_id}'`);
+        //     let [sel_likes] = await queryExecuter(`SELECT count(*) as tot FROM   likes WHERE tweet_id = '${tweet_id}'`);
 
         //     all_comments.push(sel_comments.tot);
         //     all_likes.push(sel_likes.tot);
@@ -390,7 +390,7 @@ const postTweet = asyncHandler(async (req, res) => {
     const tweet = req.body.tweet_text || "";
 
     if (file.length == 0) {
-        conn.query('INSERT INTO twitter_clone.tweets (user_id,tweet,media_type,created_at) VALUES (?,?,?,NOW())', [user_id, tweet, 'text']);
+        conn.query('INSERT INTO  tweets (user_id,tweet,media_type,created_at) VALUES (?,?,?,NOW())', [user_id, tweet, 'text']);
     } else {
         for (var i = 0; i < file.length; i++) {
             const filename = file[i].originalname;
@@ -398,7 +398,7 @@ const postTweet = asyncHandler(async (req, res) => {
             const filetype = file[i].mimetype;
             const filename1 = file[i].filename
             var imgsrc = '/assets/images/' + filename1;
-            const sql = 'INSERT INTO twitter_clone.tweets (user_id,tweet, media_url,media_type,created_at) VALUES (?,?, ?, ?,NOW())';
+            const sql = 'INSERT INTO  tweets (user_id,tweet, media_url,media_type,created_at) VALUES (?,?, ?, ?,NOW())';
 
 
             const data = [user_id, tweet, imgsrc, filetype];

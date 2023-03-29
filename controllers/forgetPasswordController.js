@@ -32,7 +32,7 @@ const getMail = asyncHandler(async (req, res)=>{
     var mail = req.query.val;
     var otp = Math.floor(100000 + Math.random() * 900000);
     var mailExistStatus;
-    var dbMailsQry = `select email from twitter_clone.users;`;
+    var dbMailsQry = `select email from  users;`;
     var resultmail = await queryExecuter(dbMailsQry);
     if (resultmail.find(e => e.email == mail)) {
         mailExistStatus = true;
@@ -56,7 +56,7 @@ const getMail = asyncHandler(async (req, res)=>{
     }).then(info => {
         console.log({ info });
     }).catch(console.error);
-    var sql = `update twitter_clone.users set otp= "${otp}" where id="39";`;
+    var sql = `update  users set otp= "${otp}" where id="39";`;
     var result = await queryExecuter(sql);
     res.json({ result, mailExistStatus });
 })
@@ -64,7 +64,7 @@ const getMail = asyncHandler(async (req, res)=>{
 
 const getOtp = asyncHandler(async (req, res) => {
     var otp = req.query.otp;
-    var sql = `select otp from twitter_clone.users where id="39";`;
+    var sql = `select otp from  users where id="39";`;
     var result = await queryExecuter(sql);
     if (otp == result[0].otp) {
         res.json({ verified: true })
@@ -78,7 +78,7 @@ const resetPassword = asyncHandler(async(req, res) => {
     var email = req.query.email;
     const salt = await bcrypt.genSalt(15);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
-    const qry = `update twitter_clone.users set password = "${hashedPassword}" where email="${email}"`
+    const qry = `update  users set password = "${hashedPassword}" where email="${email}"`
     const result = await queryExecuter(qry);
     console.log("password updated");
     // res.render("dashboard")

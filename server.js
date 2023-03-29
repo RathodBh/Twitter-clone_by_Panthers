@@ -116,7 +116,7 @@ app.post("/updateProfile", uploads.fields([{
 
 app.get("/srch?", async (req, res) => {
     var srchval = req.query.val;
-    var sql = `select user_name from twitter_clone.users`;
+    var sql = `select user_name from  users`;
     var names = await queryExecuter(sql);
     var arr = [];
     var newArr = [];
@@ -142,7 +142,7 @@ app.get("/srch?", async (req, res) => {
     }
     var matchedResult = [];
     for (let m = 0; m < newArr.length; m++) {
-        var sql2 = `SELECT id,name,user_name,user_image FROM twitter_clone.users where user_name="${newArr[m]}"`;;
+        var sql2 = `SELECT id,name,user_name,user_image FROM  users where user_name="${newArr[m]}"`;;
         resultantName = await queryExecuter(sql2);
         matchedResult.push(resultantName)
     }
@@ -157,17 +157,17 @@ app.get("/addfollow", async (req, res) => {
     let followerId = req.query.followerId
     if (req.query.flag == 0) {
         cnt++;
-        await queryExecuter(`insert into  twitter_clone.followers (user_id,follower_id,isdelete) values("${followerId}","${userId}","${0}");`);
+        await queryExecuter(`insert into   followers (user_id,follower_id,isdelete) values("${followerId}","${userId}","${0}");`);
 
-        await queryExecuter(`insert into twitter_clone.following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
+        await queryExecuter(`insert into  following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
 
         let a = await queryExecuter(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
         let b=await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
         
     } else {
         cnt--;
-        await queryExecuter(`delete from twitter_clone.followers  where user_id = ${followerId} AND follower_id = ${userId};`);
-        await queryExecuter(`delete from twitter_clone.following  where user_id = ${userId} AND following_id = ${followerId} ;`);
+        await queryExecuter(`delete from  followers  where user_id = ${followerId} AND follower_id = ${userId};`);
+        await queryExecuter(`delete from  following  where user_id = ${userId} AND following_id = ${followerId} ;`);
         await queryExecuter(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
         await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
     }
