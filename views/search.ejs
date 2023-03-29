@@ -18,7 +18,7 @@
 
             </div>
 
-     
+
 
             <a href="" class="p-2 fs-14 text-blue">Show more</a>
         </div>
@@ -101,13 +101,14 @@
         location.href = `/profile/user/${e.id}`;
     }
 
-    
+
 
 
     async function follow(follower_id, flag) {
 
 
-        if (flag == 0) {
+        if (flag == 0) {//follow btn clicked 0
+            console.log("Unfollow");
             await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
             document.getElementById(`f${follower_id}`).innerHTML = "Unfollow";
             document.getElementById(`f${follower_id}`).setAttribute("onclick", `follow(${follower_id},1)`);
@@ -115,6 +116,8 @@
             document.getElementById(`f${follower_id}`).style.color = "black";
 
         } else {
+            console.log("Follow");
+
             await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
             document.getElementById(`f${follower_id}`).innerHTML = "Follow";
             document.getElementById(`f${follower_id}`).setAttribute("onclick", `follow(${follower_id},0)`);
@@ -132,26 +135,31 @@
         let fuser = [];
         let fuser2 = ans.fuser;
 
+        let followers = ans.fuser;
+        let unfollowers = ans.unfollowers;
         for (let i = 0; i < 3; i++) {
-            fuser.push(fuser2[Math.ceil(Math.random() * (fuser2.length))])
+            fuser.push(unfollowers[Math.ceil(Math.random() * (fuser2.length))])
         }
-        let followers = ans.followers;
+        let unfollowersIds = [];
 
+        for(let x of unfollowers){
+            unfollowersIds.push(x.id)
+        }
+        console.log("unollowers arr", unfollowersIds);
         let whoToFollowData = ""
-
         fuser.forEach(sql => {
             whoToFollowData += `
             <div class="my-4 d-flex justify-content-between align-items-center w-100">
                 <div class="d-flex w-100">
                     <img src="${sql.user_image}" alt="" class="profile-size me-2 border">
                     <div class="info d-flex justify-content-between w-100">
-                        <div>
+                        <a href="/profile/user/${sql.id}" class="text-dark d-inline-block">
                             <h6>${sql.name}</h6>
                             <span class="text-gray">@${sql.user_name}</span>
-                        </div>
+                        </a>
                         <div class="mt-1">
-                            ${(followers.includes(sql.id)) ? `<div id="f${sql.id}" onclick="follow('${sql.id}',1)" class="followButton btn btn-light rounded-pill px-3 border-dark" >Unfollow</div>` : `<div id="f${sql.id}" onclick="follow('${sql.id}',0)" class="followButton btn btn-dark rounded-pill px-3" >Follow</div>`
-                }
+                        
+                            ${(!unfollowersIds.includes(sql.id)) ? `<div id="f${sql.id}" onclick="follow('${sql.id}',1)" class="followButton btn btn-light rounded-pill px-3 border-dark" >Unfollow</div>` : `<div id="f${sql.id}" onclick="follow('${sql.id}',0)" class="followButton btn btn-dark rounded-pill px-3" >Follow</div>`}
                         </div>
                     </div>
                    
@@ -167,7 +175,7 @@
     getFollowUser();
 
 
-  
+
     //add Comment func for stopPropagation
     document.querySelectorAll(".clickComment").forEach((cur) => {
         cur.addEventListener("click", (e) => {

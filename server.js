@@ -161,8 +161,9 @@ app.get("/addfollow", async (req, res) => {
 
         await queryExecuter(`insert into twitter_clone.following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
 
-        await queryExecuter(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
-        await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
+        let a = await queryExecuter(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
+        let b=await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
+        
     } else {
         cnt--;
         await queryExecuter(`delete from twitter_clone.followers  where user_id = ${followerId} AND follower_id = ${userId};`);

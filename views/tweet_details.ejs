@@ -6,7 +6,7 @@
             <div class="inner-main commentInfo ">
                 <div class="blur-ui p-3">
                     <div class="d-flex align-items-center my-2">
-                        <a href="/dashboard" class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "></a>
+                        <a onclick="window.history.back()" class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "></a>
                         <h5 class="text-black d-inline-block mb-0">Tweet</h5>
                     </div>
 
@@ -136,9 +136,9 @@
                                                                     <div class="col-10">
                                                                         <div
                                                                             class="d-flex align-items-center user-info">
-                                                                            <span class="text-black fs-16 me-1 fw-600">
+                                                                            <a href="/profile/user/<%= c.user_id %>" class="text-black fs-16 me-1 fw-600">
                                                                                 <%= c.name %>
-                                                                            </span>
+                                                                            </a>
                                                                             <span class="fs-16 text-gray me-1">
                                                                                 @<%= c.user_name %>
                                                                             </span>
@@ -215,6 +215,7 @@
             linkModal.addEventListener("click", (e) => {
                 let id = e.currentTarget.getAttribute("data-id");
                 document.querySelector(".modal-body #tweetId").value = id;
+                document.querySelector("#comment_area").value = "";
             })
 
             let form = document.querySelector('#addCommentForm')
@@ -254,9 +255,9 @@
                                                                     <div class="col-10">
                                                                         <div
                                                                             class="d-flex align-items-center user-info">
-                                                                            <span class="text-black fs-16 me-1 fw-600">
+                                                                            <a href="/profile/user/${allComments[i].user_id}" class="text-black fs-16 me-1 fw-600">
                                                                                 ${allComments[i].name}
-                                                                            </span>
+                                                                            </a>
                                                                             <span class="fs-16 text-gray me-1">
                                                                                 @${allComments[i].user_name}
                                                                             </span>

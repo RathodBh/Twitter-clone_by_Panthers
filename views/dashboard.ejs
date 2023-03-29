@@ -41,9 +41,9 @@
                                         </div>
                                         <div class="col-10 px-4">
                                             <div class="d-flex align-items-center user-info">
-                                                <span class="text-black fs-16 me-1 fw-600">
+                                                <a href="/profile/user/<%= t.user_id %>" class="text-black fs-16 me-1 fw-600">
                                                     <%= t.name %>
-                                                </span>
+                                                </a>
                                                 <span class="fs-16 text-gray me-1">
                                                     @<%= t.user_name %>
                                                 </span>
@@ -190,6 +190,7 @@
                 cur.addEventListener("click", (e) => {
                     let id = e.currentTarget.getAttribute("data-id");
                     document.querySelector(".modal-body #tweetId").value = id;
+                    document.querySelector("#comment_area").value = "";
                 })
             })
             
