@@ -21,21 +21,23 @@ async function checkValidationForm1() {
   const next = document.querySelector("#next");
 
 
-  // const regExEmail = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
-  // let test_email = regExEmail.test(email);
+  const currYear = new Date().getFullYear();
+  let currectYear = false
+  if (year != "" && year != "year") {
+    if (currYear - year >= 13) {
+      currectYear = true;
+      document.querySelector("#yearError").innerHTML = ""
 
-
+    } else {
+      document.querySelector("#yearError").innerHTML = "You can't use twitter, Age must be greater than 13"
+    }
+  }
 
   let valid_email = await checkuserEmail(document.querySelector("#email"))
 
-  if (uname == "" || email == "" || year == "year" || month == "month" || day == "day" || !day || !valid_email) {
+  if (uname == "" || email == "" || year == "year" || month == "month" || day == "day" || !day || !valid_email || !currectYear) {
     is_valid = false
   }
-
-  // if (!test_email && email != "") {
-  //   let emailErrMsg = document.getElementById('emailError')
-  //   emailErrMsg.innerHTML = `<span class="text-danger">Please enter valid email</span>`
-  // }
 
   if (!is_valid) {
     next.setAttribute("disabled", "true");
@@ -47,12 +49,57 @@ async function checkValidationForm1() {
 }
 checkValidationForm1()
 
+document.querySelector("#password").addEventListener("input", checkValidationForm2)
+document.querySelector("#username").addEventListener("input", checkValidationForm2)
+document.querySelector("#cpassword").addEventListener("input", checkValidationForm2)
+
+async function checkValidationForm2() {
+  let is_valid = true;
+  const pwd = document.querySelector("#password").value;
+  const cpwd = document.querySelector("#cpassword").value;
+  const username = document.querySelector("#username").value;
+  let submit = document.querySelector("#submit,#next");
+
+
+  let checkCpass = checkConfirmPass();
+  let checkUniqueUser = await checkusername(document.querySelector("#username"));
+
+  if (username == "" || pwd == "" || cpwd == "" || !checkCpass || !checkUniqueUser) {
+    is_valid = false
+  }
+
+  if (!is_valid) {
+    submit.setAttribute("disabled", "true");
+  }
+  else {
+    submit.removeAttribute("disabled");
+  }
+}
+
+function checkConfirmPass() {
+  let pwd = document.querySelector("#password").value;
+  let cpwd = document.querySelector("#cpassword").value;
+  let passErr = document.querySelector("#cpassErr");
+  if (pwd == "" || cpwd == "") {
+    passErr.innerText = ""
+  }
+  else if (pwd != cpwd) {
+    passErr.innerText = "Password and confirm password are not match"
+  } else {
+    passErr.innerText = ""
+    return true;
+  }
+  return false;
+}
+
 const allInputs = document.querySelectorAll("#name,#email");
-allInputs.forEach((input) => {
-  input.addEventListener("input", checkValidationForm1)
+
+allInputs.forEach((cur) => {
+  cur.addEventListener("input", checkValidationForm1)
 })
 
-
+const pwd = document.querySelector("#password");
+pwd.addEventListener("input", checkPwd)
 //variables
 const allBtns = document.querySelectorAll(".next");
 const allParts = document.querySelectorAll(".user > div");
@@ -68,15 +115,16 @@ const updateLength = () => {
 updateLength();
 
 const updateTransition = (i) => {
-  let allParts = document.querySelectorAll(".user > div");
-  allParts.forEach((cur) => {
-    cur.style.transform = `translateX(-${i * 100}%)`;
-  });
+    let allParts = document.querySelectorAll(".user > div");
+    allParts.forEach((cur) => {
+      cur.style.transform = `translateX(-${i * 100}%)`;
+    });
 }
 
 let i = 0;
 checkStatus(i)
 next.addEventListener("click", (e) => {
+  checkValidationForm2()
   ++i;
   updateTransition(i);
   checkStatus(i)
@@ -85,6 +133,7 @@ prev.addEventListener("click", (e) => {
   --i;
   updateTransition(i);
   checkStatus(i)
+  checkValidationForm1()
 })
 
 function checkStatus(i) {
@@ -240,16 +289,15 @@ function change_month(select) {
 const unm = document.getElementById("username");
 const unmLimit = document.getElementById("usernameLimit");
 const usernameError = document.getElementById("usernameError");
-unm.addEventListener("input", (e) => {
+unm.addEventListener("input", async (e) => {
   if (e.target.value.length >= 50) {
-    unm.style.boxShadow = "0 0 1px 3px red";
     usernameError.innerText = "Username must be less than 50 characters";
   } else {
-    unm.style.boxShadow = "none";
     usernameError.innerText = "";
   }
   e.target.value = e.target.value.substring(0, 50);
   unmLimit.innerText = e.target.value.length + " / " + 50;
+
 })
 
 
@@ -264,26 +312,54 @@ async function checkusername(e) {
     },
     body: JSON.stringify({
       data: e.value
-
     })
   });
 
   var resSave = await save_req.json();
   if (resSave.isNew == true) {
     let usermsg = document.getElementById('usernameError')
-    let content = `<span style="color: #1c800f; font-size:14px">Username Available</span>`
-    usermsg.innerHTML = content
+    // usermsg.innerHTML = ""
     return true
   }
   else {
     let usermsg = document.getElementById('usernameError')
-    let content = `<span style="color: #b9370f; font-size:14px">Username unAvailable</span>`
+    let content = `Username already exists!`
     usermsg.innerHTML = content;
     return false;
   }
 
 }
-
+function checkPwd() {
+  let pwd = document.querySelector("#password").value;
+  let passErr = document.querySelector("#passError");
+  if (pwd.length < 8 || pwd.length > 16) {
+    // document.querySelector("#btnSubmit").disabled = true
+    passErr.innerText = "Password must be 8 to 16 characters long";
+  }
+  else if (!(/[a-z]/.test(pwd))) {
+    // document.querySelector("#btnSubmit").disabled = true
+    passErr.innerText = "Password must contain atleast 1 lowercase character";
+  }
+  else if (!(/[A-Z]/.test(pwd))) {
+    // document.querySelector("#btnSubmit").disabled = true
+    passErr.innerText = "Password must contain atleast 1 uppercase character";
+  }
+  else if (!(/\d/.test(pwd))) {
+    // document.querySelector("#btnSubmit").disabled = true
+    passErr.innerText = "Password must contain atleast 1 digit";
+  }
+  else if (!(/[^a-zA-Z0-9]/.test(pwd))) {
+    // document.querySelector("#btnSubmit").disabled = true
+    passErr.innerText = "Password must contain atleast 1 Special character like, @,#,$,*";
+  }
+  else {
+    passErr.innerText = "";
+    return true;
+    pwdCHK = true;
+    // document.querySelector(".inner").style.display = "none";
+  }
+  return false;
+}
 
 async function checkuserEmail(e) {
   let email = e.value
