@@ -1,47 +1,48 @@
-  <!-- right panel  -->
-  <div class="col-3 right">
+<!-- right panel  -->
+<div class="col-3 right">
     <div class="inner-right h-100 ">
         <div class="search-box position-relative">
-            <input type="search" class="rounded-pill w-100" placeholder="Search Twitter">
+            <input type="search" class="rounded-pill w-100" placeholder="Search Twitter" oninput=search()
+                id="searchInput">
             <i class="fa-solid fa-magnifying-glass search-icon"></i>
         </div>
-        <div class="mt-3 follow-right bg-gray p-2 border-radius-12">
-            <h5 class="mt-2 mb-3">Who to follow</h5>
+        <div class="mt-3 follow-right bg-gray p-2 border-radius-12 d-none" id="searchRes">
+            <h5 class="mt-2 mb-3">Search result</h5>
+            <div id="addHere">
 
-            <div class="my-4 d-flex justify-content-between align-items-center w-100">
-                    <div class="d-flex">
-                        <img src="/assets/images/cover.jpg" alt="" class="profile-size me-2 border">
-                        <div class="info">
-                            <h6>Bhavesh Rathod</h6>
-                            <span class="text-gray">@BH836sas</span>
-                        </div>
-                    </div>
-                    <a href="" class="btn btn-dark rounded-pill px-3">Follow</a>
             </div>
-            <div class="my-4 d-flex justify-content-between align-items-center w-100">
-                    <div class="d-flex">
-                        <img src="/assets/images/cover.jpg" alt="" class="profile-size me-2 border">
-                        <div class="info">
-                            <h6>Bhavesh Rathod</h6>
-                            <span class="text-gray">@BH836sas</span>
-                        </div>
-                    </div>
-                    <a href="" class="btn btn-dark rounded-pill px-3">Follow</a>
-            </div>
-            <div class="my-4 d-flex justify-content-between align-items-center w-100">
-                    <div class="d-flex">
-                        <img src="/assets/images/cover.jpg" alt="" class="profile-size me-2 border">
-                        <div class="info">
-                            <h6>Bhavesh Rathod</h6>
-                            <span class="text-gray">@BH836sas</span>
-                        </div>
-                    </div>
-                    <a href="" class="btn btn-dark rounded-pill px-3">Follow</a>
-            </div>
-
-            <a href="" class="p-2 fs-14 text-blue">Show more</a>
         </div>
+        <div class="mt-3 follow-right bg-gray p-2 border-radius-12" id="whotofolow" onload="whoToFollow()">
+            <h5 class="mt-2 mb-3">Who to follow</h5>
+            <% fuser.forEach(sql=>{%>
+                <div class="my-4 d-flex justify-content-between align-items-center w-100">
+                    <div class="d-flex">
+                        <img src="<%=sql.user_image%>" alt="" class="profile-size me-2 border">
+                        <div class="info">
+                            <h6>
+                                <%=sql.name%>
+                            </h6>
+                            <span class="text-gray">@<%=sql.user_name%></span>
+                            <div class="mt-1">
+                                <% if(followers.includes(sql.id)){%>
 
+                                    <div id="<%=sql.id%>" onclick="follow('<%=sql.id%>',1)"
+                                        class="followButton btn btn-light rounded-pill px-3">unFollow</div>
+                                    <%}else{%>
+
+                                        <div id="<%=sql.id%>" onclick="follow('<%=sql.id%>',0)"
+                                            class="followButton btn btn-dark rounded-pill px-3">Follow</div>
+                                        <%}%>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <%});%>
+
+                    <a href="" class="p-2 fs-14 text-blue">Show more</a>
+        </div>
         <div class="footer p-2 mt-2">
             <ul class="d-flex flex-wrap list-unstyled footer-link-container mb-0">
                 <li>
@@ -72,16 +73,84 @@
 </div>
 </div>
 </div>
-
+<img src="/public/assets/images/" alt="">
 
 
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-crossorigin="anonymous"></script>
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
 <script>
-//for print latest year
-document.querySelector("#footer-year").innerText = new Date().getFullYear();
+
+    //for print latest year
+    document.querySelector("#footer-year").innerText = new Date().getFullYear();
+    async function search() {
+
+        var val = document.getElementById("searchInput").value;
+    
+        if(val == ""){
+            document.querySelector("#searchRes").classList.add("d-none");
+        }else{
+            document.querySelector("#searchRes").classList.remove("d-none");
+        }
+
+        let data1 = await fetch(`/srch?val=${val}`)
+        let data = await data1.json();
+        let user_details = ``;
+        for (let i = 0; i < data.length; i++) {
+            user_details += `
+<div class="my-4 d-flex justify-content-between align-items-center w-100" id="${data[i][0].id}" onclick="getTargetProfile(this)" style="cursor: pointer;">
+        <div class="d-flex">
+            <img src="${data[i][0].user_image}" alt="" class="profile-size me-2 border">
+            <div class="info" > 
+                <h6>${data[i][0].name}</h6>
+                <span class="text-gray">@${data[i][0].user_name}</span>
+            </div>
+        </div>
+</div>
+`
+        }
+        if (!val) {
+            user_details = ``
+        }
+        document.getElementById("addHere").innerHTML = user_details;
+    }
+
+
+
+
+    async function getTargetProfile(e) {
+        console.log(e.id);
+        const save_req = await fetch(`http://localhost:3008/profile/user/search/?id=${e.id}`);
+        const data = await save_req.json();
+        location.href = `/profile/user/${e.id}`;
+
+
+    }
+
+
+    async function follow(follower_id, flag) {
+
+        console.log(flag);
+
+        if (flag == 0) {
+
+            await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
+            document.getElementById(`${follower_id}`).innerHTML = "unFollow";
+            document.getElementById(`${follower_id}`).setAttribute("onclick", `follow(${follower_id},1)`);
+            document.getElementById(`${follower_id}`).style.background = "white";
+            document.getElementById(`${follower_id}`).style.color = "black";
+
+        } else {
+            await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
+            document.getElementById(`${follower_id}`).innerHTML = "Follow";
+            document.getElementById(`${follower_id}`).setAttribute("onclick", `follow(${follower_id},0)`);
+            document.getElementById(`${follower_id}`).style.background = "black";
+            document.getElementById(`${follower_id}`).style.color = "white";
+        }
+
+    }
+
 
 </script>
 </body>

@@ -22,6 +22,7 @@ function emoji_clk() {
 // document.querySelector("#sub_btn").disabled = 'false'
 
 var limit_img = 0;
+
 const previewImage = (event) => {
     const imageFiles = event.target.files;
     limit_img+=imageFiles.length;
@@ -74,7 +75,6 @@ const previewImage = (event) => {
 
 function twt_clk() {
     var twt_value = document.getElementById("twt-area").value;
-    alert("done" + twt_value);
 
     // fetch api
     function fetch_data() {
@@ -96,4 +96,23 @@ function twt_clk() {
 }
 function twt_clk1() {
     window.location = "http://localhost:3008/dashboard/tweet";
+}
+
+
+let gg=0;
+
+function emoji_picker1() {
+    if (gg == 0) {
+        document.getElementById('comment_add').style.display = "block";
+        document.querySelector('#comment_add')
+            .addEventListener('emoji-click', event => document.getElementById('comment_area').value += event.detail.unicode);
+        gg = 1;
+    }
+    else {
+        document.getElementById('comment_add').style.display = "none";
+        document.querySelector('#comment_add')
+            .addEventListener('emoji-click', event => document.getElementById('comment_area').value += event.detail.unicode);
+        gg = 0;
+    }
+    // document.getElementById('emojiSelectorIcon').style.display="none"
 }
