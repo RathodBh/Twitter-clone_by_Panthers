@@ -79,7 +79,7 @@ function twt_clk() {
     // fetch api
     function fetch_data() {
         try {
-            fetch('http://localhost:3008/tweet/getapi?twt_value=' + twt_value + '').then(function (response) {
+            fetch('/tweet/getapi?twt_value=' + twt_value + '').then(function (response) {
                 return response.json()
             })
                 .then(function (responseData) {
@@ -95,7 +95,7 @@ function twt_clk() {
 
 }
 function twt_clk1() {
-    window.location = "http://localhost:3008/dashboard/tweet";
+    window.location = "/dashboard/tweet";
 }
 
 
