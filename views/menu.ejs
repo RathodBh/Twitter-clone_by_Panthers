@@ -25,7 +25,6 @@
     <title>Twitter | Home</title>
 
 </head>
-
 <body>
 
     <!-- Tweet modal  -->
@@ -101,7 +100,7 @@
                                 </a>
                             </li>
                             <li class="link-hover">
-                                <a href="/dashboard" class="menu-link" id="homeLink">
+                                <a href="/dashboard" class="menu-link " id="homeLink">
                                     <i class="fa-solid fa-house link-icon "></i>
                                     <span>Home</span>
                                 </a>
@@ -113,7 +112,7 @@
                                 </a>
                             </li>
                             <li class="link-hover">
-                                <a href="/profile/user" class="menu-link" id="profileLink">
+                                <a href="/profile/user" class="menu-link " id="profileLink">
                                     <i class="fa-regular fa-user link-icon"></i>
                                     <span>Profile</span>
                                 </a>
@@ -168,7 +167,7 @@
                 </div>
                 <script>
                     if(location.href.includes("dashboard")){
-
+                        document.querySelector("#homeLink").classList.add("active")
                     }
                     else if(location.href.includes("profile")){
                         document.querySelector("#profileLink").classList.add("active")
