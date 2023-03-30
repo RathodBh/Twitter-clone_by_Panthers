@@ -394,7 +394,7 @@
                     if (e.classList.value == 'fa-regular fa-heart') {
                         e.classList.value = 'fa-solid fa-heart text-danger';
                         let like = true
-                        const save_req = await fetch(`http://localhost:3008/dashboard/like`, {
+                        const save_req = await fetch(`/dashboard/like`, {
                             method: "POST",
                             headers: {
                                 'Content-Type': 'application/json'

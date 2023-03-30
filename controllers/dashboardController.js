@@ -201,8 +201,14 @@ const getDashboard = asyncHandler(async (req, res) => {
             res.redirect('/user-login');
             return
         }
-        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name FROM   tweets as t LEFT JOIN   users u ON t.user_id = u.id ORDER BY t.id DESC `;
+        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name FROM tweets as t LEFT JOIN users u ON t.user_id = u.id ORDER BY t.id DESC `;
+        let follow_sel = `SELECT following.following_id FROM following WHERE following.user_id = ${user_id}`;
+        const followingId = await queryExecuter(follow_sel);
 
+        let allFollowingIds = [];
+        for (let x of followingId) {
+           allFollowingIds.push(x.following_id);
+        }
         //get comments of every tweet
         let comments = 0;
 
@@ -362,12 +368,12 @@ const getDashboard = asyncHandler(async (req, res) => {
 
         //i need to show the get request for register page
         let flag = false;
-
-        return res.render('dashboard', { tweet_data: all_tweet_data, post_date: post_at, all_comments, all_likes, arrtruefalse, arrlikeid ,arrretweetid});
+        
+        return res.render('dashboard', { tweet_data: all_tweet_data, following_data:allFollowingIds, post_date: post_at, all_comments, all_likes, arrtruefalse, arrlikeid ,arrretweetid});
     }
 
 
-    catch (err) {
+    catch (err) {   
         console.log("Error Dashboard:", err);
     }
     //i need to show the get request for register page
@@ -377,7 +383,7 @@ const getDashboard = asyncHandler(async (req, res) => {
 
 
 const postTweet = asyncHandler(async (req, res) => {
-    console.log('req.file :>> ', req);
+    // console.log('req.file :>> ', req);
     const token = req.session.email
     if (!token) {
         res.redirect('/user-login')

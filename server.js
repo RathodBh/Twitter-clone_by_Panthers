@@ -86,13 +86,13 @@ app.post("/updateProfile", uploads.fields([{
             var cover_imgsrc = req.files.cover_image;
             var profile_imgsrc = req.files.profile_image;
             if (cover_imgsrc) {
-                cover_imgsrc = 'http://localhost:3008/assets/images/' + file.cover_image[0].filename;
+                cover_imgsrc = '/assets/images/' + file.cover_image[0].filename;
             } else {
                 cover_imgsrc = users[0].cover;
             }
 
             if (profile_imgsrc) {
-                profile_imgsrc = 'http://localhost:3008/assets/images/' + file.profile_image[0].filename
+                profile_imgsrc = '/assets/images/' + file.profile_image[0].filename
             } else {
                 profile_imgsrc = users[0].dp
             }

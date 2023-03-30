@@ -195,13 +195,13 @@ const updateProfilepoint = asyncHandler(async (req, res) => {
             var profile_imgsrc = req.files.profile_image;
 
             if (cover_imgsrc) {
-                cover_imgsrc = 'http://localhost:3008/uploads/' + file.cover_image[0].filename;
+                cover_imgsrc = '/uploads/' + file.cover_image[0].filename;
             } else {
                 cover_imgsrc = users[0].cover;
             }
 
             if (profile_imgsrc) {
-                profile_imgsrc = 'http://localhost:3008/uploads/' + file.profile_image[0].filename
+                profile_imgsrc = '/uploads/' + file.profile_image[0].filename
             } else {
                 profile_imgsrc = users[0].dp
             }

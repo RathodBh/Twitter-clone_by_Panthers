@@ -24,6 +24,10 @@
 
     <title>Twitter | Home</title>
 
+    <!-- sweet alert  -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.all.min.js"></script>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
+
 </head>
 
 <body>
@@ -157,7 +161,7 @@
                         </div>
                         <ul class="dropdown-menu">
                             <li class="d-flex">
-                                <a class="dropdown-item" href="/user-logout"><i
+                                <a class="dropdown-item" onclick="logout()"><i
                                         class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout <span
                                         class="text-blue" id="userDataId"></span>
 
@@ -168,10 +172,10 @@
                     </div>
                 </div>
                 <script>
-                    if(location.href.includes("dashboard")){
-
+                    if (location.href.includes("dashboard")) {
+                        // document.querySelector("#profileLink").classList.add("active")
                     }
-                    else if(location.href.includes("profile")){
+                    else if (location.href.includes("profile")) {
                         document.querySelector("#profileLink").classList.add("active")
                     }
 
@@ -185,6 +189,7 @@
                         document.querySelector("#userDataId").innerText = ans.username
                     }
 
+                   
                 </script>
 
                 <div class="modal fade " id="settingsModal" tabindex="-1" aria-labelledby="exampleModalLabel"

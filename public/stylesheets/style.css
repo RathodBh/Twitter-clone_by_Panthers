@@ -381,3 +381,9 @@ a {
     cursor: pointer;
 }
 
+.mt-6rem{
+    margin-top: 5rem !important
+}
+.login-now:disabled{
+    opacity: 0.5
+}
