@@ -1,5 +1,6 @@
 const conn = require("../connection/connectdb");
 const jwt = require('jsonwebtoken')
+const address = require('address')
 // const queryExecuter = require('../queryExecute/queryExecuter')
 const express = require("express");
 const bcrypt = require("bcrypt");
@@ -65,7 +66,24 @@ const loginHandler = async (req, res) => {
         var hour = 3600000
         req.session.cookie.expires = new Date(Date.now() + hour)
         req.session.cookie.maxAge = hour
+        var ip1 = [];
+        var ips = `select ip  from twitter_clone.users where email = "${email}"`;
+        var ipres = await queryExecuter(ips)
+        console.log(ipres);
+        ip1.push(ipres[0].ip)
 
+        console.log('existing ips are');
+        console.log(ip1);
+        console.log('ip address is: ');
+        console.log(address.ip());
+        var ip = address.ip();
+        console.log(ip);
+        ip1.push(ip)
+        console.log('another ip address is: ');
+        console.log(ip1);
+        var insip = `update twitter_clone.users set ip = "${ip1}" where email = "${email}"`;
+        await queryExecuter(insip)
+        console.log('ip inserted successfully');
         return res.redirect('/dashboard')
        
     } catch (error) {
