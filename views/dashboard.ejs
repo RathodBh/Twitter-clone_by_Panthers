@@ -260,7 +260,7 @@
                 if (t_id.classList.value == 'fa-solid fa-retweet') {
                     t_id.classList.value = 'fa-solid fa-retweet text-success';
                     let retweet = true
-                    const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                    const save_req = await fetch(`/dashboard/retweet`, {
                         method: "POST",
                         headers: {
                             'Content-Type': 'application/json'
@@ -279,7 +279,7 @@
                 else if (t_id.classList.value == 'fa-solid fa-retweet text-success') {
                     t_id.classList.value = 'fa-solid fa-retweet'
                     let retweet = false;
-                    const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                    const save_req = await fetch(`/dashboard/retweet`, {
                         method: "POST",
                         headers: {
                             'Content-Type': 'application/json'

@@ -425,7 +425,7 @@
                 else if (e.classList.value == 'fa-solid fa-heart text-danger') {
                     e.classList.value = 'fa-regular fa-heart'
                     let like = false;
-                    const save_req = await fetch(`http://localhost:3008/dashboard/like`, {
+                    const save_req = await fetch(`/dashboard/like`, {
                         method: "POST",
                         headers: {
                             'Content-Type': 'application/json'
@@ -468,7 +468,7 @@
                 if (e.classList.value == 'fa-solid fa-retweet') {
                     e.classList.value = 'fa-solid fa-retweet text-success';
                     let retweet = true
-                    const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                    const save_req = await fetch(`/dashboard/retweet`, {
                         method: "POST",
                         headers: {
                             'Content-Type': 'application/json'
@@ -487,7 +487,7 @@
                 else if (e.classList.value == 'fa-solid fa-retweet text-success') {
                     e.classList.value = 'fa-solid fa-retweet'
                     let retweet = false;
-                    const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                    const save_req = await fetch(`/dashboard/retweet`, {
                         method: "POST",
                         headers: {
                             'Content-Type': 'application/json'

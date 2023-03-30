@@ -273,12 +273,12 @@
 
                 data.forEach(users => {
                     udata += `<div class="cover">
-                    <img src="${users.cover_image}" alt="">
+                    <img src="<%= users[0].cover_image%>" alt="">
                 </div>
                 <div class="row ">
                     <div class="col">
                         <div class="dp">
-                            <img src="${users.user_image}" class="card-img-left" alt="">
+                            <img src="<%= users[0].user_image%>" class="card-img-left" alt="">
                         </div>
                     </div>
                     <div class="col">
@@ -294,30 +294,31 @@
                 <div class="card-body">
                     <div class="user-data">
                         
-                        <label for="" class="bold">${users.name}</label>
+                        <label for="" class="bold"><%= users[0].name%></label>
                         <img src="./uploads/red_verified.png" alt="" height="20px" width="20px">
                         
-                        <p class="text-secondary">@${users.user_name}</p>
+                        <p class="text-secondary">@<%= users[0].user_name%></p>
                     </div>
-                    <p class="card-text text-dark ">${users.bio}  <i class="fa-regular fa-face-laugh-beam"></i></p>
+                    <p class="card-text text-dark "><%= users[0].bio%> <i class="fa-regular fa-face-laugh-beam"></i></p>
                     <div class="info d-flex ">
                         <p class="text-secondary ms-1"><i class="fa-solid fa-location-dot"></i> everywhere</p>
                         <p class="text-secondary ms-2"><i class="fa-solid fa-link"></i>
                         <p class="text-info">username.com</p>
                         </p>
-                        <p class="text-secondary ms-2"><i class="fa-solid fa-cake-candles"></i> Date Of Birth:  ${users.birth_date.slice(0, 10)}
+                        <p class="text-secondary ms-2"><i class="fa-solid fa-cake-candles"></i> Date Of Birth: <%= users[0].birth_date.slice(0, 10)%> 
                         </p>
                     </div>
                     <div class="join">
-                        <p class="text-secondary"><i class="fa-solid fa-calendar-days"></i> Joined at:   ${users.created_at.slice(0, 10)}</p>
+                        <p class="text-secondary"><i class="fa-solid fa-calendar-days"></i> Joined at:<%= users[0].created_at.slice(0, 10)%>  </p>
                     </div>
                     <div class="d-flex">
                         <p>
-                            ${users.following}
+                            <%= users[0].following%> 
+                            
                         <p class="ms-2">Following</p>
                         </p>
                         <p class="ms-3">
-                            ${users.followers}
+                            <%= users[0].followers%> 
                         <p class="ms-2">Followers</p>
                         </p>
                     </div>
@@ -393,7 +394,7 @@
                 if (t_id.classList.value == 'fa-solid fa-retweet') {
                     t_id.classList.value = 'fa-solid fa-retweet text-success';
                     let retweet = true
-                    const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                    const save_req = await fetch(`/dashboard/retweet`, {
                         method: "POST",
                         headers: {
                             'Content-Type': 'application/json'
@@ -412,7 +413,7 @@
                 else if (t_id.classList.value == 'fa-solid fa-retweet text-success') {
                     t_id.classList.value = 'fa-solid fa-retweet'
                     let retweet = false;
-                    const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                    const save_req = await fetch(`/dashboard/retweet`, {
                         method: "POST",
                         headers: {
                             'Content-Type': 'application/json'
