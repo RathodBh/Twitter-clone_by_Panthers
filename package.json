@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/dev-bhavesh/Twitter-clone_by_Panthers#readme",
   "dependencies": {
+    "address": "^1.2.2",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",

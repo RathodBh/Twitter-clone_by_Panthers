@@ -79,7 +79,7 @@ app.post("/updateProfile", uploads.fields([{
         const arr = { user_email, user_bio, user_dob } = req.body;
 
         try {
-            let uid = req.session.user_id
+            let uid = req.session.user_id;
             const file = req.files;
             var users = await queryExecuter(`select user_image as dp , cover_image as cover from users where id=${uid}`);
 
