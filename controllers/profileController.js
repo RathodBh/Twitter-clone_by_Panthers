@@ -92,8 +92,6 @@ const getProfile = asyncHandler(async (req, res) => {
                     hours = hours - 12;
                 }
                 if (diffYears) {
-
-
                     post_at.push(`${hours}:${d.getMinutes()} ${is_am_pm} • ${month[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`)
                 } else {
                     post_at.push(`${hours}:${d.getMinutes()} ${is_am_pm} • ${month[d.getMonth()]} ${d.getDate()}`)
