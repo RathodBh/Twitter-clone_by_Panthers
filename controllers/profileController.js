@@ -44,13 +44,17 @@ const getProfile = asyncHandler(async (req, res) => {
             res.redirect('/user-login')
         }
         const user_id = req.session.user_id
-        // let sel_q = `SELECT id,name,user_image,user_name FROM ${db}.users `;
+        // let sel_q = `SELECT id,name,user_image,user_name FROM   users `;
         let sel_tweets = `select * from tweets where user_id=${user_id} order by id DESC`;
         const all_tweet_data = await query(sel_tweets);
         // for retweet
         let sel_retweets = `SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id=tweets.id where retweet.user_id='${user_id}'AND retweet.is_deleted='0' order by retweet.id DESC`;
         const all_retweet_data = await query(sel_retweets);
 
+
+        // //for retweet 
+        // let sel_retweets = `SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id = tweets.id where retweet.user_id = '${user_id}'AND retweet.is_deleted = '0' order by retweet.id DESC`;
+        // const all_retweet_data = await query(sel_retweets);
 
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -109,10 +113,9 @@ const getProfile = asyncHandler(async (req, res) => {
         var done = []
         for (let i = 0; i < value; i++) {
 
-            const qrt = `SELECT *  FROM twitter_clone.likes where tweet_id=${alltweet_ids[i].id} and user_id=${user_id} and is_deleted=0;`
+            const qrt = `SELECT *  FROM  likes where tweet_id=${alltweet_ids[i].id} and user_id=${user_id} and is_deleted=0;`
 
             const likeddata = await queryExecuter(qrt);
-            console.log("like query=" + likeddata[i]);
             arr_of_liked[i] = likeddata
 
         }
@@ -136,7 +139,6 @@ const getProfile = asyncHandler(async (req, res) => {
             }
 
         }
-
         let some = alltweet_ids.length
         var arr_of_retweet = [];
 
@@ -164,59 +166,35 @@ const getProfile = asyncHandler(async (req, res) => {
         var users = await query(`select * from users where id=${user_id}`);
         let followuser = await queryExecuter(`select * from users where id not in(${user_id}) limit 3`)
         var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${user_id}`);
-        console.log("Liked id=", arrlikeid);
-        // console.log(arrretweetid);
 
-
-        // for retweeted user get  
         for (let b = 0; b < all_retweet_data.length; b++) {
-            var twt_user = await query(`SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id=tweets.id inner join twitter_clone.users on tweets.user_id=users.id where retweet.user_id='${user_id}' AND retweet.is_deleted='0' order by retweet.id DESC ;`);
-            console.log("retweet", twt_user[b].tweet_id);
-           
+            var twt_user = await query(`SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id=tweets.id inner join twitter_clone.users on tweets.user_id=users.id where retweet.user_id='${user_id}' AND retweet.is_deleted='0' order by retweet.id DESC `);
         }
-         console.log("rwt length", twt_user.length);
-        // for retweeted user get  end
 
-        // for retweeted user get end
-        var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${user_id}`);
-        console.log("user data" + twt_user[0].user_name);
         //i need to show the get request for register page
-
-
-
         let changepass = false
-        res.render('profile', { twt_user: twt_user, all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, users, changepass, arrretweetid, fuser: followuser, followers: getfollowerId });
+        res.render('profile', {twt_user: twt_user, all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, arrretweetid, users, changepass, fuser: followuser, followers: getfollowerId });
 
     } catch (err) {
         console.log("Error Dashboard:", err);
     }
-    //i need to show the get request for regi
-    // res.render('profile',)
+
 
 });
-
 
 const updateProfilepoint = asyncHandler(async (req, res) => {
     try {
         const arr = { name, user_email, user_bio, user_dob } = req.body;
         console.log(arr);
-        // async function edit(user_name, user_email,user_bio, user_dob) {
+
         try {
             let uid = req.query.uid || 3;
             const file = req.files;
             var users = await query(`select user_image as dp , cover_image as cover from users where id=${uid}`);
-            console.log(users[0].dp);
-            console.log(users[0].cover);
-            console.log("here");
-            console.log(req.files);
-            // console.log(file.cover_image[0].filename);
-            // console.log(file.profile_image[0].filename);
-            // var cover_imgsrc =  'http://localhost:3008/uploads/' + file.cover_image[0].filename || users[0].cover ;
-            // var profile_imgsrc = 'http://localhost:3008/uploads/' + file.profile_image[0].filename ||  users[0].dp ;
+
             var cover_imgsrc = req.files.cover_image;
             var profile_imgsrc = req.files.profile_image;
-            console.log(cover_imgsrc);
-            console.log(profile_imgsrc);
+
             if (cover_imgsrc) {
                 cover_imgsrc = 'http://localhost:3008/uploads/' + file.cover_image[0].filename;
             } else {
@@ -229,18 +207,17 @@ const updateProfilepoint = asyncHandler(async (req, res) => {
                 profile_imgsrc = users[0].dp
             }
 
-            console.log("Image uploaded")
+
 
 
             await query(`update users set  bio="${user_bio}" ,birth_date="${user_dob}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id=${uid}`);
             res.redirect("prof")
-            // const oldUser = await queryExecuter(qry1)
-            // res.render("dashboard", {cover_imgsrc,profile_imgsrc })
+
 
         } catch (error) {
             throw error;
         }
-        // }
+
 
     } catch (error) {
         throw error;
@@ -280,6 +257,33 @@ const getTagetProfiledata = async (req, res) => {
 
 }
 
+
+
+// const getTagetProfiledata = async (req, res) => {
+
+
+//     let db = `twitter_clone`;
+//     try {
+//         const token = req.session.email
+//         if (!token) {
+//             res.redirect('/user-login')
+//         }
+//         let user_id = req.query.id;
+//         console.log(user_id);
+
+
+//         //   return  res.redirect('/profilhfjkhfgjhsdfgjke');
+
+
+//     } catch (err) {
+//         console.log("Error Dashboard:", err);
+//     }
+//     return res.json({ msg: "success" });
+
+
+// }
+
+
 const getTargetProfile = asyncHandler(async (req, res) => {
     let db = `twitter_clone`;
     try {
@@ -291,9 +295,6 @@ const getTargetProfile = asyncHandler(async (req, res) => {
         let sel_tweets = `select * from tweets where user_id=${user_id} order by id DESC`;
         const all_tweet_data = await query(sel_tweets);
 
-        // for retweet
-        let sel_retweets = `SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id=tweets.id where retweet.user_id='${user_id}'AND retweet.is_deleted='0' order by retweet.id DESC`;
-        const all_retweet_data = await query(sel_retweets);
 
 
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -356,7 +357,7 @@ const getTargetProfile = asyncHandler(async (req, res) => {
         var done = []
         for (let i = 0; i < value; i++) {
 
-            const qrt = `SELECT *  FROM twitter_clone.likes where tweet_id=${alltweet_ids[i].id} and user_id=${uid} and is_deleted=0;`
+            const qrt = `SELECT *  FROM  likes where tweet_id=${alltweet_ids[i].id} and user_id=${uid} and is_deleted=0;`
 
             const likeddata = await queryExecuter(qrt);
             arr_of_liked[i] = likeddata
@@ -412,7 +413,16 @@ const getTargetProfile = asyncHandler(async (req, res) => {
         let followuser = await queryExecuter(`select * from users where id not in(${user_id}) limit 3`)
         var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${user_id}`);
 
-        res.render('targetProfile', { all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, users, arrretweetid, fuser: followuser, followers: getfollowerId })
+        //for retweet
+        let sel_retweets = `SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id = tweets.id where retweet.user_id = '${user_id}'AND retweet.is_deleted = '0' order by retweet.id DESC`;
+        const all_retweet_data = await query(sel_retweets);
+
+
+        for (let b = 0; b < all_retweet_data.length; b++) {
+            var twt_user = await query(`SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id=tweets.id inner join twitter_clone.users on tweets.user_id=users.id where retweet.user_id='${user_id}' AND retweet.is_deleted='0' order by retweet.id DESC `);
+        }
+
+        res.render('targetProfile', { twt_user: twt_user, all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, users, arrretweetid, fuser: followuser, followers: getfollowerId })
 
     }
     catch (err) {
@@ -423,4 +433,4 @@ const getTargetProfile = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { getProfile, getProfiledata, updateProfilepoint, editprofile, getTargetProfile, getTagetProfiledata, getUserInfo }
+module.exports = { getProfile, getProfiledata, updateProfilepoint, editprofile, getUserInfo, getTagetProfiledata, getTargetProfile }

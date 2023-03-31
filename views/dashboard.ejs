@@ -35,15 +35,17 @@
                         <div id="for-you" class="tab-pane active">
                             <div class="tweet-container all-center flex-column ">
                                 <% tweet_data.forEach((t,index)=>{ %>
-                                    <div class="tweet w-100 p-3 row pt-4 border-bottom border-top">
+
+                                    <div onclick="test(`<%=t.id%>`)"
+                                        class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
                                         <div class="col-1 p-0">
                                             <img src="<%= t.user_image %>" alt="" class="profile-size me-2 border">
                                         </div>
                                         <div class="col-10 px-4">
                                             <div class="d-flex align-items-center user-info">
-                                                <span class="text-black fs-16 me-1 fw-600">
+                                                <a href="/profile/user/<%= t.user_id %>" class="text-black fs-16 me-1 fw-600">
                                                     <%= t.name %>
-                                                </span>
+                                                </a>
                                                 <span class="fs-16 text-gray me-1">
                                                     @<%= t.user_name %>
                                                 </span>
@@ -53,11 +55,11 @@
                                                 </span>
                                             </div>
                                             <div class="tweet-content">
-                                                <a href="/tweet/tweet_details/<%= t.id %>">
-                                                    <p class="text-black fs-16 fw-300">
-                                                        <%= t.tweet %>
-                                                    </p>
-                                                </a>
+
+                                                <p class="text-black fs-16 fw-300 word-wrap">
+                                                    <%= t.tweet %>
+                                                </p>
+
                                             </div>
 
                                             <% if(t.media_type.includes("image")){ %>
@@ -74,7 +76,8 @@
                                                         <div class="tweet-reactions-container mt-3">
                                                             <ul class="list-unstyled row">
                                                                 <li class="col">
-                                                                    <a href="" data-bs-toggle="modal" class="comment"
+                                                                    <a href="" data-bs-toggle="modal"
+                                                                        class="comment clickComment"
                                                                         data-bs-target="#commentModal"
                                                                         data-id="<%= t.id %>" id="clickComment">
                                                                         <i class="fa-regular fa-comment"></i>
@@ -87,7 +90,7 @@
                                                                 <li class="col">
                                                                     <a class="retweet">
                                                                         <i class="fa-solid fa-retweet"
-                                                                            onclick="retweetpost(this)"
+                                                                            onclick="retweetpost(event,this)"
                                                                             id="k<%= t.id %>"></i>
                                                                         <span id="retweet<%= t.id %>">
                                                                             <%= t.tweet_retweets %>
@@ -97,7 +100,7 @@
                                                                 <li class="col">
                                                                     <a class="like">
                                                                         <i class="fa-regular fa-heart"
-                                                                            onclick="likepost(this)"
+                                                                            onclick="likepost(event,this)"
                                                                             id="<%= t.id %>"></i>
                                                                         <span id="like<%= t.id %>">
                                                                             <%= t.tweet_likes %>
@@ -120,8 +123,8 @@
                                                                     </a>
                                                                     <ul class="dropdown-menu p-0">
                                                                         <li class="d-flex">
-                                                                            <a class="dropdown-item text-dark" href="#"
-                                                                                onclick="copyContent(`http:/localhost:3008/tweet/tweet_details/<%= t.id %>`)">
+                                                                            <a class="dropdown-item text-dark"
+                                                                                onclick="copyContent(event,`/tweet/tweet_details/<%= t.id %>`)">
                                                                                 <i
                                                                                     class="fa-regular fa-clipboard me-2"></i>
 
@@ -160,7 +163,8 @@
                                                 <li class="d-flex">
                                                     <a class="dropdown-item" href="/profile/user"><i
                                                             class="fa-regular fa-eye me-2"></i>
-                                                        Visit profile <span class="text-blue">@<%= t.user_name %></span>
+                                                        Visit profile <span class="text-blue">@<%= t.user_name %>
+                                                        </span>
                                                     </a>
                                                 </li>
                                             </ul>
@@ -182,70 +186,83 @@
                 loader.className += " hidden"; // class "loader hidden"
             });
 
+            let allClicks = document.querySelectorAll(".clickComment")
+            allClicks.forEach((cur) => {
+                // let linkModal = document.querySelector("#clickComment");
+                cur.addEventListener("click", (e) => {
+                    let id = e.currentTarget.getAttribute("data-id");
+                    document.querySelector(".modal-body #tweetId").value = id;
+                    document.querySelector("#comment_area").value = "";
+                })
+            })
+            
 
             //done by jigar
-            async function likepost(e) {
-            let tweet_id = e.id
+            async function likepost(e, t_id) {
+                console.log('e', e)
 
-            if (e.classList.value == 'fa-regular fa-heart') {
-                e.classList.value = 'fa-solid fa-heart text-danger';
-                let like = true
-                const save_req = await fetch(`http://localhost:3008/dashboard/like`, {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        data: { like, tweet_id }
-                    })
-                });
-                var resSave = await save_req.json();
+                e.stopPropagation()
+                let tweet_id = t_id.id
 
-                if (resSave.flag == true) {
-                    let likeSpan = document.querySelector("#like" + tweet_id)
-                    likeSpan.innerHTML = resSave.alllikecount
+                if (t_id.classList.value == 'fa-regular fa-heart') {
+                    t_id.classList.value = 'fa-solid fa-heart text-danger';
+                    let like = true
+                    const save_req = await fetch(`/dashboard/like`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { like, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+
+                    if (resSave.flag == true) {
+                        let likeSpan = document.querySelector("#like" + tweet_id)
+                        likeSpan.innerHTML = resSave.alllikecount
+                    }
+                }
+                else if (t_id.classList.value == 'fa-solid fa-heart text-danger') {
+                    t_id.classList.value = 'fa-regular fa-heart'
+                    let like = false;
+                    const save_req = await fetch(`/dashboard/like`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { like, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    if (resSave.flag == false) {
+                        let likeSpan = document.querySelector("#like" + tweet_id)
+                        likeSpan.innerHTML = resSave.alllikecount
+                    }
                 }
             }
-            else if (e.classList.value == 'fa-solid fa-heart text-danger') {
-                e.classList.value = 'fa-regular fa-heart'
-                let like = false;
-                const save_req = await fetch(`http://localhost:3008/dashboard/like`, {
-                    method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        data: { like, tweet_id }
-                    })
-                });
-                var resSave = await save_req.json();
-                if (resSave.flag == false) {
-                    let likeSpan = document.querySelector("#like" + tweet_id)
-                    likeSpan.innerHTML = resSave.alllikecount
-                }
-            }
-        }
-       
-       
-        var userLike = [];
-        '<%for(let i=0;i<arrlikeid.length;i++){%>'
-        userLike.push('<%=arrlikeid[i]%>');
-        '<%}%>'
-        userLike.forEach(element => {
-
-            document.getElementById(element).classList = "fa-solid fa-heart text-danger";
-        });
 
 
-            async function retweetpost(e) {
-                let temp = e.id
+            var userLike = [];
+            '<%for(let i=0;i<arrlikeid.length;i++){%>'
+            userLike.push('<%=arrlikeid[i]%>');
+            '<%}%>'
+            userLike.forEach(element => {
+
+                document.getElementById(element).classList = "fa-solid fa-heart text-danger";
+            });
+
+            async function retweetpost(e, t_id) {
+                e.stopPropagation();
+                let temp = t_id.id
                 let id = temp.slice(1);
                 let tweet_id = parseInt(id)
 
-                if (e.classList.value == 'fa-solid fa-retweet') {
-                    e.classList.value = 'fa-solid fa-retweet text-success';
+                if (t_id.classList.value == 'fa-solid fa-retweet') {
+                    t_id.classList.value = 'fa-solid fa-retweet text-success';
                     let retweet = true
-                    const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                    const save_req = await fetch(`/dashboard/retweet`, {
                         method: "POST",
                         headers: {
                             'Content-Type': 'application/json'
@@ -261,10 +278,10 @@
                         retweetSpan.innerHTML = resSave.allretweetcount
                     }
                 }
-                else if (e.classList.value == 'fa-solid fa-retweet text-success') {
-                    e.classList.value = 'fa-solid fa-retweet'
+                else if (t_id.classList.value == 'fa-solid fa-retweet text-success') {
+                    t_id.classList.value = 'fa-solid fa-retweet'
                     let retweet = false;
-                    const save_req = await fetch(`http://localhost:3008/dashboard/retweet`, {
+                    const save_req = await fetch(`/dashboard/retweet`, {
                         method: "POST",
                         headers: {
                             'Content-Type': 'application/json'
@@ -317,12 +334,20 @@
             //copy to clipboard
 
 
-            const copyContent = async (text) => {
+            async function copyContent(e, text) {
+                e.stopPropagation();
+                console.log(e, text);
+                alert("Copy to clipboard")
                 try {
                     await navigator.clipboard.writeText(text);
                 } catch (err) {
                     console.error('Failed to copy: ', err);
                 }
             }
+            const test = (id) => {
+                window.location.href = (`/tweet/tweet_details/${id}`)
+            }
+
+
         </script>
         <%- include("search") -%>

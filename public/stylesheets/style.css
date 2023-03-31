@@ -157,6 +157,7 @@ a {
     width: 46px;
     border-radius: 50%;
     object-fit: cover;
+    aspect-ratio: 1/1;
 }
 
 .bottom-dots {
@@ -332,7 +333,9 @@ a {
     font-weight: 600;
     border-bottom: 4px solid var(--bg-blue);
 }
-
+.word-wrap{
+    word-wrap: anywhere;
+}
 /* loader  */
 .loader {
     position: fixed;
@@ -368,3 +371,17 @@ a {
     border: 1px solid black;
     margin: 10px;
 }
+
+#searchRes{
+    max-height: 40vh;
+    overflow: auto;
+}
+
+.cp{
+    cursor: pointer;
+}
+
+.flw{
+    height:500px;
+    overflow-y:scroll;
+} 

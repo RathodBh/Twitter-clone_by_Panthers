@@ -6,8 +6,8 @@
             <div class="inner-main commentInfo ">
                 <div class="blur-ui p-3">
                     <div class="d-flex align-items-center my-2">
-                        <a href="/dashboard" class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "
-                            ></a>
+                        <a href="/dashboard"
+                            class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "></a>
                         <h5 class="text-black d-inline-block mb-0">Tweet</h5>
                     </div>
 
@@ -61,7 +61,7 @@
 
                                 <div class="col-12 py-3 p-0">
                                     <div class="tweet-content">
-                                        <p class="text-black fs-16 fw-300">
+                                        <p class="text-black fs-16 fw-300 word-wrap">
                                             <%= tweet_data.tweet %>
                                         </p>
                                     </div>
@@ -92,20 +92,30 @@
                                                 <div class="tweet-reactions-container py-2 border-bottom">
                                                     <ul class="list-unstyled row my-0">
                                                         <li class="col">
-                                                            <a href="" class="comment" data-bs-toggle="modal"
-                                                                data-bs-target="#commentModal"
+                                                            <a href="" class="comment clickComment"
+                                                                data-bs-toggle="modal" data-bs-target="#commentModal"
                                                                 data-id="<%= tweet_data.id %>" id="clickComment">
                                                                 <i class="fa-regular fa-comment"></i>
                                                             </a>
                                                         </li>
                                                         <li class="col">
-                                                            <a href="" class="retweet">
-                                                                <i class="fa-solid fa-retweet"></i>
+                                                            <a class="retweet">
+                                                                <i class="fa-solid fa-retweet"
+                                                                onclick="retweetpost(event,this)"
+                                                                id="k<%= tweet_data.id %>"></i>
+                                                            <span id="retweet<%= tweet_data.id %>">
+                                                                <%= tweet_data.tweet_retweets %>
+                                                            </span>
                                                             </a>
                                                         </li>
                                                         <li class="col">
-                                                            <a href="" class="like">
-                                                                <i class="fa-regular fa-heart"></i>
+                                                            <a class="like">
+                                                                <i class="fa-regular fa-heart"
+                                                                onclick="likepost(event,this)"
+                                                                id="<%= tweet_data.id %>"></i>
+                                                            <span id="like<%= tweet_data.id %>">
+                                                                <%= tweet_data.tweet_likes %>
+                                                            </span>
                                                             </a>
                                                         </li>
                                                         <li class="col">
@@ -137,9 +147,10 @@
                                                                     <div class="col-10">
                                                                         <div
                                                                             class="d-flex align-items-center user-info">
-                                                                            <span class="text-black fs-16 me-1 fw-600">
+                                                                            <a href="/profile/user/<%= c.user_id %>"
+                                                                                class="text-black fs-16 me-1 fw-600">
                                                                                 <%= c.name %>
-                                                                            </span>
+                                                                            </a>
                                                                             <span class="fs-16 text-gray me-1">
                                                                                 @<%= c.user_name %>
                                                                             </span>
@@ -155,7 +166,7 @@
                                                                                     @<%= tweet_data.user_name %></span>
                                                                             </p>
                                                                             <!-- </a> -->
-                                                                            <p class="coemment-i mb-0">
+                                                                            <p class="coemment-i mb-0 word-wrap">
                                                                                 <%= c.comment %>
                                                                             </p>
                                                                         </div>
@@ -181,7 +192,8 @@
                                                                                 <a class="dropdown-item" href="#"><i
                                                                                         class="fa-solid fa-user-minus me-2"></i>
                                                                                     Unfollow <span class="text-blue">@
-                                                                                        <%= c.user_name %></span>
+                                                                                        <%= c.user_name %>
+                                                                                    </span>
 
                                                                                 </a>
                                                                             </li>
@@ -211,6 +223,12 @@
         </div>
 
         <script>
+            let linkModal = document.querySelector("#clickComment");
+            linkModal.addEventListener("click", (e) => {
+                let id = e.currentTarget.getAttribute("data-id");
+                document.querySelector(".modal-body #tweetId").value = id;
+                document.querySelector("#comment_area").value = "";
+            })
 
             let form = document.querySelector('#addCommentForm')
             form.addEventListener('submit', async (e) => {
@@ -220,7 +238,7 @@
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body:JSON.stringify({
+                    body: JSON.stringify({
                         tweetId: document.querySelector("#tweetId").value,
                         comment_text: document.querySelector("#comment_area").value
                     })
@@ -234,14 +252,14 @@
                 console.log(allCommentAt);
                 var comment_section = document.querySelector("#commentSection");
 
-                if(allComments.length <= 0){
+                if (allComments.length <= 0) {
                     comment_section.innerHTML = `<span class="d-inline-block mt-2 text-secondary">No Comments yet.</span>`;
                 }
-                else{
+                else {
                     let comment_data = ""
-                    for(let i=0; i< allComments.length; i++){
-                        comment_data += 
-                        `<div class="comment row border py-2">
+                    for (let i = 0; i < allComments.length; i++) {
+                        comment_data +=
+                            `<div class="comment row border py-2">
                                                                     <div class="col-1">
                                                                         <img src="${allComments[i].user_image}" alt=""
                                                                             class="profile-size me-2 border">
@@ -249,9 +267,9 @@
                                                                     <div class="col-10">
                                                                         <div
                                                                             class="d-flex align-items-center user-info">
-                                                                            <span class="text-black fs-16 me-1 fw-600">
+                                                                            <a href="/profile/user/${allComments[i].user_id}" class="text-black fs-16 me-1 fw-600">
                                                                                 ${allComments[i].name}
-                                                                            </span>
+                                                                            </a>
                                                                             <span class="fs-16 text-gray me-1">
                                                                                 @${allComments[i].user_name}
                                                                             </span>
@@ -312,9 +330,112 @@
 
                     comment_section.innerHTML = comment_data;
                 }
-                
+
             })
-                
-            
+
+
+            async function likepost(e, t_id) {
+
+                e.stopPropagation()
+                let tweet_id = t_id.id
+                if (t_id.classList.value == 'fa-regular fa-heart') {
+                    t_id.classList.value = 'fa-solid fa-heart text-danger';
+                    let like = true
+                    const save_req = await fetch(`/dashboard/like`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { like, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    if (resSave.flag == true) {
+                        let likeSpan = document.querySelector("#like" + tweet_id)
+                        likeSpan.innerHTML = resSave.alllikecount
+                    }
+                }
+                else if (t_id.classList.value == 'fa-solid fa-heart text-danger') {
+                    t_id.classList.value = 'fa-regular fa-heart'
+                    let like = false;
+                    const save_req = await fetch(`/dashboard/like`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { like, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    if (resSave.flag == false) {
+                        let likeSpan = document.querySelector("#like" + tweet_id)
+                        likeSpan.innerHTML = resSave.alllikecount
+                    }
+                }
+            }
+
+            var userLike = [];
+            '<%for(let i=0;i<arrlikeid.length;i++){%>'
+            userLike.push('<%=arrlikeid[i]%>');
+            '<%}%>'
+            userLike.forEach(element => {
+
+                document.getElementById(element).classList = "fa-solid fa-heart text-danger";
+            });
+
+            async function retweetpost(e, t_id) {
+                e.stopPropagation();
+                let temp = t_id.id
+                let id = temp.slice(1);
+                let tweet_id = parseInt(id)
+                if (t_id.classList.value == 'fa-solid fa-retweet') {
+                    t_id.classList.value = 'fa-solid fa-retweet text-success';
+                    let retweet = true
+                    const save_req = await fetch(`/dashboard/retweet`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { retweet, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    if (resSave.flag == true) {
+                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                        retweetSpan.innerHTML = resSave.allretweetcount
+                    }
+                }
+                else if (t_id.classList.value == 'fa-solid fa-retweet text-success') {
+                    t_id.classList.value = 'fa-solid fa-retweet'
+                    let retweet = false;
+                    const save_req = await fetch(`/dashboard/retweet`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { retweet, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    if (resSave.flag == false) {
+                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                        retweetSpan.innerHTML = resSave.allretweetcount
+                    }
+                }
+            }
+
+            var userretweet = [];
+            '<%for(let i=0;i<arrretweetid.length;i++){%>'
+            userretweet.push('<%=arrretweetid[i]%>');
+            '<%}%>'
+            userretweet.forEach(element => {
+
+                document.getElementById("k" + element).classList = "fa-solid fa-retweet text-success";
+            });
+
         </script>
         <%- include("search") -%>

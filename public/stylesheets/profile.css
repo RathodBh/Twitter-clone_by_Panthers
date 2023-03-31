@@ -83,4 +83,6 @@
   #edit_content input{
     border: 2px solid var(--text-gray);
   }
-  
+  #retweet_p{
+    word-break: break-all;
+  }

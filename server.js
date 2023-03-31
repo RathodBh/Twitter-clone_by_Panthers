@@ -36,7 +36,7 @@ app.use('/user-logout', logout)
 app.use('/dashboard', dashboard)
 app.use("/profile", profile)
 app.use("/tweet", commentInfo)
-app.use("/forget",forgetPassword)
+app.use("/forget", forgetPassword)
 
 const multer = require('multer');
 
@@ -58,7 +58,6 @@ const storage = multer.diskStorage({
         cb(null, "./public/assets/images")
     },
     filename: (req, file, cb) => {
-        console.log(file);
         cb(null, Date.now() + path.extname(file.originalname))
     }
 })
@@ -80,15 +79,9 @@ app.post("/updateProfile", uploads.fields([{
             let uid = req.session.user_id
             const file = req.files;
             var users = await queryExecuter(`select user_image as dp , cover_image as cover from users where id=${uid}`);
-            console.log(users[0].dp);
-            console.log(users[0].cover);
-            console.log("here");
-            console.log(req.files);
 
             var cover_imgsrc = req.files.cover_image;
             var profile_imgsrc = req.files.profile_image;
-            console.log(cover_imgsrc);
-            console.log(profile_imgsrc);
             if (cover_imgsrc) {
                 cover_imgsrc = 'http://localhost:3008/assets/images/' + file.cover_image[0].filename;
             } else {
@@ -101,7 +94,6 @@ app.post("/updateProfile", uploads.fields([{
                 profile_imgsrc = users[0].dp
             }
 
-            console.log("Image uploaded")
 
 
             await queryExecuter(`update users set name="${name}" , bio="${user_bio}" ,birth_date="${user_dob}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id=${uid}`);
@@ -121,7 +113,7 @@ app.post("/updateProfile", uploads.fields([{
 
 app.get("/srch?", async (req, res) => {
     var srchval = req.query.val;
-    var sql = `select user_name from twitter_clone.users`;
+    var sql = `select user_name from  users`;
     var names = await queryExecuter(sql);
     var arr = [];
     var newArr = [];
@@ -147,7 +139,7 @@ app.get("/srch?", async (req, res) => {
     }
     var matchedResult = [];
     for (let m = 0; m < newArr.length; m++) {
-        var sql2 = `SELECT id,name,user_name,user_image FROM twitter_clone.users where user_name="${newArr[m]}"`;;
+        var sql2 = `SELECT id,name,user_name,user_image FROM  users where user_name="${newArr[m]}"`;;
         resultantName = await queryExecuter(sql2);
         matchedResult.push(resultantName)
     }
@@ -155,6 +147,90 @@ app.get("/srch?", async (req, res) => {
 
 })
 
+//vivek (Follow-Unfollow)
+app.get("/addfollow", async (req, res) => {
+    let cnt = 0;
+    let userId = req.session.user_id
+    let followerId = req.query.followerId
+    if (req.query.flag == 0) {
+        cnt++;
+        await queryExecuter(`insert into   followers (user_id,follower_id,isdelete) values("${followerId}","${userId}","${0}");`);
+
+        await queryExecuter(`insert into  following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
+
+        let a = await queryExecuter(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
+        let b=await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
+        
+    } else {
+        cnt--;
+        await queryExecuter(`delete from  followers  where user_id = ${followerId} AND follower_id = ${userId};`);
+        await queryExecuter(`delete from  following  where user_id = ${userId} AND following_id = ${followerId} ;`);
+        await queryExecuter(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
+        await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
+    }
+
+    res.send({ message: "update" });
+})
+
+app.get('/getFollowUserData', async (req, res) => {
+
+    let uid = req.session.user_id;
+    var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${uid})`);
+
+    var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
+    var followers = [];
+    getfollowerId.forEach(id => {
+        followers.push(id.follower_id);
+    });
+
+    let notFollow = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(SELECT following_id FROM following WHERE user_id='${uid}')`);
+    
+
+    // var notgetfollowerId = await queryExecuter(`SELECT f.follower_id from followers as f JOIN users as u ON u.id where`);
+    // var notFollowers = [];
+    // notgetfollowerId.forEach(id => {
+    //     notFollowers.push(id.follower_id);
+    // });
+
+    res.json( { fuser: getuser, followers, unfollowers:notFollow});
+    // res.render('profile',)
+})
+// try
+app.get("/prof",async(req,res)=>{
+
+    
+    let uid = req.query.uid || 3;
+    var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(3)`);
+    var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
+    var followers =[];
+    getfollowerId.forEach(id => {
+        followers.push(id.follower_id);
+    });
+
+console.log("Getfolloerid :::::::",followers);
+    res.render('profile',{fuser:getuser,followers})
+})
+
+
+
+
+app.get("/user-dash",async(req,res)=>{
+    let uid = req.query.uid || 39;
+    var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${uid})`);
+    var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
+    var followers =[];
+    getfollowerId.forEach(id => {
+        followers.push(id.follower_id);
+    });
+    var following = await queryExecuter(`select users.id,users.name,users.user_name,users.user_image from users left join following on users.id = following.user_id where following_id = ${uid}`)
+
+    var follower = await queryExecuter(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.user_id where follower_id = ${uid}`)
+
+console.log("Getfollowerid :::::::",followers);
+    res.render('follow_following',{fuser:getuser,followers,following,follower})
+})
+
+// try end
 app.get("*", (req, res) => {
     res.render("404")
 })

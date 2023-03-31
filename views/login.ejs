@@ -233,7 +233,7 @@
         async function checkemailforlogin(e) {
             let email = e.value
 
-            const save_req = await fetch(`http://localhost:3008/user-login/checkemail`, {
+            const save_req = await fetch(`/user-login/checkemail`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
