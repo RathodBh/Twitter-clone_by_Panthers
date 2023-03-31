@@ -158,7 +158,7 @@ const addTweetComment = asyncHandler(async (req, res) => {
         comment_post_dates.push(getDate(x.created_at))
     }
 
-    res.json({ all_comments, len: all_comments.length, comment_at: comment_post_dates });
+    res.send({ all_comments, len: all_comments.length, comment_at: comment_post_dates });
 })
 
 module.exports = { commentInfo, addTweetComment }

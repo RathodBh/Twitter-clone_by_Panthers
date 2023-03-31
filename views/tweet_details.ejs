@@ -6,8 +6,7 @@
             <div class="inner-main commentInfo ">
                 <div class="blur-ui p-3">
                     <div class="d-flex align-items-center my-2">
-                        <a href="/dashboard"
-                            class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "></a>
+                        <a href="/dashboard" class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "></a>
                         <h5 class="text-black d-inline-block mb-0">Tweet</h5>
                     </div>
 
@@ -101,21 +100,21 @@
                                                         <li class="col">
                                                             <a class="retweet">
                                                                 <i class="fa-solid fa-retweet"
-                                                                onclick="retweetpost(event,this)"
-                                                                id="k<%= tweet_data.id %>"></i>
-                                                            <span id="retweet<%= tweet_data.id %>">
-                                                                <%= tweet_data.tweet_retweets %>
-                                                            </span>
+                                                                    onclick="retweetpost(event,this)"
+                                                                    id="k<%= tweet_data.id %>"></i>
+                                                                <span id="retweet<%= tweet_data.id %>">
+                                                                    <%= tweet_data.tweet_retweets %>
+                                                                </span>
                                                             </a>
                                                         </li>
                                                         <li class="col">
                                                             <a class="like">
                                                                 <i class="fa-regular fa-heart"
-                                                                onclick="likepost(event,this)"
-                                                                id="<%= tweet_data.id %>"></i>
-                                                            <span id="like<%= tweet_data.id %>">
-                                                                <%= tweet_data.tweet_likes %>
-                                                            </span>
+                                                                    onclick="likepost(event,this)"
+                                                                    id="<%= tweet_data.id %>"></i>
+                                                                <span id="like<%= tweet_data.id %>">
+                                                                    <%= tweet_data.tweet_likes %>
+                                                                </span>
                                                             </a>
                                                         </li>
                                                         <li class="col">
@@ -233,7 +232,7 @@
             let form = document.querySelector('#addCommentForm')
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                let data = await fetch(`/tweet/tweet_comment`, {
+                let data = fetch(`/tweet/tweet_comment`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -243,7 +242,12 @@
                         comment_text: document.querySelector("#comment_area").value
                     })
                 })
+                data.then((response) => {
+                    console.log("🚀 ~ file: tweet_details.ejs:247 ~ data.then ~ response:", response)
 
+                }).catch((error) => {
+                    console.log("🚀 ~ file: tweet_details.ejs:252 ~ data.then ~ error:", error)
+                })
                 let ans = await data.json();
 
                 allComments = ans.all_comments;
@@ -285,7 +289,7 @@
                                                                                     @<%= tweet_data.user_name %></span>
                                                                             </p>
                                                                             <!-- </a> -->
-                                                                            <p class="coemment-i mb-0">
+                                                                            <p class="coemment-i mb-0 word-wrap">
                                                                                 ${allComments[i].comment}
                                                                             </p>
                                                                         </div>

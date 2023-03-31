@@ -1,159 +1,158 @@
-let allClicks = document.querySelectorAll(".clickComment")
-allClicks.forEach((cur) => {
-    // let linkModal = document.querySelector("#clickComment");
-    cur.addEventListener("click", (e) => {
-        let id = e.currentTarget.getAttribute("data-id");
-        document.querySelector(".modal-body #tweetId").value = id;
-        document.querySelector("#comment_area").value = "";
-    })
-})
+// let allClicks = document.querySelectorAll(".clickComment")
+// allClicks.forEach((cur) => {
+//     // let linkModal = document.querySelector("#clickComment");
+//     cur.addEventListener("click", (e) => {
+//         let id = e.currentTarget.getAttribute("data-id");
+//         document.querySelector(".modal-body #tweetId").value = id;
+//         document.querySelector("#comment_area").value = "";
+//     })
+// })
 
 
-//done by jigar
-async function likepost(e, t_id) {
-    console.log('e', e)
+// //done by jigar
+// async function likepost(e, t_id) {
+//     console.log('e', e)
 
-    e.stopPropagation()
-    let tweet_id = t_id.id
+//     e.stopPropagation()
+//     let tweet_id = t_id.id
 
-    if (t_id.classList.value == 'fa-regular fa-heart') {
-        t_id.classList.value = 'fa-solid fa-heart text-danger';
-        let like = true
-        const save_req = await fetch(`/dashboard/like`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                data: { like, tweet_id }
-            })
-        });
-        var resSave = await save_req.json();
+//     if (t_id.classList.value == 'fa-regular fa-heart') {
+//         t_id.classList.value = 'fa-solid fa-heart text-danger';
+//         let like = true
+//         const save_req = await fetch(`/dashboard/like`, {
+//             method: "POST",
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({
+//                 data: { like, tweet_id }
+//             })
+//         });
+//         var resSave = await save_req.json();
 
-        if (resSave.flag == true) {
-            let likeSpan = document.querySelector("#like" + tweet_id)
-            likeSpan.innerHTML = resSave.alllikecount
-        }
-    }
-    else if (t_id.classList.value == 'fa-solid fa-heart text-danger') {
-        t_id.classList.value = 'fa-regular fa-heart'
-        let like = false;
-        const save_req = await fetch(`/dashboard/like`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                data: { like, tweet_id }
-            })
-        });
-        var resSave = await save_req.json();
-        if (resSave.flag == false) {
-            let likeSpan = document.querySelector("#like" + tweet_id)
-            likeSpan.innerHTML = resSave.alllikecount
-        }
-    }
-}
-async function likepost1(e, t_id) {
+//         if (resSave.flag == true) {
+//             let likeSpan = document.querySelector("#like" + tweet_id)
+//             likeSpan.innerHTML = resSave.alllikecount
+//         }
+//     }
+//     else if (t_id.classList.value == 'fa-solid fa-heart text-danger') {
+//         t_id.classList.value = 'fa-regular fa-heart'
+//         let like = false;
+//         const save_req = await fetch(`/dashboard/like`, {
+//             method: "POST",
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({
+//                 data: { like, tweet_id }
+//             })
+//         });
+//         var resSave = await save_req.json();
+//         if (resSave.flag == false) {
+//             let likeSpan = document.querySelector("#like" + tweet_id)
+//             likeSpan.innerHTML = resSave.alllikecount
+//         }
+//     }
+// }
+// async function likepost1(e, t_id) {
 
-    e.stopPropagation()
-    let tweet_id = (t_id.id).substr(4)
+//     e.stopPropagation()
+//     let tweet_id = (t_id.id).substr(4)
 
-    if (t_id.classList.value == 'fa-regular fa-heart') {
-        t_id.classList.value = 'fa-solid fa-heart text-danger';
-        let like = true
-        const save_req = await fetch(`/dashboard/like`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                data: { like, tweet_id }
-            })
-        });
-        var resSave = await save_req.json();
+//     if (t_id.classList.value == 'fa-regular fa-heart') {
+//         t_id.classList.value = 'fa-solid fa-heart text-danger';
+//         let like = true
+//         const save_req = await fetch(`/dashboard/like`, {
+//             method: "POST",
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({
+//                 data: { like, tweet_id }
+//             })
+//         });
+//         var resSave = await save_req.json();
 
-        if (resSave.flag == true) {
-            let likeSpan = document.querySelector("#like_1" + tweet_id)
-            likeSpan.innerHTML = resSave.alllikecount
-        }
-    }
-    else if (t_id.classList.value == 'fa-solid fa-heart text-danger') {
-        t_id.classList.value = 'fa-regular fa-heart'
-        let like = false;
-        const save_req = await fetch(`/dashboard/like`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                data: { like, tweet_id }
-            })
-        });
-        var resSave = await save_req.json();
-        if (resSave.flag == false) {
-            let likeSpan = document.querySelector("#like_1" + tweet_id)
-            likeSpan.innerHTML = resSave.alllikecount
-        }
-    }
-}
-
-
-var userLike = [];
-'<%for(let i=0;i<arrlikeid.length;i++){%>'
-userLike.push('<%=arrlikeid[i]%>');
-'<%}%>'
-userLike.forEach(element => {
-    document.getElementById(element).classList = "fa-solid fa-heart text-danger";
-    document.getElementById("foll" + element).classList = "fa-solid fa-heart text-danger";
-});
-
-async function retweetpost(e, t_id) {
-    e.stopPropagation();
-    let temp = t_id.id
-    let id = temp.slice(1);
-    let tweet_id = parseInt(id)
-
-    if (t_id.classList.value == 'fa-solid fa-retweet') {
-        t_id.classList.value = 'fa-solid fa-retweet text-success';
-        let retweet = true
-        const save_req = await fetch(`/dashboard/retweet`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                data: { retweet, tweet_id }
-            })
-        });
-        var resSave = await save_req.json();
-
-        if (resSave.flag == true) {
-            let retweetSpan = document.querySelector("#retweet" + tweet_id)
-            retweetSpan.innerHTML = resSave.allretweetcount
-        }
-    }
-    else if (t_id.classList.value == 'fa-solid fa-retweet text-success') {
-        t_id.classList.value = 'fa-solid fa-retweet'
-        let retweet = false;
-        const save_req = await fetch(`/dashboard/retweet`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                data: { retweet, tweet_id }
-            })
-        });
-        var resSave = await save_req.json();
-        if (resSave.flag == false) {
-            let retweetSpan = document.querySelector("#retweet" + tweet_id)
-            retweetSpan.innerHTML = resSave.allretweetcount
-        }
-    }
+//         if (resSave.flag == true) {
+//             let likeSpan = document.querySelector("#like_1" + tweet_id)
+//             likeSpan.innerHTML = resSave.alllikecount
+//         }
+//     }
+//     else if (t_id.classList.value == 'fa-solid fa-heart text-danger') {
+//         t_id.classList.value = 'fa-regular fa-heart'
+//         let like = false;
+//         const save_req = await fetch(`/dashboard/like`, {
+//             method: "POST",
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({
+//                 data: { like, tweet_id }
+//             })
+//         });
+//         var resSave = await save_req.json();
+//         if (resSave.flag == false) {
+//             let likeSpan = document.querySelector("#like_1" + tweet_id)
+//             likeSpan.innerHTML = resSave.alllikecount
+//         }
+//     }
+// }
 
 
-}
+// var userLike = [];
+// '<%for(let i=0;i<arrlikeid.length;i++){%>'
+// userLike.push('<%=arrlikeid[i]%>');
+// '<%}%>'
+// userLike.forEach(element => {
+//     document.getElementById(element).classList = "fa-solid fa-heart text-danger";
+// });
+
+// async function retweetpost(e, t_id) {
+//     e.stopPropagation();
+//     let temp = t_id.id
+//     let id = temp.slice(1);
+//     let tweet_id = parseInt(id)
+
+//     if (t_id.classList.value == 'fa-solid fa-retweet') {
+//         t_id.classList.value = 'fa-solid fa-retweet text-success';
+//         let retweet = true
+//         const save_req = await fetch(`/dashboard/retweet`, {
+//             method: "POST",
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({
+//                 data: { retweet, tweet_id }
+//             })
+//         });
+//         var resSave = await save_req.json();
+
+//         if (resSave.flag == true) {
+//             let retweetSpan = document.querySelector("#retweet" + tweet_id)
+//             retweetSpan.innerHTML = resSave.allretweetcount
+//         }
+//     }
+//     else if (t_id.classList.value == 'fa-solid fa-retweet text-success') {
+//         t_id.classList.value = 'fa-solid fa-retweet'
+//         let retweet = false;
+//         const save_req = await fetch(`/dashboard/retweet`, {
+//             method: "POST",
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({
+//                 data: { retweet, tweet_id }
+//             })
+//         });
+//         var resSave = await save_req.json();
+//         if (resSave.flag == false) {
+//             let retweetSpan = document.querySelector("#retweet" + tweet_id)
+//             retweetSpan.innerHTML = resSave.allretweetcount
+//         }
+//     }
+
+
+// }
 
 
 var userretweet = [];
