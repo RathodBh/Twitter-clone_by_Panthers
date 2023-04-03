@@ -138,7 +138,7 @@
         let followers = ans.fuser;
         let unfollowers = ans.unfollowers;
         for (let i = 0; i < 3; i++) {
-            fuser.push(unfollowers[Math.ceil(Math.random() * (fuser2.length))])
+            fuser.push(unfollowers[Math.floor(Math.random() * (unfollowers.length))])
         }
         let unfollowersIds = [];
 

@@ -214,8 +214,11 @@ console.log("Getfolloerid :::::::",followers);
 
 
 
-app.get("/user-dash",async(req,res)=>{
-    let uid = req.query.uid || 39;
+app.get("/user-dash?",async(req,res)=>{
+    let uid = req.query.id || 39;
+
+    console.log("uid"+uid);
+
     var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${uid})`);
     var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
     var followers =[];
@@ -237,3 +240,45 @@ app.get("*", (req, res) => {
 app.listen(PORT, () => {
     console.log(`I am listining on ${PORT}`);
 })
+
+
+
+// for retweet update flag without hard delete
+
+// var select_tweet = await queryExecuter(`SELECT * FROM twitter_clone.retweet WHERE tweet_id='${tweet_id}';`)
+// console.log("select tweet", select_tweet[0]);
+// var tweet_sel = await queryExecuter(`SELECT * FROM twitter_clone.tweets where id='${tweet_id}';`);
+// console.log("tweet=", tweet_sel[0].tweet_retweets);
+
+// var tot_re_tweet = tweet_sel[0].tweet_retweets;
+
+// console.log("total retweet=", tot_re_tweet);
+
+
+// if (select_tweet[0] == undefined) {
+//     var re_tweet = await queryExecuter(`INSERT INTO twitter_clone.retweet(user_id,tweet_id,created_at,is_retweet)VALUES(${user_id},${tweet_id},NOW(),'1' );`);
+//     console.log("retweeted");
+
+//     tot_re_tweet += 1;
+
+//     console.log("total retweet 1=", tot_re_tweet);
+//     var up_tweet = await queryExecuter(`UPDATE twitter_clone.tweets SET tweet_retweets = ${tot_re_tweet} WHERE id =${tweet_id};`)
+//     a = 0;
+//     console.log("update tweet 0=", up_tweet[0]);
+// }
+// else if (select_tweet[0].is_retweet == 1) {
+//     console.log("tweet id match");
+//     tot_re_tweet -= 1;
+//     console.log("new total=", tot_re_tweet);
+//     var update_re_tweet = await queryExecuter(`UPDATE twitter_clone.retweet SET is_retweet = 0 WHERE tweet_id = '${tweet_id}';`)
+//     var up_tweet2 = await queryExecuter(`UPDATE twitter_clone.tweets SET tweet_retweets = ${tot_re_tweet} WHERE id =${tweet_id};`)
+//     console.log("new tweet update=", up_tweet2);
+// }
+// else {
+//     console.log("tweet id not match");
+//     tot_re_tweet += 1;
+//     console.log("total retweet 2=", tot_re_tweet);
+//     var update_re_tweet = await queryExecuter(`UPDATE twitter_clone.retweet SET is_retweet = '1' WHERE tweet_id = '${tweet_id}';`)
+//     var up_tweet1 = await queryExecuter(`UPDATE twitter_clone.tweets SET tweet_retweets = ${tot_re_tweet} WHERE id =${tweet_id} ;`)
+//     console.log(" update tweet 1=", up_tweet1);
+// }

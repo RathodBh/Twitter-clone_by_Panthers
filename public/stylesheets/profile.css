@@ -86,3 +86,9 @@
   #retweet_p{
     word-break: break-all;
   }
+  #following:hover{
+    text-decoration: underline;
+  }
+  #follower:hover{
+    text-decoration: underline;
+  }

@@ -173,7 +173,7 @@ const getProfile = asyncHandler(async (req, res) => {
 
         //i need to show the get request for register page
         let changepass = false
-        res.render('profile', {twt_user: twt_user, all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, arrretweetid, users, changepass, fuser: followuser, followers: getfollowerId });
+        res.render('profile', { twt_user: twt_user, all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, arrretweetid, users, changepass, fuser: followuser, followers: getfollowerId });
 
     } catch (err) {
         console.log("Error Dashboard:", err);
@@ -246,7 +246,6 @@ const getTagetProfiledata = async (req, res) => {
         console.log(user_id);
 
 
-        //   return  res.redirect('/profilhfjkhfgjhsdfgjke');
 
 
     } catch (err) {
@@ -259,29 +258,7 @@ const getTagetProfiledata = async (req, res) => {
 
 
 
-// const getTagetProfiledata = async (req, res) => {
 
-
-//     let db = `twitter_clone`;
-//     try {
-//         const token = req.session.email
-//         if (!token) {
-//             res.redirect('/user-login')
-//         }
-//         let user_id = req.query.id;
-//         console.log(user_id);
-
-
-//         //   return  res.redirect('/profilhfjkhfgjhsdfgjke');
-
-
-//     } catch (err) {
-//         console.log("Error Dashboard:", err);
-//     }
-//     return res.json({ msg: "success" });
-
-
-// }
 
 
 const getTargetProfile = asyncHandler(async (req, res) => {
@@ -291,7 +268,7 @@ const getTargetProfile = asyncHandler(async (req, res) => {
         if (!token) {
             res.redirect('/user-login')
         }
-        let user_id = req.params.id
+        let user_id = req.params.id;
         let sel_tweets = `select * from tweets where user_id=${user_id} order by id DESC`;
         const all_tweet_data = await query(sel_tweets);
 
@@ -433,4 +410,26 @@ const getTargetProfile = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { getProfile, getProfiledata, updateProfilepoint, editprofile, getUserInfo, getTagetProfiledata, getTargetProfile }
+// app.get("/user-dash",async(req,res)=>{
+const fflist = asyncHandler(async (req, res) => {
+    let uid = req.params.id || 39;
+
+    let user_id = req.params.id;
+    console.log("user id in controller="+user_id);
+    console.log("uid in controller="+uid);
+    var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${uid})`);
+    var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
+    var followers = [];
+    getfollowerId.forEach(id => {
+        followers.push(id.follower_id);
+    });
+    var following = await queryExecuter(`select users.id,users.name,users.user_name,users.user_image from users left join following on users.id = following.user_id where following_id = ${uid}`)
+
+    var follower = await queryExecuter(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.user_id where follower_id = ${uid}`)
+
+    console.log("Getfollowerid fflist:::::::", followers);
+    res.render('follow_following', { fuser: getuser, followers, following, follower })
+})
+
+
+module.exports = { fflist,getProfile, getProfiledata, updateProfilepoint, editprofile, getUserInfo, getTagetProfiledata, getTargetProfile }

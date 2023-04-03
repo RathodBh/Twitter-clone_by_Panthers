@@ -112,7 +112,7 @@
 
 
 
-            <div class="all-data">
+            <div class="all-data ">
                 <div class="tab-content">
                     <div id="Tweets" class="tab-pane active">
                         <div class="tweet-container all-center flex-column ">
@@ -465,13 +465,13 @@
                         <p class="text-secondary"><i class="fa-solid fa-calendar-days"></i> Joined at:<%= users[0].created_at.slice(0, 10)%>  </p>
                     </div>
                     <div class="d-flex" >
-                        <a href="/user-dash" class="d-flex text-dark">
+                        <a href="user-dash" class="d-flex text-dark" id="following">
                         <p>
                             <%= users[0].following%> 
                         <p class="ms-2">Following</p>
                         </p>
                     </a>
-                    <a href="/user-dash" class="d-flex text-dark">
+                    <a href="user-dash" class="d-flex text-dark" id="follower">
                         <p class="ms-3">
                             <%= users[0].followers%> 
                         <p class="ms-2">Followers</p>

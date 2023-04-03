@@ -174,168 +174,10 @@ const getpostRetweet = asyncHandler(async (req, res) => {
 
 
 
-//     }
-//     catch (err) {
-//         console.log("Error Dashboard:", err);
-//     }
-//     })
 
 
 var tweet_ids
-// const getpostLike1 = asyncHandler(async (req, res) => {
-//     // console.log("herer");
-//     try {
-//         const token = req.session.email
-//         const user_id = req.session.user_id
-//         if (!token) {
-//             res.redirect('/user-login');
-//             return
-//         }
-//         const { data } = req.body;
-//         var tweet_id = data.tweet_id
-//         tweet_ids = data.tweet_id
-//         if (data.like == true) {
-//             const qrt = `SELECT  * FROM  likes where tweet_id=${data.tweet_id} and user_id=${user_id} and is_deleted=0;`
 
-//             const like_data = await queryExecuter(qrt);
-
-
-//             if (like_data.length == 0) {
-//                 const ins_qrt = `INSERT INTO likes (user_id,tweet_id,created_at) values (${user_id},${data.tweet_id},NOW())`
-
-//                 const like_entry = await queryExecuter(ins_qrt);
-
-//                 const select_tweet_like = `select tweet_likes from tweets where id=${data.tweet_id}`
-//                 const tweet_like_count = await queryExecuter(select_tweet_like);
-
-//                 var alllikecount = tweet_like_count[0].tweet_likes
-//                 alllikecount = alllikecount + 1
-
-//                 const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount} where id=${data.tweet_id}`
-//                 const Update_entry_tweet = await queryExecuter(up_tweets_tweetlike);
-//                 let flag = true
-//                 res.json({ flag, alllikecount })
-//             }
-//             else if (like_data.length >= 1) {
-
-//                 const select_tweet_like = `select tweet_likes from tweets where id=${data.tweet_id}`
-//                 const tweet_like_count = await queryExecuter(select_tweet_like);
-//                 alllikecount = tweet_like_count[0].tweet_likes
-//                 alllikecount = alllikecount - 1
-
-//                 const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount}  where id=${data.tweet_id}`
-//                 const Update_entry_tweet = await queryExecuter(up_tweets_tweetlike);
-
-
-//                 const Update_unlike = `Update likes Set  updated_at= Now(),is_deleted=1  where tweet_id=${data.tweet_id}`
-//                 const Update_unlike_entry = await queryExecuter(Update_unlike);
-//                 let flag = false
-//                 res.json({ flag, alllikecount })
-//             }
-
-//         }
-
-//         else {
-//             const select_tweet_like = `select tweet_likes from tweets where id=${data.tweet_id}`
-//             const tweet_like_count = await queryExecuter(select_tweet_like);
-//             alllikecount = tweet_like_count[0].tweet_likes
-//             alllikecount = alllikecount - 1
-
-//             const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount}  where id=${data.tweet_id}`
-//             const Update_entry_tweet = await queryExecuter(up_tweets_tweetlike);
-
-
-//             const Update_unlike = `Update likes Set  updated_at= Now(),is_deleted=1  where tweet_id=${data.tweet_id}`
-//             const Update_unlike_entry = await queryExecuter(Update_unlike);
-//             let flag = false
-//             res.json({ flag, alllikecount })
-//         }
-
-//     } catch (error) {
-//         console.log(error);
-//     }
-
-// })
-
-
-// const getpostRetweet = asyncHandler(async (req, res) => {
-//     // console.log("herer");
-//     try {
-//         const token = req.session.email
-//         const user_id = req.session.user_id
-//         if (!token) {
-//             res.redirect('/user-login');
-//             return
-//         }
-//         const { data } = req.body;
-
-//         var tweet_id = data.tweet_id
-//         tweet_ids = data.tweet_id
-//         if (data.retweet == true) {
-//             const qrt = `SELECT  * FROM retweet where tweet_id=${data.tweet_id} and user_id=${user_id} and is_deleted=0;`
-
-//             const like_data = await queryExecuter(qrt);
-
-
-//             if (like_data.length == 0) {
-//                 const ins_qrt = `INSERT INTO retweet (user_id,tweet_id,created_at) values (${user_id},${data.tweet_id},NOW())`
-
-//                 const like_entry = await queryExecuter(ins_qrt);
-
-//                 const select_retweet = `select tweet_retweets from tweets where id=${data.tweet_id}`
-//                 const tweet_retweet_count = await queryExecuter(select_retweet);
-
-//                 var allretweetcount = tweet_retweet_count[0].tweet_retweets
-//                 allretweetcount = allretweetcount + 1
-//                 console.log(allretweetcount);
-
-//                 const up_tweets_retweet = `Update tweets Set tweet_retweets=${allretweetcount} where id=${data.tweet_id}`
-//                 const Update_entry_retweet = await queryExecuter(up_tweets_retweet);
-//                 let flag = true
-//                 res.json({ flag, allretweetcount })
-//             }
-//             else if (like_data.length >= 1) {
-
-//                 const select_tweet_retweet = `select tweet_retweets from tweets where id=${data.tweet_id}`
-//                 const tweet_retweet_count = await queryExecuter(select_tweet_retweet);
-//                 allretweetcount = tweet_retweet_count[0].tweet_retweets
-//                 allretweetcount = allretweetcount - 1
-
-
-//                 const up_tweets_retweet = `Update tweets Set tweet_retweets=${allretweetcount}  where id=${data.tweet_id}`
-//                 const Update_entry_tweet = await queryExecuter(up_tweets_retweet);
-
-
-//                 const Update_retweet = `Update retweet Set updated_at=Now(),is_deleted=1  where tweet_id=${data.tweet_id}`
-//                 const Update_unlike_entry = await queryExecuter(Update_retweet);
-//                 let flag = false
-//                 res.json({ flag, allretweetcount })
-//             }
-
-//         }
-
-//         else {
-//             const select_tweet_retweet = `select tweet_retweets from tweets where id=${data.tweet_id}`
-//             const tweet_retweet_count = await queryExecuter(select_tweet_retweet);
-//             allretweetcount = tweet_retweet_count[0].tweet_retweets
-//             allretweetcount = allretweetcount - 1
-
-//             const up_tweets_tweetlike = `Update tweets Set tweet_retweets=${allretweetcount}  where id=${data.tweet_id}`
-
-//             const Update_entry_tweet = await queryExecuter(up_tweets_tweetlike);
-
-
-//             const Update_unlike = `Update retweet Set updated_at=Now(),is_deleted=1  where tweet_id=${data.tweet_id}`
-//             const Update_unlike_entry = await queryExecuter(Update_unlike);
-//             let flag = false
-//             res.json({ flag, allretweetcount })
-//         }
-
-//     } catch (error) {
-//         console.log(error);
-//     }
-
-// })
 
 
 
@@ -354,8 +196,10 @@ const getDashboard = asyncHandler(async (req, res) => {
         //get comments of every tweet
         let comments = 0;
 
-
         const all_tweet_data = await queryExecuter(sel_tweets);
+
+        let folllowing = `SELECT * FROM twitter_clone.following inner join users on users.id=following.following_id inner join tweets on following.following_id=tweets.user_id where following.user_id='${user_id}' and following.isdelete='0' order by tweets.id desc;`;
+        const following_data =await queryExecuter(folllowing);
 
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -409,7 +253,7 @@ const getDashboard = asyncHandler(async (req, res) => {
                 }
             }
         })
-        
+
         let all_comments = []
         let all_likes = []
         let all_retweets = []
@@ -464,7 +308,7 @@ const getDashboard = asyncHandler(async (req, res) => {
 
         // console.log(arrlikeid);
 
-       
+
         const allretweertids = `select id from retweet`
         const allretweert_id = await queryExecuter(allretweertids);
         let some = allretweert_id.length
@@ -473,7 +317,7 @@ const getDashboard = asyncHandler(async (req, res) => {
         for (let i = 0; i < some; i++) {
 
             const qrt = `SELECT *  FROM retweet where tweet_id=${allretweert_id[i].id} and user_id=${user_id} and is_deleted=0;`
-    
+
             const retweetdata = await queryExecuter(qrt);
             arr_of_retweet[i] = retweetdata
 
@@ -496,22 +340,11 @@ const getDashboard = asyncHandler(async (req, res) => {
 
 
 
-        // let all_comments = []
-        // let all_likes = []
-        // let all_retweets = []
-        // for (let x of all_tweet_data) {
-        //     let tweet_id = x.id;
-        //     let [sel_comments] = await queryExecuter(`SELECT count(*) as tot FROM   comments WHERE tweet_id = '${tweet_id}'`);
-        //     let [sel_likes] = await queryExecuter(`SELECT count(*) as tot FROM   likes WHERE tweet_id = '${tweet_id}'`);
-
-        //     all_comments.push(sel_comments.tot);
-        //     all_likes.push(sel_likes.tot);
-        // }
-
+     
         //i need to show the get request for register page
         let flag = false;
-
-        return res.render('dashboard', { tweet_data: all_tweet_data, post_date: post_at, all_comments, all_likes, arrtruefalse, arrlikeid ,arrretweetid});
+// console.log("following user data=",following_data);
+        return res.render('dashboard', {following_data:following_data, tweet_data: all_tweet_data, post_date: post_at, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid });
     }
 
 
@@ -521,12 +354,12 @@ const getDashboard = asyncHandler(async (req, res) => {
     //i need to show the get request for register page
 });
 
-const tweetit = asyncHandler(async function (req, res)  {
+const tweetit = asyncHandler(async function (req, res) {
     // console.log(req.file.path);
     // i need to show the get request for tweet page
     let flag = false;
     console.log("tweet");
-    res.render('tweet',{flag})
+    res.render('tweet', { flag })
 });
 
 // const tweetit1 = asyncHandler(async function (req, res)  {

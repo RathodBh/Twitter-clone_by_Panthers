@@ -56,14 +56,14 @@
                             </p>
                         </div>
                         <div class="d-flex">
-                            <a href="/user-dash" class="d-flex text-dark">
+                            <a href="/user-dash?id=<%=users[0].id%>" class="d-flex text-dark" id="following">
                             <p>
                                 <%= users[0].following %>
 
                                     <p class="ms-2">Following</p>
                             </p>
                         </a>
-                        <a href="/user-dash" class="d-flex text-dark ">
+                        <a href="/user-dash?id=<%=users[0].id%>" class="d-flex text-dark" id="follower">
                             <p class="ms-3">
                                 <%= users[0].followers %>
                                     <p class="ms-2">Followers</p>
