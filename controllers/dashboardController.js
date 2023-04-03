@@ -193,6 +193,11 @@ const getpostRetweet = asyncHandler(async (req, res) => {
 
 
 const getDashboard = asyncHandler(async (req, res) => {
+    const token = req.session.email
+    if (!token) {
+        res.redirect('/user-login');
+        return
+    }
     res.render('dashboard')
     //i need to show the get request for register page
 

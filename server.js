@@ -180,22 +180,17 @@ app.get('/getFollowUserData', async (req, res) => {
     let uid = req.session.user_id;
     var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${uid})`);
 
-    var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
+    var getfollowerId = await queryExecuter(`select follower_id from followers where user_id='${uid}'`);
     var followers = [];
     getfollowerId.forEach(id => {
         followers.push(id.follower_id);
     });
 
-    let notFollow = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(SELECT following_id FROM following WHERE user_id='${uid}')`);
+
+    let notFollow = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id !='${uid}' && id not in(SELECT following_id FROM following WHERE user_id='${uid}' && following_id != '${uid}')`);
     
 
-    // var notgetfollowerId = await queryExecuter(`SELECT f.follower_id from followers as f JOIN users as u ON u.id where`);
-    // var notFollowers = [];
-    // notgetfollowerId.forEach(id => {
-    //     notFollowers.push(id.follower_id);
-    // });
-
-    res.json( { fuser: getuser, followers, unfollowers:notFollow});
+    res.json( { fuser: getuser, followers, unfollowers:notFollow, myUserId:uid});
     // res.render('profile',)
 })
 
@@ -207,7 +202,7 @@ app.get('/dashboardData',async (req,res) => {
             res.redirect('/user-login');
             return
         }
-        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name FROM tweets as t INNER JOIN users u ON t.user_id = u.id ORDER BY t.id DESC `;
+        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM tweets as t INNER JOIN users u ON t.user_id = u.id ORDER BY t.id DESC `;
         let follow_sel = `SELECT following.following_id FROM following WHERE following.user_id = ${user_id}`;
         const followingId = await queryExecuter(follow_sel);
 
@@ -298,9 +293,8 @@ app.get('/dashboardData',async (req,res) => {
         var arr_of_liked = []
         var done = []
         for (let i = 0; i < value; i++) {
-
-            const qrt = `SELECT *  FROM  likes where tweet_id=${alltweet_ids[i].id} and user_id=${user_id} and is_deleted=0;`
-
+            const qrt = `SELECT *  FROM  likes where tweet_id='${alltweet_ids[i].id}' and user_id='${user_id}' and is_deleted='0';`
+            
             const likeddata = await queryExecuter(qrt);
             arr_of_liked[i] = likeddata
 
@@ -329,14 +323,14 @@ app.get('/dashboardData',async (req,res) => {
         // console.log(arrlikeid);
 
        
-        const allretweertids = `select id from retweet`
+        const allretweertids = `select tweet_id from retweet`
         const allretweert_id = await queryExecuter(allretweertids);
         let some = allretweert_id.length
         var arr_of_retweet = [];
 
         for (let i = 0; i < some; i++) {
 
-            const qrt = `SELECT *  FROM retweet where tweet_id=${allretweert_id[i].id} and user_id=${user_id} and is_deleted=0;`
+            const qrt = `SELECT *  FROM retweet where tweet_id='${allretweert_id[i].tweet_id}' and user_id='${user_id}' and is_deleted='0';`
     
             const retweetdata = await queryExecuter(qrt);
             arr_of_retweet[i] = retweetdata
@@ -371,7 +365,7 @@ app.get('/dashboardData',async (req,res) => {
         //     all_comments.push(sel_comments.tot);
         //     all_likes.push(sel_likes.tot);
         // }
-
+        // console.log("arrretweetid",arrretweetid);
         //i need to show the get request for register page
         let flag = false;
         
@@ -390,4 +384,5 @@ app.get("*", (req, res) => {
 })
 app.listen(PORT, () => {
     console.log(`I am listining on ${PORT}`);
+    console.log(`CLick here http://localhost:3008/user-login`);
 })

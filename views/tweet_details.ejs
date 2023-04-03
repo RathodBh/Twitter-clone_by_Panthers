@@ -15,19 +15,55 @@
                 <div class="tab-content">
                     <div id="for-you" class="tab-pane active">
                         <div class="tweet-container all-center">
-                            <div class="tweet w-100 p-3 row pt-4 border-bottom border-top">
+                            <div class="tweet w-100 p-3 row pt-4 border-bottom border-top position-relative">
                                 <div class="col-1 p-0">
-                                    <img src="<%= tweet_data.user_image %>" alt="" class="profile-size me-2 border">
+                                    <img src="<%= tweet_data.user_image %>" alt=""
+                                        class="profile-size me-2 border toastbtn"
+                                        data-toast="toast<%= tweet_data.user_id %>">
                                 </div>
-                                <div class="col-10 px-4">
+                                <div class="col-10 px-4 position-relative">
                                     <div class="d-flex align-items-center user-info">
-                                        <span class="text-black fs-16 me-1 fw-600">
+                                        <span class="text-black fs-16 me-1 fw-600 toastbtn"
+                                            data-toast="toast<%= tweet_data.user_id %>">
                                             <%= tweet_data.name %>
                                         </span>
                                     </div>
-                                    <span class="fs-16 text-gray me-1">
+                                    <span class="fs-16 text-gray me-1 toastbtn"
+                                        data-toast="toast<%= tweet_data.user_id %>">
                                         @<%= tweet_data.user_name %>
                                     </span>
+                                    <div class="toast toast-profile bg-light toastbtn"
+                                        id="toast<%= tweet_data.user_id %>" data-toast="toast<%= tweet_data.user_id %>">
+                                        <div class="toast-body">
+                                            <div class="w-100 mb-1 d-flex justify-content-between align-items-center">
+                                                <img src="<%= tweet_data.user_image %>" alt=""
+                                                    class="profile-size profile-size2 me-2 border">
+                                                <a
+                                                    class="followButton btn btn-light rounded-pill px-3 border-dark mb-0">Follow</a>
+                                            </div>
+                                            <a href="/profile/user/<%= tweet_data.user_id %>"
+                                                class="text-black d-block fs-16 me-1 fw-600 ">
+                                                <%= tweet_data.name %>
+
+                                            </a>
+                                            <span class="fs-16 d-block text-gray me-1">
+                                                @<%= tweet_data.user_name %>
+                                            </span>
+                                            <p class="text-black fs-16 fw-300 word-wrap">
+                                                <%= tweet_data.bio %>
+                                            </p>
+
+                                            <div class="d-flex fs-16 d-block ">
+                                                <p class="text-dark">
+                                                    <%= tweet_data.following %> <span
+                                                            class="text-gray me-3">Following</span>
+                                                </p>
+                                                <p class="text-dark">
+                                                    <%= tweet_data.followers %> <span class="text-gray">Followers</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-1 ">
                                     <a href="" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false"> •••
@@ -139,18 +175,22 @@
                                                         <% }else{ %>
                                                             <% comments.forEach((c,i)=>{ %>
                                                                 <div class="comment row border py-2">
-                                                                    <div class="col-1">
+                                                                    <div class="col-1 position-relative">
                                                                         <img src="<%= c.user_image %>" alt=""
-                                                                            class="profile-size me-2 border">
+                                                                            class="profile-size me-2 border commentModBtn"
+                                                                            data-toast="commentMod<%= i %>">
                                                                     </div>
                                                                     <div class="col-10">
                                                                         <div
-                                                                            class="d-flex align-items-center user-info">
+                                                                            class="d-flex align-items-center user-info position-relative">
                                                                             <a href="/profile/user/<%= c.user_id %>"
-                                                                                class="text-black fs-16 me-1 fw-600">
+                                                                                class="text-black fs-16 me-1 fw-600 commentModBtn"
+                                                                                data-toast="commentMod<%= i %>">
                                                                                 <%= c.name %>
                                                                             </a>
-                                                                            <span class="fs-16 text-gray me-1">
+                                                                            <span
+                                                                                class="fs-16 text-gray me-1 commentModBtn"
+                                                                                data-toast="commentMod<%= i %>">
                                                                                 @<%= c.user_name %>
                                                                             </span>
                                                                             <i
@@ -158,6 +198,44 @@
                                                                             <span class="date fs-16 me-1 text-gray">
                                                                                 <%= comment_at[i] %>
                                                                             </span>
+                                                                            <div class="toast toast-profile bg-light commentModBtn"
+                                                                                id="commentMod<%= i %>"
+                                                                                data-toast="commentMod<%= i %>">
+                                                                                <div class="toast-body">
+                                                                                    <div
+                                                                                        class="w-100 mb-1 d-flex justify-content-between align-items-center">
+                                                                                        <img src="<%= c.user_image %>"
+                                                                                            alt=""
+                                                                                            class="profile-size profile-size2 me-2 border">
+                                                                                        <a
+                                                                                            class="followButton btn btn-light rounded-pill px-3 border-dark mb-0">Follow</a>
+                                                                                    </div>
+                                                                                    <a href="/profile/user/<%= c.user_id %>"
+                                                                                        class="text-black d-block fs-16 me-1 fw-600 ">
+                                                                                        <%= c.name %>
+
+                                                                                    </a>
+                                                                                    <span
+                                                                                        class="fs-16 d-block text-gray me-1">
+                                                                                        @<%= c.user_name %>
+                                                                                    </span>
+                                                                                    <p
+                                                                                        class="text-black fs-16 fw-300 word-wrap">
+                                                                                        <%= c.bio %>
+                                                                                    </p>
+
+                                                                                    <div class="d-flex fs-16 d-block ">
+                                                                                        <p class="text-dark">
+                                                                                            <%= c.following %> <span
+                                                                                                    class="text-gray me-3">Following</span>
+                                                                                        </p>
+                                                                                        <p class="text-dark">
+                                                                                            <%= c.followers %> <span
+                                                                                                    class="text-gray">Followers</span>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
                                                                         </div>
                                                                         <div class="sub-info">
                                                                             <p class="text-gray fs-16 fw-300 mb-0">
@@ -214,9 +292,9 @@
                             </div>
                         </div>
                     </div>
-                    <div id="following-home" class="tab-pane container">
+                    <!-- <div id="following-home" class="tab-pane container">
                         Part2
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -228,11 +306,58 @@
                 document.querySelector(".modal-body #tweetId").value = id;
                 document.querySelector("#comment_area").value = "";
             })
+           
+            document.querySelectorAll(".toastbtn").forEach((cur) => {
+                cur.addEventListener("mouseover", function (e) {
+                    let curId = e.target.getAttribute("data-toast")
+                    var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
+                    var toastList = toastElList.map(function (toastEl) {
+                        return new bootstrap.Toast(toastEl)
+                    })
+                    toastList.forEach(toast => toast.show())
+                })
+            })
+
+            document.querySelectorAll(".toastbtn").forEach((cur) => {
+                cur.addEventListener("mouseout", function (e) {
+                    let curId = e.target.getAttribute("data-toast")
+                    var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
+                    var toastList = toastElList.map(function (toastEl) {
+                        return new bootstrap.Toast(toastEl)
+                    })
+                    setTimeout(() => {
+                        toastList.forEach(toast => toast.hide())
+                    }, 2000)
+                })
+            })
+
+            document.querySelectorAll(".commentModBtn").forEach((cur) => {
+                cur.addEventListener("mouseover", function (e) {
+                    let curId = e.target.getAttribute("data-toast")
+                    var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
+                    var toastList = toastElList.map(function (toastEl) {
+                        return new bootstrap.Toast(toastEl)
+                    })
+                    toastList.forEach(toast => toast.show())
+                })
+            })
+
+            document.querySelectorAll(".commentModBtn").forEach((cur) => {
+                cur.addEventListener("mouseout", function (e) {
+                    let curId = e.target.getAttribute("data-toast")
+                    var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
+                    var toastList = toastElList.map(function (toastEl) {
+                        return new bootstrap.Toast(toastEl)
+                    })
+                    toastList.forEach(toast => toast.hide())
+                })
+            })
+
 
             let form = document.querySelector('#addCommentForm')
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                let data = fetch(`/tweet/tweet_comment`, {
+                let data = await fetch(`/tweet/tweet_comment`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -241,12 +366,6 @@
                         tweetId: document.querySelector("#tweetId").value,
                         comment_text: document.querySelector("#comment_area").value
                     })
-                })
-                data.then((response) => {
-                    console.log("🚀 ~ file: tweet_details.ejs:247 ~ data.then ~ response:", response)
-
-                }).catch((error) => {
-                    console.log("🚀 ~ file: tweet_details.ejs:252 ~ data.then ~ error:", error)
                 })
                 let ans = await data.json();
 

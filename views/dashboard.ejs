@@ -49,17 +49,23 @@
             window.addEventListener("load", function () {
                 const loader = document.querySelector(".loader");
                 loader.className += " hidden"; // class "loader hidden"
+                allClicks()
+
             });
 
-            let allClicks = document.querySelectorAll(".clickComment")
-            allClicks.forEach((cur) => {
-                // let linkModal = document.querySelector("#clickComment");
-                cur.addEventListener("click", (e) => {
-                    let id = e.currentTarget.getAttribute("data-id");
-                    document.querySelector(".modal-body #tweetId").value = id;
-                    document.querySelector("#comment_area").value = "";
+            function allClicks() {
+                let allClicks = document.querySelectorAll(".clickComment")
+                allClicks.forEach((cur) => {
+                    // let linkModal = document.querySelector("#clickComment");
+                    cur.addEventListener("click", (e) => {
+                        e.stopPropagation()
+                        let id = e.currentTarget.getAttribute("data-id");
+                        document.querySelector(".modal-body #tweetId").value = id;
+                        document.querySelector("#comment_area").value = "";
+                    })
                 })
-            })
+            }
+
             async function likepost(e, t_id) {
                 e.stopPropagation()
                 let tweet_id = t_id.id
@@ -107,10 +113,27 @@
 
             async function copyContent(e, text) {
                 e.stopPropagation();
-                console.log(e, text);
-                alert("Copy to clipboard")
+                const ToastCopy = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
                 try {
                     await navigator.clipboard.writeText(text);
+
+
+
+                    ToastCopy.fire({
+                        icon: 'success',
+                        title: 'Link copied successfully',
+
+                    })
                 } catch (err) {
                     console.error('Failed to copy: ', err);
                 }
@@ -127,28 +150,56 @@
 
                 let part1 = document.querySelector("#forYouPart");
                 let part1Data = '';
+
                 tweet_data.forEach((t, index) => {
                     part1Data +=
                         `
                     <div onclick="test(${t.id})"
                                             class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
                                             <div class="col-1 p-0">
-                                                <img src="${t.user_image}" alt="" class="profile-size me-2 border">
+                                                <img src="${t.user_image}" alt="" class="profile-size me-2 border toastbtn" data-toast="toast${t.id}">
                                             </div>
-                                            <div class="col-10 px-4">
-                                                <div class="d-flex align-items-center user-info">
+                                            <div class="col-10 px-4 " >
+                                                <div class="d-flex align-items-center user-info position-relative">
+                                                    
                                                     <a href="/profile/user/${t.user_id}"
-                                                        class="text-black fs-16 me-1 fw-600">
+                                                        class="text-black fs-16 me-1 fw-600 toastbtn" data-toast="toast${t.id}">
                                                         ${t.name} 
                                                     </a>
-                                                    <span class="fs-16 text-gray me-1">
+                                                    <span class="fs-16 text-gray me-1 toastbtn"  data-toast="toast${t.id}">
                                                         @${t.user_name} 
                                                     </span>
                                                     <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
                                                     <span class="date fs-16 me-1 text-gray">
                                                         ${post_date[index]} 
                                                     </span>
+                                                    <div class="toast toast-profile bg-light toastbtn" id="toast${t.id}" data-toast="toast${t.id}">
+                                                        
+                                                        <div class="toast-body">
+                                                           <div class="w-100 mb-1 d-flex justify-content-between align-items-center">
+                                                <img src="${t.user_image}" alt="" class="profile-size profile-size2 me-2 border">
+                                                                <a class="followButton btn btn-light rounded-pill px-3 border-dark mb-0" >Follow</a>
+                                                            </div>
+                                                            <a href="/profile/user/${t.user_id}"
+                                                        class="text-black d-block fs-16 me-1 fw-600 " >
+                                                        ${t.name} 
+                                                    </a>
+                                                    <span class="fs-16 d-block text-gray me-1">
+                                                        @${t.user_name} 
+                                                    </span>
+                                                    <p class="text-black fs-16 fw-300 word-wrap">
+                                                        ${t.bio} 
+                                                    </p>
+
+                                                        <div class="d-flex fs-16 d-block ">
+                                                            <p class="text-dark">${t.following} <span class="text-gray me-3">Following</span></p>
+                                                            <p class="text-dark">${t.followers} <span class="text-gray">Followers</span></p>
+
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                            </div>
+                                                
                                                 <div class="tweet-content">
     
                                                     <p class="text-black fs-16 fw-300 word-wrap">
@@ -175,9 +226,9 @@
                                                                 <ul class="list-unstyled row">
                                                                     <li class="col">
                                                                         <a href="" data-bs-toggle="modal"
-                                                                            class="comment clickComment"
+                                                                            class="comment clickComment p-2"
                                                                             data-bs-target="#commentModal"
-                                                                            data-id="${t.id}" id="clickComment">
+                                                                            data-id="${t.id}" id="clickComment" onclick="stopProp(event)">
                                                                             <i class="fa-regular fa-comment"></i>
                                                                             <span id="allComment${t.id}">
                                                                                 ${all_comments[index]} 
@@ -186,7 +237,7 @@
                                                                         </a>
                                                                     </li>
                                                                     <li class="col">
-                                                                        <a class="retweet">
+                                                                        <a class="retweet p-2" >
                                                                             <i class="fa-solid fa-retweet"
                                                                                 onclick="retweetpost(event,this)"
                                                                                 id="k${t.id}"></i>
@@ -196,7 +247,7 @@
                                                                         </a>
                                                                     </li>
                                                                     <li class="col">
-                                                                        <a class="like">
+                                                                        <a class="like p-2">
                                                                             <i class="fa-regular fa-heart"
                                                                                 onclick="likepost(event,this)"
                                                                                 id="${t.id}"></i>
@@ -213,8 +264,8 @@
                                                                             </a>
                                                                         </li> -->
                                                                     <li class="col">
-                                                                        <a href="" class="share" data-bs-toggle="dropdown"
-                                                                            aria-expanded="false">
+                                                                        <a href="" class="share p-2" data-bs-toggle="dropdown"
+                                                                            aria-expanded="false" onclick="stopProp(event)">
                                                                             <i
                                                                                 class="fa-solid fa-arrow-up-from-bracket"></i>
     
@@ -237,7 +288,7 @@
                                             </div>
                                             <div class="col-1 dropstart">
                                                 <a href="" class="text-dark" data-bs-toggle="dropdown"
-                                                    aria-expanded="false">
+                                                    aria-expanded="false" onclick="stopProp(event)">
                                                     •••
                                                 </a>
                                                 <ul class="dropdown-menu">
@@ -269,6 +320,8 @@
                                             </div>
                                         </div>
                     `;
+
+
                 })
                 part1.innerHTML = part1Data;
                 document.querySelector("#followingShowData").innerHTML = ""
@@ -280,6 +333,32 @@
                 userLike.forEach(element => {
                     document.getElementById(element).classList = "fa-solid fa-heart text-danger";
                 });
+
+                document.querySelectorAll(".toastbtn").forEach((cur) => {
+                    cur.addEventListener("mouseover", function (e) {
+                        let curId = e.target.getAttribute("data-toast")
+                        var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
+                        var toastList = toastElList.map(function (toastEl) {
+                            return new bootstrap.Toast(toastEl)
+                        })
+                        toastList.forEach(toast => toast.show())
+                    })
+                })
+
+                document.querySelectorAll(".toastbtn").forEach((cur) => {
+                    cur.addEventListener("mouseout", function (e) {
+                        let curId = e.target.getAttribute("data-toast")
+                        var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
+                        var toastList = toastElList.map(function (toastEl) {
+                            return new bootstrap.Toast(toastEl)
+                        })
+                        setTimeout(() => {
+                            toastList.forEach(toast => toast.hide())
+                        }, 2000)
+                    })
+                })
+                load()
+                allClicks()
             }
 
             forYouDataLoad()
@@ -287,7 +366,6 @@
 
 
             async function followingTab() {
-                load()
                 let fetchDashboard = await fetch(`/dashboardData`);
                 let ansData = await fetchDashboard.json();
 
@@ -299,25 +377,51 @@
                     if (following_data.includes(t.user_id)) {
                         part2Data +=
                             `
-                    <div onclick="test(${t.id})"
+                            <div onclick="test(${t.id})"
                                             class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
                                             <div class="col-1 p-0">
-                                                <img src="${t.user_image}" alt="" class="profile-size me-2 border">
+                                                <img src="${t.user_image}" alt="" class="profile-size me-2 border toastbtn" data-toast="toast${t.id}">
                                             </div>
-                                            <div class="col-10 px-4">
-                                                <div class="d-flex align-items-center user-info">
+                                            <div class="col-10 px-4 " >
+                                                <div class="d-flex align-items-center user-info position-relative">
+                                                    
                                                     <a href="/profile/user/${t.user_id}"
-                                                        class="text-black fs-16 me-1 fw-600">
+                                                        class="text-black fs-16 me-1 fw-600 toastbtn" data-toast="toast${t.id}">
                                                         ${t.name} 
                                                     </a>
-                                                    <span class="fs-16 text-gray me-1">
+                                                    <span class="fs-16 text-gray me-1 toastbtn"  data-toast="toast${t.id}">
                                                         @${t.user_name} 
                                                     </span>
                                                     <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
                                                     <span class="date fs-16 me-1 text-gray">
                                                         ${post_date[index]} 
                                                     </span>
+                                                    <div class="toast toast-profile bg-light toastbtn" id="toast${t.id}" data-toast="toast${t.id}">
+                                                        
+                                                        <div class="toast-body">
+                                                           <div class="w-100 mb-1 d-flex justify-content-between align-items-center">
+                                                <img src="${t.user_image}" alt="" class="profile-size profile-size2 me-2 border">
+                                                                <a class="followButton btn btn-light rounded-pill px-3 border-dark mb-0" >Follow</a>
+                                                            </div>
+                                                            <a href="/profile/user/${t.user_id}"
+                                                        class="text-black d-block fs-16 me-1 fw-600 " >
+                                                        ${t.name} 
+                                                    </a>
+                                                    <span class="fs-16 d-block text-gray me-1">
+                                                        @${t.user_name} 
+                                                    </span>
+                                                    <p class="text-black fs-16 fw-300 word-wrap">
+                                                        ${t.bio} 
+                                                    </p>
+                                                    <div class="d-flex fs-16 d-block ">
+                                                            <p class="text-dark">${t.following} <span class="text-gray me-3">Following</span></p>
+                                                            <p class="text-dark">${t.followers} <span class="text-gray">Followers</span></p>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
+                                                
                                                 <div class="tweet-content">
     
                                                     <p class="text-black fs-16 fw-300 word-wrap">
@@ -346,7 +450,7 @@
                                                                         <a href="" data-bs-toggle="modal"
                                                                             class="comment clickComment"
                                                                             data-bs-target="#commentModal"
-                                                                            data-id="${t.id}" id="clickComment">
+                                                                            data-id="${t.id}" id="clickComment" onclick="(e)=>{e.stopPrapogation()}">
                                                                             <i class="fa-regular fa-comment"></i>
                                                                             <span id="allComment${t.id}">
                                                                                 ${all_comments[index]} 
@@ -383,7 +487,7 @@
                                                                         </li> -->
                                                                     <li class="col">
                                                                         <a href="" class="share" data-bs-toggle="dropdown"
-                                                                            aria-expanded="false">
+                                                                            aria-expanded="false" >
                                                                             <i
                                                                                 class="fa-solid fa-arrow-up-from-bracket"></i>
     
@@ -391,7 +495,7 @@
                                                                         <ul class="dropdown-menu p-0">
                                                                             <li class="d-flex">
                                                                                 <a class="dropdown-item text-dark"
-                                                                                    onclick="copyContent(event,'/tweet/tweet_details/${t.id}')">
+                                                                                    onclick="copyContent(event,'/tweet/tweet_details/${t.id}')" >
                                                                                     <i
                                                                                         class="fa-regular fa-clipboard me-2"></i>
     
@@ -406,19 +510,10 @@
                                             </div>
                                             <div class="col-1 dropstart">
                                                 <a href="" class="text-dark" data-bs-toggle="dropdown"
-                                                    aria-expanded="false">
+                                                    aria-expanded="false" onclick="stopProp(event)">
                                                     •••
                                                 </a>
                                                 <ul class="dropdown-menu">
-                                                    <li class="d-flex">
-                                                        <a class="dropdown-item" href="#"><i
-                                                                class="fa-solid fa-user-plus me-2"></i>
-                                                            Follow <span class="text-blue">@${t.user_name} </span>
-    
-                                                        </a>
-                                                    </li>
-    
-    
                                                     <li class="d-flex">
                                                         <a class="dropdown-item" href="#"><i
                                                                 class="fa-solid fa-user-minus me-2"></i> Unfollow <span
@@ -439,9 +534,11 @@
                                         </div>
                     `;
                     }
+
                 })
                 part2.innerHTML = part2Data;
                 document.querySelector("#forYouPart").innerHTML = ""
+
 
                 var userLike = [];
                 for (let i = 0; i < arrlikeid.length; i++) {
@@ -454,6 +551,35 @@
                         //console.log("Error: " + e)
                     }
                 });
+
+                document.querySelectorAll(".toastbtn").forEach((cur) => {
+                    cur.addEventListener("mouseover", function (e) {
+                        let curId = e.target.getAttribute("data-toast")
+                        var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
+                        var toastList = toastElList.map(function (toastEl) {
+                            return new bootstrap.Toast(toastEl)
+                        })
+                        toastList.forEach(toast => toast.show())
+                    })
+                })
+
+                document.querySelectorAll(".toastbtn").forEach((cur) => {
+                    cur.addEventListener("mouseout", function (e) {
+                        let curId = e.target.getAttribute("data-toast")
+                        var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
+                        var toastList = toastElList.map(function (toastEl) {
+                            return new bootstrap.Toast(toastEl)
+                        })
+                        setTimeout(() => {
+                            toastList.forEach(toast => toast.hide())
+                        }, 2000)
+                    })
+                })
+
+
+
+                load()
+                allClicks()
             }
             async function load() {
                 let fetchDashboard = await fetch(`/dashboardData`);
@@ -461,18 +587,19 @@
 
                 let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
 
+
                 var userretweet = [];
                 for (let i = 0; i < arrretweetid.length; i++) {
                     userretweet.push(arrretweetid[i]);
                 }
                 userretweet.forEach(element => {
                     try {
-                        console.log(document.getElementById("k" + element));
                         document.getElementById("k" + element).classList = "fa-solid fa-retweet text-success";
                     } catch (e) {
                         //console.log("Error: " + e)
                     }
                 });
+
             }
             load()
             async function retweetpost(e, t_id) {
@@ -531,8 +658,6 @@
                 }
 
                 load()
-
-
             }
 
 
@@ -555,5 +680,11 @@
                 comment_section.innerHTML = allCommentsLen
                 // loadComments()
             })
+
+            function stopProp(e) {
+                e.stopPropagation();
+            }
+
+
         </script>
         <%- include("search") -%>

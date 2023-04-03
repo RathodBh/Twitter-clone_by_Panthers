@@ -97,23 +97,6 @@
         })
 
     }
-
-    // const Toast = Swal.mixin({
-    //     toast: true,
-    //     position: 'top-end',
-    //     showConfirmButton: false,
-    //     timer: 3000,
-    //     timerProgressBar: true,
-    //     didOpen: (toast) => {
-    //         toast.addEventListener('mouseenter', Swal.stopTimer)
-    //         toast.addEventListener('mouseleave', Swal.resumeTimer)
-    //     }
-    // })
-
-    // Toast.fire({
-    //     icon: 'success',
-    //     title: 'Signed in successfully'
-    // })
     //for print latest year
     document.querySelector("#footer-year").innerText = new Date().getFullYear();
     async function search() {
@@ -148,7 +131,7 @@
         document.getElementById("addHere").innerHTML = user_details;
     }
     async function getTargetProfile(e) {
-        console.log(e.id);
+        // console.log(e.id);
         const save_req = await fetch(`/profile/user/search/?id=${e.id}`);
         const data = await save_req.json();
         location.href = `/profile/user/${e.id}`;
@@ -159,7 +142,7 @@
 
     async function follow(follower_id, flag) {
         if (flag == 0) {
-            console.log("Unfollow");
+            // console.log("Unfollow");
             await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
             document.getElementById(`f${follower_id}`).innerHTML = "Unfollow";
             document.getElementById(`f${follower_id}`).setAttribute("onclick", `follow(${follower_id},1)`);
@@ -167,7 +150,7 @@
             document.getElementById(`f${follower_id}`).style.color = "black";
 
         } else {
-            console.log("Follow");
+            // console.log("Follow");
 
             await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
             document.getElementById(`f${follower_id}`).innerHTML = "Follow";
@@ -187,6 +170,7 @@
 
         let followers = ans.fuser;
         let unfollowers = ans.unfollowers;
+        
         for (let i = 0; i < 3; i++) {
             fuser.push(unfollowers[Math.floor(Math.random() * (unfollowers.length))])
         }
@@ -207,7 +191,6 @@
                             <span class="text-gray">@${sql.user_name}</span>
                         </a>
                         <div class="mt-1">
-                        
                             ${(!unfollowersIds.includes(sql.id)) ? `<div id="f${sql.id}" onclick="follow('${sql.id}',1)" class="followButton btn btn-light rounded-pill px-3 border-dark" >Unfollow</div>` : `<div id="f${sql.id}" onclick="follow('${sql.id}',0)" class="followButton btn btn-dark rounded-pill px-3" >Follow</div>`}
                         </div>
                     </div>
@@ -222,15 +205,6 @@
     }
 
     getFollowUser();
-
-
-
-    //add Comment func for stopPropagation
-    document.querySelectorAll(".clickComment").forEach((cur) => {
-        cur.addEventListener("click", (e) => {
-            e.stopPropagation();
-        })
-    })
 
 </script>
 </body>

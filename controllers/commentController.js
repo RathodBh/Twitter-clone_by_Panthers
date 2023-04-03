@@ -86,7 +86,7 @@ const commentInfo = asyncHandler(async (req, res) => {
     let tweet_id = req.params.id;
     let db = `twitter_clone`;
     try {
-        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name  FROM   tweets as t JOIN   users as u  WHERE t.id = ${tweet_id} && u.id = t.user_id `;
+        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM  tweets as t JOIN users as u  WHERE t.id = ${tweet_id} && u.id = t.user_id `;
 
         const [tweet] = await queryExecuter(sel_tweets);
 
@@ -96,7 +96,7 @@ const commentInfo = asyncHandler(async (req, res) => {
         }
         let post_at = getDate(tweet.created_at)
 
-        let sel_comments = await queryExecuter(`SELECT u.id as user_id, u.user_name,u.name,u.user_image,c.comment,c.created_at  FROM   comments as c JOIN   users as u ON c.user_id = u.id WHERE c.tweet_id = '${tweet_id}' ORDER BY c.created_at DESC`);
+        let sel_comments = await queryExecuter(`SELECT u.id as user_id, u.user_name,u.name,u.user_image,u.bio,u.following,u.followers,c.comment,c.created_at  FROM   comments as c JOIN   users as u ON c.user_id = u.id WHERE c.tweet_id = '${tweet_id}' ORDER BY c.created_at DESC`);
 
         let comment_post_dates = []
         for (let x of sel_comments) {
@@ -139,7 +139,6 @@ const addTweetComment = asyncHandler(async (req, res) => {
         return;
     }
     const { tweetId, comment_text } = req.body;
-    console.log(req.body);
     const userId = req.session.user_id;
 
 

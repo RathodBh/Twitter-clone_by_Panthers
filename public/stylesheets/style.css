@@ -6,7 +6,9 @@
     --text-gray: #909ba4;
     --text-black: #0f1419;
 }
-
+/* body{
+    overflow: hidden;
+} */
 a {
     text-decoration: none;
 }
@@ -158,6 +160,10 @@ a {
     border-radius: 50%;
     object-fit: cover;
     aspect-ratio: 1/1;
+}
+.profile-size2{
+    height: 66px;
+    width: 66px;
 }
 
 .bottom-dots {
@@ -386,4 +392,11 @@ a {
 }
 .login-now:disabled{
     opacity: 0.5
+}
+.toast.toast-profile{
+    position: absolute !important;
+    top: 25px !important;
+    border-radius: 15px !important;
+    box-shadow: 0 0 4px 2px silver !important;
+    z-index: 1000000000000000 !important;
 }
