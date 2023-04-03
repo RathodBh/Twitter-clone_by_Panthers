@@ -427,7 +427,7 @@ const fflist = asyncHandler(async (req, res) => {
 
     var follower = await queryExecuter(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.user_id where follower_id = ${uid}`)
 
-    console.log("Getfollowerid fflist:::::::", followers);
+    // console.log("Getfollowerid fflist:::::::", follower);
     res.render('follow_following', { fuser: getuser, followers, following, follower })
 })
 

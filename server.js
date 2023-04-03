@@ -39,6 +39,7 @@ app.use("/tweet", commentInfo)
 app.use("/forget", forgetPassword)
 
 const multer = require('multer');
+const { protect } = require('./Middlewares/auth');
 
 async function queryExecuter(query) {
     return new Promise((resolve, rejects) => {
@@ -214,11 +215,13 @@ console.log("Getfolloerid :::::::",followers);
 
 
 
-app.get("/user-dash?",async(req,res)=>{
+app.get("/user-dash?",protect,async(req,res)=>{
     let uid = req.query.id || 39;
+    if(uid==undefined){
+         uid = req.session.user_id;
+    }
 
     console.log("uid"+uid);
-
     var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${uid})`);
     var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
     var followers =[];
@@ -233,6 +236,33 @@ console.log("Getfollowerid :::::::",followers);
     res.render('follow_following',{fuser:getuser,followers,following,follower})
 })
 
+
+
+// for time zone
+function calcTime(city, offset) {
+
+    // create Date object for current location
+    d = new Date();
+    
+    // convert to msec
+    // add local time zone offset
+    // get UTC time in msec
+    utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+    
+    // create new Date object for different city
+    // using supplied offset
+    nd = new Date(utc + (3600000*offset));
+    
+    // return time as a string
+    return 'The local time in ' + city + ' is ' + nd.toLocaleString();
+    
+    }
+    
+    // get Bombay time
+    console.log(calcTime('Bombay', +5.5));
+    
+
+// for time zone end
 // try end
 app.get("*", (req, res) => {
     res.render("404")

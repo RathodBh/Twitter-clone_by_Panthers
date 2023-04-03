@@ -385,3 +385,5 @@ a {
     height:500px;
     overflow-y:scroll;
 } 
+
+.pointer {cursor: pointer;}

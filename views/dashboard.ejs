@@ -1,5 +1,3 @@
-
-
 <%- include("menu") -%>
     <div class="loader">
         <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
@@ -42,8 +40,9 @@
                                             <img src="<%= t.user_image %>" alt="" class="profile-size me-2 border">
                                         </div>
                                         <div class="col-10 px-4">
-                                            <div class="d-flex align-items-center user-info">
-                                                <a href="/profile/user/<%= t.user_id %>" class="text-black fs-16 me-1 fw-600">
+                                            <div class="d-flex flex-wrap align-items-center user-info">
+                                                <a href="/profile/user/<%= t.user_id %>"
+                                                    class="text-black fs-16 me-1 fw-600">
                                                     <%= t.name %>
                                                 </a>
                                                 <span class="fs-16 text-gray me-1">
@@ -68,7 +67,7 @@
                                                 </div>
                                                 <% }else if(t.media_type.includes("video") ){ %>
                                                     <div class="tweet-video-container">
-                                                        <video controls loop>
+                                                        <video controls loop onclick="vid(event,this)">
                                                             <source src="<%= t.media_url %>" type="video/mp4">
                                                         </video>
                                                     </div>
@@ -173,19 +172,20 @@
                                     <% }) %>
                             </div>
                         </div>
-                        <div id="following-home" class="tab-pane container">
-                            <div id="following" class="tab-pane active">
+                        <div id="following-home" class="tab-pane ">
+                            <div id="following" class="tab-pane  active">
                                 <div class="tweet-container all-center flex-column ">
                                     <% following_data.forEach((t,index)=>{ %>
-    
+
                                         <div onclick="test(`<%=t.id%>`)"
                                             class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
                                             <div class="col-1 p-0">
                                                 <img src="<%= t.user_image %>" alt="" class="profile-size me-2 border">
                                             </div>
                                             <div class="col-10 px-4">
-                                                <div class="d-flex align-items-center user-info">
-                                                    <a href="/profile/user/<%= t.user_id %>" class="text-black fs-16 me-1 fw-600">
+                                                <div class="d-flex flex-wrap align-items-center user-info">
+                                                    <a href="/profile/user/<%= t.user_id %>"
+                                                        class="text-black fs-16 me-1 fw-600">
                                                         <%= t.name %>
                                                     </a>
                                                     <span class="fs-16 text-gray me-1">
@@ -197,20 +197,20 @@
                                                     </span>
                                                 </div>
                                                 <div class="tweet-content">
-    
+
                                                     <p class="text-black fs-16 fw-300 word-wrap">
                                                         <%= t.tweet %>
                                                     </p>
-    
+
                                                 </div>
-    
+
                                                 <% if(t.media_type.includes("image")){ %>
                                                     <div class="tweet-img-container">
                                                         <img src="<%= t.media_url %>" alt="" class="w-100">
                                                     </div>
                                                     <% }else if(t.media_type.includes("video") ){ %>
                                                         <div class="tweet-video-container">
-                                                            <video controls loop>
+                                                            <video controls loop onclick="vid(event,this)">
                                                                 <source src="<%= t.media_url %>" type="video/mp4">
                                                             </video>
                                                         </div>
@@ -226,7 +226,7 @@
                                                                             <span id="allComment<%= t.id %>">
                                                                                 <%= all_comments[index] %>
                                                                             </span>
-    
+
                                                                         </a>
                                                                     </li>
                                                                     <li class="col">
@@ -247,7 +247,7 @@
                                                                             <span id="like<%= t.id %>">
                                                                                 <%= t.tweet_likes %>
                                                                             </span>
-    
+
                                                                         </a>
                                                                     </li>
                                                                     <!-- <li class="col">
@@ -257,11 +257,12 @@
                                                                             </a>
                                                                         </li> -->
                                                                     <li class="col">
-                                                                        <a href="" class="share" data-bs-toggle="dropdown"
+                                                                        <a href="" class="share"
+                                                                            data-bs-toggle="dropdown"
                                                                             aria-expanded="false">
                                                                             <i
                                                                                 class="fa-solid fa-arrow-up-from-bracket"></i>
-    
+
                                                                         </a>
                                                                         <ul class="dropdown-menu p-0">
                                                                             <li class="d-flex">
@@ -269,9 +270,9 @@
                                                                                     onclick="copyContent(event,`/tweet/tweet_details/<%= t.id %>`)">
                                                                                     <i
                                                                                         class="fa-regular fa-clipboard me-2"></i>
-    
+
                                                                                     Click to copy link
-    
+
                                                                                 </a>
                                                                             </li>
                                                                         </ul>
@@ -289,19 +290,19 @@
                                                         <a class="dropdown-item" href="#"><i
                                                                 class="fa-solid fa-user-plus me-2"></i>
                                                             Follow <span class="text-blue">@<%= t.user_name %></span>
-    
+
                                                         </a>
                                                     </li>
-    
-    
+
+
                                                     <li class="d-flex">
                                                         <a class="dropdown-item" href="#"><i
                                                                 class="fa-solid fa-user-minus me-2"></i> Unfollow <span
                                                                 class="text-blue">@<%= t.user_name %></span>
-    
+
                                                         </a>
                                                     </li>
-    
+
                                                     <li class="d-flex">
                                                         <a class="dropdown-item" href="/profile/user"><i
                                                                 class="fa-regular fa-eye me-2"></i>
@@ -335,7 +336,10 @@
                     document.querySelector("#comment_area").value = "";
                 })
             })
-            
+
+            async function vid(e) {
+                e.stopPropagation()
+            }
 
             //done by jigar
             async function likepost(e, t_id) {
@@ -392,9 +396,10 @@
 
                 document.getElementById(element).classList = "fa-solid fa-heart text-danger";
             });
-
-
             
+
+
+
             async function retweetpost(e, t_id) {
                 e.stopPropagation();
                 let temp = t_id.id
