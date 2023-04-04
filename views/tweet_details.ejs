@@ -132,7 +132,7 @@
                                                             <ul class="dropdown-menu p-0">
                                                                 <li class="d-flex">
                                                                     <a class="dropdown-item text-dark"
-                                                                        onclick="copyContent(event,`/tweet/tweet_details/<%= tweet_data.id %>`)">
+                                                                        onclick="copyContent(event,`<%= tweet_data.id %>`)">
                                                                         <i class="fa-regular fa-clipboard me-2"></i>
 
                                                                         Click to copy link
@@ -247,6 +247,9 @@
 
             async function copyContent(e, text) {
                 e.stopPropagation();
+
+                let link = location.href.split('/')[0] + "//" + location.href.split('/')[2];
+                let myData =  `/tweet/tweet_details/${text}`
                 const ToastCopy = Swal.mixin({
                     toast: true,
                     position: 'top',
@@ -259,7 +262,7 @@
                     }
                 })
                 try {
-                    await navigator.clipboard.writeText(text);
+                    await navigator.clipboard.writeText(link+myData);
 
 
 

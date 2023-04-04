@@ -112,6 +112,11 @@
             //copy to clipboard
 
             async function copyContent(e, text) {
+                //
+
+                let link = location.href.split('/')[0] + "//" + location.href.split('/')[2];
+                let myData =  `/tweet/tweet_details/${text}`
+
                 e.stopPropagation();
                 const ToastCopy = Swal.mixin({
                     toast: true,
@@ -125,7 +130,7 @@
                     }
                 })
                 try {
-                    await navigator.clipboard.writeText(text);
+                    await navigator.clipboard.writeText(link+myData);
                     ToastCopy.fire({
                         icon: 'success',
                         title: 'Link copied successfully',
@@ -249,7 +254,7 @@
                                                                         <ul class="dropdown-menu p-0">
                                                                             <li class="d-flex">
                                                                                 <a class="dropdown-item text-dark"
-                                                                                    onclick="copyContent(event,'/tweet/tweet_details/${t.id}')">
+                                                                                    onclick="copyContent(event,'${t.id}')">
                                                                                     <i
                                                                                         class="fa-regular fa-clipboard me-2"></i>
     
@@ -425,7 +430,7 @@
                                                                         <ul class="dropdown-menu p-0">
                                                                             <li class="d-flex">
                                                                                 <a class="dropdown-item text-dark"
-                                                                                    onclick="copyContent(event,'/tweet/tweet_details/${t.id}')">
+                                                                                    onclick="copyContent(event,'${t.id}')">
                                                                                     <i
                                                                                         class="fa-regular fa-clipboard me-2"></i>
     

@@ -421,6 +421,7 @@ const fflist = asyncHandler(async (req, res) => {
     console.log("user id in controller="+user_id);
     console.log("uid in controller="+uid);
     var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${uid})`);
+    var curuser = await queryExecuter(`select id,name,user_name,user_image from users where id = '${uid}'`);
     var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
     var followers = [];
     getfollowerId.forEach(id => {
@@ -431,7 +432,7 @@ const fflist = asyncHandler(async (req, res) => {
     var follower = await queryExecuter(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.user_id where follower_id = ${uid}`)
 
     // console.log("Getfollowerid fflist:::::::", follower);
-    res.render('follow_following', { fuser: getuser, followers, following, follower })
+    res.render('follow_following', { fuser: getuser, followers, following, follower,userInfo:curuser[0] })
 })
 
 

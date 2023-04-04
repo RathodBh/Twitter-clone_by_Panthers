@@ -156,7 +156,6 @@ app.get("/addfollow", async (req, res) => {
     if (req.query.flag == 0) {
         cnt++;
         await queryExecuter(`insert into   followers (user_id,follower_id,isdelete) values("${followerId}","${userId}","${0}");`);
-
         await queryExecuter(`insert into  following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
 
         let a = await queryExecuter(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
@@ -397,13 +396,14 @@ app.get('/dashboardData',async (req,res) => {
 app.get("/user-dash?",protect,async(req,res)=>{
     let user_id=req.session.user_id;
     console.log("user id="+user_id);
-    let uid = req.query.id || 39;
+    let uid = req.query.id || user_id;
     if(uid==undefined){
          uid = req.session.user_id;
     }
 
     console.log("uid"+uid);
     var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${uid})`);
+    var curuser = await queryExecuter(`select id,name,user_name,user_image from users where id = '${uid}'`);
     var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
     var followers =[];
     getfollowerId.forEach(id => {
@@ -413,8 +413,7 @@ app.get("/user-dash?",protect,async(req,res)=>{
 
     var follower = await queryExecuter(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.user_id where follower_id = ${uid}`)
 
-console.log("Getfollowerid :::::::",followers);
-    res.render('follow_following',{fuser:getuser,followers,following,follower})
+    res.render('follow_following',{fuser:getuser,followers,following,follower,userInfo:curuser[0]})
 })
 
 
