@@ -207,7 +207,7 @@ const getDashboard = asyncHandler(async (req, res) => {
 
         const all_tweet_data = await queryExecuter(sel_tweets);
 
-        let folllowing = `SELECT * FROM twitter_clone.following inner join users on users.id=following.following_id inner join tweets on following.following_id=tweets.user_id where following.user_id='${user_id}' and following.isdelete='0' order by tweets.id desc;`;
+        let folllowing = `SELECT * FROM  following inner join users on users.id=following.following_id inner join tweets on following.following_id=tweets.user_id where following.user_id='${user_id}' and following.isdelete='0' order by tweets.id desc;`;
         const following_data =await queryExecuter(folllowing);
 
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
