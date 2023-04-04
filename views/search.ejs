@@ -198,7 +198,7 @@
     //follow
     let getFollowUser = async () => {
 
-        let data = await fetch(`/getFollowUserData`);
+        let data = await fetch(`/follow`);
 
         let ans = await data.json();
         let fuser = [];

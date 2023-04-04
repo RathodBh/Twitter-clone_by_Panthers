@@ -57,14 +57,14 @@
                             </p>
                         </div>
                         <div class="d-flex">
-                            <a href="/user-dash?id=<%=users[0].id%>" class="d-flex text-dark" id="following">
+                            <a href="/profile/user-dash?id=<%=users[0].id%>" class="d-flex text-dark" id="following">
                             <p>
                                 <%= users[0].following %>
 
                                     <p class="ms-2">Following</p>
                             </p>
                         </a>
-                        <a href="/user-dash?id=<%=users[0].id%>" class="d-flex text-dark" id="follower">
+                        <a href="/profile/user-dash?id=<%=users[0].id%>" class="d-flex text-dark" id="follower">
                             <p class="ms-3">
                                 <%= users[0].followers %>
                                     <p class="ms-2">Followers</p>
@@ -434,7 +434,7 @@
                         var resSave = await save_req.json();
                         console.log(resSave.flag);
 
-                        if (resSave.flag == false) {
+                        if (resSave.flag) {
                             let likeSpan = document.querySelector("#like" + tweet_id)
                             likeSpan.innerHTML = resSave.alllikecount
                         }
@@ -493,7 +493,7 @@
                             })
                         });
                         var resSave = await save_req.json();
-                        if (resSave.flag == false) {
+                        if (resSave.flag) {
                             let retweetSpan = document.querySelector("#retweet" + tweet_id)
                             retweetSpan.innerHTML = resSave.allretweetcount
                         }
@@ -562,7 +562,7 @@
                 let getFollowUser2 = async () => {
 
                     let targetId = `<%= users[0].id %>`;
-                    let data = await fetch(`/getFollowUserData`);
+                    let data = await fetch(`/follow`);
 
                     let ans = await data.json();
                     let fuser = [];
@@ -571,7 +571,6 @@
                     let unfollowers = ans.unfollowers;
 
                     let unfollowerIds = []
-                    console.log("🚀 ~ file: targetProfile.ejs:541 ~ getFollowUser2 ~ unfollowers:", unfollowers, targetId)
                     let myId = ans.myUserId;
                     for (const x of unfollowers) {
                         unfollowerIds.push(x.id);

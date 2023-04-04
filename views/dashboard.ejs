@@ -1,8 +1,8 @@
 <%- include("menu") -%>
-    <div class="loader">
-        <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
-    </div>
-
+    
+<div class="loader">
+    <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
+</div>
     <%- include("add_comment") -%>
         <!-- main panel  -->
         <div class="col-6 px-0 border">
@@ -106,6 +106,10 @@
                         let likeSpan = document.querySelector("#like" + tweet_id)
                         likeSpan.innerHTML = resSave.alllikecount
                     }
+                    if (resSave.flag == true) {
+                        let likeSpan = document.querySelector("#like" + tweet_id)
+                        likeSpan.innerHTML = resSave.alllikecount
+                    }
                 }
             }
 
@@ -115,7 +119,7 @@
                 //
 
                 let link = location.href.split('/')[0] + "//" + location.href.split('/')[2];
-                let myData =  `/tweet/tweet_details/${text}`
+                let myData = `/tweet/tweet_details/${text}`
 
                 e.stopPropagation();
                 const ToastCopy = Swal.mixin({
@@ -130,7 +134,7 @@
                     }
                 })
                 try {
-                    await navigator.clipboard.writeText(link+myData);
+                    await navigator.clipboard.writeText(link + myData);
                     ToastCopy.fire({
                         icon: 'success',
                         title: 'Link copied successfully',
@@ -145,7 +149,7 @@
             }
 
             async function forYouDataLoad() {
-                let fetchDashboard = await fetch(`/dashboardData`);
+                let fetchDashboard = await fetch(`/dashboard/dashboardData`);
                 let ansData = await fetchDashboard.json();
 
                 let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
@@ -322,7 +326,7 @@
 
 
             async function followingTab() {
-                let fetchDashboard = await fetch(`/dashboardData`);
+                let fetchDashboard = await fetch(`/dashboard/dashboardData`);
                 let ansData = await fetchDashboard.json();
 
                 let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
@@ -500,7 +504,7 @@
                 allClicks()
             }
             async function load() {
-                let fetchDashboard = await fetch(`/dashboardData`);
+                let fetchDashboard = await fetch(`/dashboard/dashboardData`);
                 let ansData = await fetchDashboard.json();
 
                 let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
@@ -565,13 +569,15 @@
                     });
                     var resSave = await save_req.json();
                     if (resSave.flag == false) {
-                        try {
-                            let retweetSpan = document.querySelector("#retweet" + tweet_id)
-                            retweetSpan.innerHTML = resSave.allretweetcount
-                        } catch (e) {
-                            //console.log("Error: " + e)
-                        }
 
+                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                        retweetSpan.innerHTML = resSave.allretweetcount
+
+
+                    }
+                    if (resSave.flag == true) {
+                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                        retweetSpan.innerHTML = resSave.allretweetcount
                     }
                 }
 

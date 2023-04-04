@@ -13,6 +13,7 @@ router.route("/getUserData").get(protect, getUserInfo);
 router.route("/user/search").get( getTagetProfiledata);
 router.route('/user/:id').get(getTargetProfile);
 router.route('/user-dash').get(protect,fflist);
+router.route('/user-dash/:id').get(fflist);
 // router.route('/user-dash/:id').get(fflist);
 
 

@@ -415,7 +415,7 @@
                         })
                     });
                     var resSave = await save_req.json();
-                    if (resSave.flag == false) {
+                    if (resSave.flag) {
                         let likeSpan = document.querySelector("#like" + tweet_id)
                         likeSpan.innerHTML = resSave.alllikecount
                     }
@@ -467,7 +467,7 @@
                         })
                     });
                     var resSave = await save_req.json();
-                    if (resSave.flag == false) {
+                    if (resSave.flag) {
                         let retweetSpan = document.querySelector("#retweet" + tweet_id)
                         retweetSpan.innerHTML = resSave.allretweetcount
                     }
