@@ -138,7 +138,7 @@
                                         </div>
                                         <div class="col-1 dropstart">
                                             <a href="" class="text-dark" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
+                                                aria-expanded="false" onclick="vid(event,this)">
                                                 •••
                                             </a>
                                             <ul class="dropdown-menu">
@@ -282,7 +282,7 @@
                                             </div>
                                             <div class="col-1 dropstart">
                                                 <a href="" class="text-dark" data-bs-toggle="dropdown"
-                                                    aria-expanded="false">
+                                                    aria-expanded="false" onclick="vid(event,this)" >
                                                     •••
                                                 </a>
                                                 <ul class="dropdown-menu">
@@ -459,7 +459,7 @@
 
             let form = document.querySelector('#addCommentForm')
             form.addEventListener('submit', async (e) => {
-                e.preventDefault();
+                e.preventDefault()
                 let data = await fetch(`/tweet/tweet_comment`, {
                     method: "POST",
                     headers: {
@@ -482,11 +482,12 @@
 
 
             async function copyContent(e, text) {
-                e.stopPropagation();
-                console.log(e, text);
-                alert("Copy to clipboard")
+                e.stopPropagation()
+                console.log(e, text+"text");
                 try {
-                    await navigator.clipboard.writeText(text);
+                    await navigator.clipboard.writeText(text.value);
+                    alert("Copy to clipboard")
+                    console.log(e, text+"text");
                 } catch (err) {
                     console.error('Failed to copy: ', err);
                 }
