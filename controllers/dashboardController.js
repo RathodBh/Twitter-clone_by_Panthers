@@ -570,7 +570,7 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) =>{
 
         let flag = false;
         
-        return res.json({ tweet_data: all_tweet_data, following_data:allFollowingIds, post_date: post_at, all_comments, all_likes, arrtruefalse, arrlikeid ,arrretweetid});
+        return res.json({ tweet_data: all_tweet_data, following_data:allFollowingIds, post_date: post_at, all_comments, all_likes, arrtruefalse, arrlikeid ,arrretweetid,userID:req.session.user_id});
     }
 
 
