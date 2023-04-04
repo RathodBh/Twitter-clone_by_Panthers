@@ -157,47 +157,23 @@
                     <div onclick="test(${t.id})"
                                             class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
                                             <div class="col-1 p-0">
-                                                <img src="${t.user_image}" alt="" class="profile-size me-2 border toastbtn" data-toast="toast${t.id}">
+                                                <img src="${t.user_image}" alt="" class="profile-size me-2 border">
                                             </div>
                                             <div class="col-10 px-4 " >
                                                 <div class="d-flex align-items-center user-info position-relative">
                                                     
                                                     <a href="/profile/user/${t.user_id}"
-                                                        class="text-black fs-16 me-1 fw-600 toastbtn" data-toast="toast${t.id}">
+                                                        class="text-black fs-16 me-1 fw-600 ">
                                                         ${t.name} 
                                                     </a>
-                                                    <span class="fs-16 text-gray me-1 toastbtn"  data-toast="toast${t.id}">
+                                                    <span class="fs-16 text-gray me-1 "  >
                                                         @${t.user_name} 
                                                     </span>
                                                     <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
                                                     <span class="date fs-16 me-1 text-gray">
                                                         ${post_date[index]} 
                                                     </span>
-                                                    <div class="toast toast-profile bg-light toastbtn" id="toast${t.id}" data-toast="toast${t.id}">
-                                                        
-                                                        <div class="toast-body">
-                                                           <div class="w-100 mb-1 d-flex justify-content-between align-items-center">
-                                                <img src="${t.user_image}" alt="" class="profile-size profile-size2 me-2 border">
-                                                                <a class="followButton btn btn-light rounded-pill px-3 border-dark mb-0" >Follow</a>
-                                                            </div>
-                                                            <a href="/profile/user/${t.user_id}"
-                                                        class="text-black d-block fs-16 me-1 fw-600 " >
-                                                        ${t.name} 
-                                                    </a>
-                                                    <span class="fs-16 d-block text-gray me-1">
-                                                        @${t.user_name} 
-                                                    </span>
-                                                    <p class="text-black fs-16 fw-300 word-wrap">
-                                                        ${t.bio} 
-                                                    </p>
-
-                                                        <div class="d-flex fs-16 d-block ">
-                                                            <p class="text-dark">${t.following} <span class="text-gray me-3">Following</span></p>
-                                                            <p class="text-dark">${t.followers} <span class="text-gray">Followers</span></p>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                    
                                             </div>
                                                 
                                                 <div class="tweet-content">
@@ -336,29 +312,7 @@
                     document.getElementById(element).classList = "fa-solid fa-heart text-danger";
                 });
 
-                document.querySelectorAll(".toastbtn").forEach((cur) => {
-                    cur.addEventListener("mouseover", function (e) {
-                        let curId = e.target.getAttribute("data-toast")
-                        var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
-                        var toastList = toastElList.map(function (toastEl) {
-                            return new bootstrap.Toast(toastEl)
-                        })
-                        toastList.forEach(toast => toast.show())
-                    })
-                })
 
-                document.querySelectorAll(".toastbtn").forEach((cur) => {
-                    cur.addEventListener("mouseout", function (e) {
-                        let curId = e.target.getAttribute("data-toast")
-                        var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
-                        var toastList = toastElList.map(function (toastEl) {
-                            return new bootstrap.Toast(toastEl)
-                        })
-                        setTimeout(() => {
-                            toastList.forEach(toast => toast.hide())
-                        }, 2000)
-                    })
-                })
                 load()
                 allClicks()
             }
@@ -382,46 +336,23 @@
                             <div onclick="test(${t.id})"
                                             class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
                                             <div class="col-1 p-0">
-                                                <img src="${t.user_image}" alt="" class="profile-size me-2 border toastbtn" data-toast="toast${t.id}">
+                                                <img src="${t.user_image}" alt="" class="profile-size me-2 border" >
                                             </div>
                                             <div class="col-10 px-4 " >
                                                 <div class="d-flex align-items-center user-info position-relative">
                                                     
                                                     <a href="/profile/user/${t.user_id}"
-                                                        class="text-black fs-16 me-1 fw-600 toastbtn" data-toast="toast${t.id}">
+                                                        class="text-black fs-16 me-1 fw-600" >
                                                         ${t.name} 
                                                     </a>
-                                                    <span class="fs-16 text-gray me-1 toastbtn"  data-toast="toast${t.id}">
+                                                    <span class="fs-16 text-gray me-1" >
                                                         @${t.user_name} 
                                                     </span>
                                                     <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
                                                     <span class="date fs-16 me-1 text-gray">
                                                         ${post_date[index]} 
                                                     </span>
-                                                    <div class="toast toast-profile bg-light toastbtn" id="toast${t.id}" data-toast="toast${t.id}">
-                                                        
-                                                        <div class="toast-body">
-                                                           <div class="w-100 mb-1 d-flex justify-content-between align-items-center">
-                                                <img src="${t.user_image}" alt="" class="profile-size profile-size2 me-2 border">
-                                                                <a class="followButton btn btn-light rounded-pill px-3 border-dark mb-0" >Follow</a>
-                                                            </div>
-                                                            <a href="/profile/user/${t.user_id}"
-                                                        class="text-black d-block fs-16 me-1 fw-600 " >
-                                                        ${t.name} 
-                                                    </a>
-                                                    <span class="fs-16 d-block text-gray me-1">
-                                                        @${t.user_name} 
-                                                    </span>
-                                                    <p class="text-black fs-16 fw-300 word-wrap">
-                                                        ${t.bio} 
-                                                    </p>
-                                                    <div class="d-flex fs-16 d-block ">
-                                                            <p class="text-dark">${t.following} <span class="text-gray me-3">Following</span></p>
-                                                            <p class="text-dark">${t.followers} <span class="text-gray">Followers</span></p>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                
                                                 </div>
                                                 
                                                 <div class="tweet-content">
@@ -556,29 +487,6 @@
                     }
                 });
 
-                document.querySelectorAll(".toastbtn").forEach((cur) => {
-                    cur.addEventListener("mouseover", function (e) {
-                        let curId = e.target.getAttribute("data-toast")
-                        var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
-                        var toastList = toastElList.map(function (toastEl) {
-                            return new bootstrap.Toast(toastEl)
-                        })
-                        toastList.forEach(toast => toast.show())
-                    })
-                })
-
-                document.querySelectorAll(".toastbtn").forEach((cur) => {
-                    cur.addEventListener("mouseout", function (e) {
-                        let curId = e.target.getAttribute("data-toast")
-                        var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
-                        var toastList = toastElList.map(function (toastEl) {
-                            return new bootstrap.Toast(toastEl)
-                        })
-                        setTimeout(() => {
-                            toastList.forEach(toast => toast.hide())
-                        }, 2000)
-                    })
-                })
 
 
 

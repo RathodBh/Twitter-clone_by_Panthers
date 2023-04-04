@@ -393,10 +393,3 @@ a {
 .login-now:disabled{
     opacity: 0.5
 }
-.toast.toast-profile{
-    position: absolute !important;
-    top: 25px !important;
-    border-radius: 15px !important;
-    box-shadow: 0 0 4px 2px silver !important;
-    z-index: 1000000000000000 !important;
-}
