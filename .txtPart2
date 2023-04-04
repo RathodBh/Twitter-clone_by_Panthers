@@ -1,0 +1,128 @@
+ <% tweet_data.forEach((t,index)=>{ %>
+                                    <% if(following_data.includes(t.user_id)){ %>
+                                        <div onclick="test(`<%=t.id%>`)"
+                                            class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
+                                            <div class="col-1 p-0">
+                                                <img src="<%= t.user_image %>" alt="" class="profile-size me-2 border">
+                                            </div>
+                                            <div class="col-10 px-4">
+                                                <div class="d-flex align-items-center user-info">
+                                                    <a href="/profile/user/<%= t.user_id %>"
+                                                        class="text-black fs-16 me-1 fw-600">
+                                                        <%= t.name %>
+                                                    </a>
+                                                    <span class="fs-16 text-gray me-1">
+                                                        @<%= t.user_name %>
+                                                    </span>
+                                                    <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
+                                                    <span class="date fs-16 me-1 text-gray">
+                                                        <%= post_date[index] %>
+                                                    </span>
+                                                </div>
+                                                <div class="tweet-content">
+
+                                                    <p class="text-black fs-16 fw-300 word-wrap">
+                                                        <%= t.tweet %>
+                                                    </p>
+
+                                                </div>
+
+                                                <% if(t.media_type.includes("image")){ %>
+                                                    <div class="tweet-img-container">
+                                                        <img src="<%= t.media_url %>" alt="" class="w-100">
+                                                    </div>
+                                                    <% }else if(t.media_type.includes("video") ){ %>
+                                                        <div class="tweet-video-container">
+                                                            <video controls loop>
+                                                                <source src="<%= t.media_url %>" type="video/mp4">
+                                                            </video>
+                                                        </div>
+                                                        <% } %>
+                                                            <div class="tweet-reactions-container mt-3">
+                                                                <ul class="list-unstyled row">
+                                                                    <li class="col">
+                                                                        <a href="" data-bs-toggle="modal"
+                                                                            class="comment clickComment"
+                                                                            data-bs-target="#commentModal"
+                                                                            data-id="<%= t.id %>" id="clickComment">
+                                                                            <i class="fa-regular fa-comment"></i>
+                                                                            <span id="allComment<%= t.id %>">
+                                                                                <%= all_comments[index] %>
+                                                                            </span>
+
+                                                                        </a>
+                                                                    </li>
+                                                                    <li class="col">
+                                                                        <a class="retweet">
+                                                                            <i class="fa-solid fa-retweet"
+                                                                                onclick="retweetpost(event,this)"
+                                                                                id="k<%= t.id %>"></i>
+                                                                            <span id="retweet<%= t.id %>">
+                                                                                <%= t.tweet_retweets %>
+                                                                            </span>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li class="col">
+                                                                        <a class="like">
+                                                                            <i class="fa-regular fa-heart"
+                                                                                onclick="likepost1(event,this)"
+                                                                                id="foll<%= t.id %>"></i>
+                                                                            <span id="like_1<%= t.id %>">
+                                                                                <%= t.tweet_likes %>
+                                                                            </span>
+
+                                                                        </a>
+                                                                    </li>
+                                                                    <li class="col">
+                                                                        <a href="" class="share"
+                                                                            data-bs-toggle="dropdown"
+                                                                            aria-expanded="false">
+                                                                            <i
+                                                                                class="fa-solid fa-arrow-up-from-bracket"></i>
+
+                                                                        </a>
+                                                                        <ul class="dropdown-menu p-0">
+                                                                            <li class="d-flex">
+                                                                                <a class="dropdown-item text-dark"
+                                                                                    onclick="copyContent(event,`/tweet/tweet_details/<%= t.id %>`)">
+                                                                                    <i
+                                                                                        class="fa-regular fa-clipboard me-2"></i>
+
+                                                                                    Click to copy link
+
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                            </div>
+                                            <div class="col-1 dropstart">
+                                                <a href="" class="text-dark" data-bs-toggle="dropdown"
+                                                    aria-expanded="false">
+                                                    •••
+                                                </a>
+                                                <ul class="dropdown-menu">
+
+
+
+                                                    <li class="d-flex">
+                                                        <a class="dropdown-item" href="#"><i
+                                                                class="fa-solid fa-user-minus me-2"></i> Unfollow <span
+                                                                class="text-blue">@<%= t.user_name %></span>
+
+                                                        </a>
+                                                    </li>
+
+                                                    <li class="d-flex">
+                                                        <a class="dropdown-item" href="/profile/user"><i
+                                                                class="fa-regular fa-eye me-2"></i>
+                                                            Visit profile <span class="text-blue">@<%= t.user_name %>
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                    <% }) %>

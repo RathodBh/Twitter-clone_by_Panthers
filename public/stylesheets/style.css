@@ -6,7 +6,9 @@
     --text-gray: #909ba4;
     --text-black: #0f1419;
 }
-
+/* body{
+    overflow: hidden;
+} */
 a {
     text-decoration: none;
 }
@@ -157,6 +159,11 @@ a {
     width: 46px;
     border-radius: 50%;
     object-fit: cover;
+    aspect-ratio: 1/1;
+}
+.profile-size2{
+    height: 66px;
+    width: 66px;
 }
 
 .bottom-dots {
@@ -332,7 +339,9 @@ a {
     font-weight: 600;
     border-bottom: 4px solid var(--bg-blue);
 }
-
+.word-wrap{
+    word-wrap: anywhere;
+}
 /* loader  */
 .loader {
     position: fixed;
@@ -367,4 +376,20 @@ a {
     height: 100px;
     border: 1px solid black;
     margin: 10px;
+}
+
+#searchRes{
+    max-height: 40vh;
+    overflow: auto;
+}
+
+.cp{
+    cursor: pointer;
+}
+
+.mt-6rem{
+    margin-top: 5rem !important
+}
+.login-now:disabled{
+    opacity: 0.5
 }

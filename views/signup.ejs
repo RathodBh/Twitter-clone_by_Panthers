@@ -25,12 +25,12 @@
     </div>
     <!-- Modal  -->
     <div class="modal fade" id="signup">
-        <div class="modal-dialog container">
+        <div class="modal-dialog container mt-6rem">
             <div id="jobImage" class="modal-content rounded">
 
                 <div class="modal-header bg-blue top-radius  d-flex flex-column jcc">
-                        <i class="fa-brands fa-twitter twitter-logo"></i>
-                        <h3 class="modal-title text-light">Register your account</h3>
+                    <i class="fa-brands fa-twitter twitter-logo"></i>
+                    <h3 class="modal-title text-light">Register your account</h3>
                 </div>
 
                 <div class="modal-body bg-light">
@@ -55,7 +55,7 @@
                         <div class="col-6">
                             <form action="/user/sign-up" class="w-100" method="post">
                                 <div class="data">
-                                    <div class="candidate">
+                                    <div class="user">
                                         <div id="part1">
 
                                             <!-- <h1 class="txt-center m-20 text-blue">Registration</h1> -->
@@ -64,30 +64,42 @@
 
                                                 <div class="mb-3 w100">
                                                     <label for="name" class="form-label text-dark">Name</label>
-                                                    <input type="text" class="form-control rounded" name="name" id="name" placeholder="Enter name">
-                                                  </div>
+                                                    <input type="text" class="form-control rounded" name="name"
+                                                        id="name" placeholder="Enter name" tabindex="1">
+                                                </div>
                                                 <div class="mb-3 w100">
-                                                    <label for="email" class="form-label text-dark">Email address</label>
-                                                    <input type="email" class="form-control rounded" id="email" name="email" onkeyup="checkuserEmail(this)"  placeholder="name@example.com">
+                                                    <label for="email" class="form-label text-dark">Email
+                                                        address</label>
+                                                    <input type="email" class="form-control rounded" id="email"
+                                                        name="email" tabindex="2" onkeyup="checkuserEmail(this)"
+                                                        placeholder="name@example.com">
                                                     <span class="w-100 text-danger fs-14" id="emailError"></span>
                                                 </div>
 
-                                                <label for="year" class="form-label w-100 text-dark">Date of Birth</label>
-                                                <p class="text-gray fs-14 w-100">This will be shown publicly. Confirm your own age.</p>
+                                                <label for="year" class="form-label w-100 text-dark">Date of
+                                                    Birth</label>
+                                                <p class="text-gray fs-14 w-100">This will be shown publicly. Confirm
+                                                    your own age.</p>
                                                 <div class="d-flex jcsb control">
                                                     <div class="w30">
-                                                        <select class="form-select rounded" id ="year" name = "yyyy" onchange="change_year(this)" onmousedown="if(this.options.length>8){this.size=8;}" >
+                                                        <select class="form-select rounded" id="year" tabindex="3"
+                                                            name="yyyy" onchange="change_year(this)">
                                                         </select>
                                                     </div>
                                                     <div class="w30">
-                                                        <select class="form-select rounded"  id ="month" name = "mm" onchange="change_month(this)" onmousedown="if(this.options.length>8){this.size=8;}">
+                                                        <select class="form-select rounded" id="month" tabindex="4"
+                                                            name="mm" onchange="change_month(this)">
                                                         </select>
                                                     </div>
                                                     <div class="w30">
-                                                        <select class="form-select rounded" id ="day" name = "dd"   >
+                                                        <select class="form-select rounded" id="day" tabindex="5"
+                                                            name="dd">
                                                         </select>
                                                     </div>
                                                 </div>
+
+                                                <span class="w-100 text-danger fs-14" id="yearError"></span>
+
                                             </div>
                                         </div>
                                         <div id="part2">
@@ -96,30 +108,38 @@
                                             <div class="d-flex jcc alc p-10 flex-column">
                                                 <div class="mb-3 w100">
                                                     <div class="d-flex jcsb">
-                                                        <label for="username" class="form-label text-dark">Username</label>
+                                                        <label for="username"
+                                                            class="form-label text-dark">Username</label>
                                                         <span class="text-dark" id="usernameLimit">
                                                         </span>
                                                     </div>
-                                                        <input type="text" class="form-control rounded" name="uname" onkeyup="checkusername(this)" id="username" placeholder="Enter username">
+                                                    <input type="text" class="form-control rounded" name="uname"
+                                                        onkeyup="checkusername(this)" id="username"
+                                                        placeholder="Enter username" autocomplete="new-password"
+                                                        tabindex="-1">
                                                     <span class="w-100 text-danger fs-14" id="usernameError"></span>
-                                                  </div>
-                                                  <div class="mb-3 w100 position-relative">
-                                                    <label for="password" class="form-label text-dark">Password</label>
-                                                    <div class="position-relative">
-                                                        <input type="password" class="form-control rounded" id="password"
-                                                            placeholder="Enter password" name="password">
-                                                        <i class="far fa-eye text-secondary" id="togglePassword"></i>
-                                                    </div>
-            
                                                 </div>
                                                 <div class="mb-3 w100 position-relative">
-                                                    <label for="password" class="form-label text-dark">Confirm Password</label>
+                                                    <label for="password" class="form-label text-dark">Password</label>
                                                     <div class="position-relative">
-                                                        <input type="password" class="form-control rounded" id="password"
-                                                            placeholder="retype password" name="cpassword">
+                                                        <input type="password" class="form-control rounded"
+                                                            id="password" placeholder="Enter password" name="password"
+                                                            autocomplete="new-password" tabindex="-1">
                                                         <i class="far fa-eye text-secondary" id="togglePassword"></i>
                                                     </div>
-            
+                                                    <span class="w-100 text-danger fs-14" id="passError"></span>
+
+                                                </div>
+                                                <div class="mb-3 w100 position-relative">
+                                                    <label for="password" class="form-label text-dark">Confirm
+                                                        Password</label>
+                                                    <div class="position-relative">
+                                                        <input type="password" class="form-control rounded"
+                                                            id="cpassword" placeholder="retype password"
+                                                            name="cpassword" tabindex="-1" autocomplete="new-password">
+                                                    </div>
+                                                    <span class="w-100 text-danger fs-14" id="cpassErr"></span>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -127,8 +147,9 @@
 
                                     </div>
                                     <div class="w100 control d-flex bottom">
-                                        <input type="button" value="PREVIOUS" class="w50 " id="prev">
-                                        <input type="button" value="NEXT" class="w50 bg-blue text-light" id="next">
+                                        <input type="button" value="PREVIOUS" class="w-50 " id="prev">
+                                        <input type="button" value="NEXT" class="w-50 bg-blue text-light" id="next"
+                                            tabindex="6">
                                     </div>
                                 </div>
                             </form>
@@ -139,7 +160,8 @@
                 </div>
 
                 <div class="modal-footer bottom-radius py-4">
-                    <p class="text-center w-100">Already have an account? <a href="/user-login" class="text-light fw-600">Login now</a></p>
+                    <p class="text-center w-100">Already have an account? <a href="/user-login"
+                            class="text-light fw-600">Login now</a></p>
                 </div>
             </div>
         </div>
@@ -153,16 +175,16 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 
     <!-- Initialize Swiper -->
- 
+
     <script src="/javascripts/signup.js"></script>
     <script>
-        
+
         //for stopping the hide modal
         var myModal = new bootstrap.Modal(document.getElementById('signup'), {
             keyboard: false,
             backdrop: false
         })
-        
+
         //auto show the modal
         myModal.show();
         const togglePassword = document.querySelector('#togglePassword');
@@ -174,60 +196,20 @@
             password.setAttribute('type', type);
 
             // toggle the eye slash icon
-            if(this.classList.contains('fa-eye-slash')){
+            if (this.classList.contains('fa-eye-slash')) {
                 this.classList.remove('fa-eye-slash');
                 this.classList.add('fa-eye');
-            }else{
+            } else {
                 this.classList.remove('fa-eye');
                 this.classList.add('fa-eye-slash');
             }
         });
         window.addEventListener("load", function () {
-    const loader = document.querySelector(".loader");
-    loader.className += " hidden"; // class "loader hidden"
-});
+            const loader = document.querySelector(".loader");
+            loader.className += " hidden"; // class "loader hidden"
+        });
 
-
-        
     </script>
-         
-        </script>
-        <style>
-          .loader {
-      position: fixed;
-      z-index: 99;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-  }
-  
-  .loader > img {
-      width: 100px;
-  }
-  
-  .loader.hidden {
-      animation: fadeOut 1s;
-      animation-fill-mode: forwards;
-  }
-  
-  @keyframes fadeOut {
-      100% {
-          opacity: 0;
-          visibility: hidden;
-      }
-  }
-  
-  .thumb {
-      height: 100px;
-      border: 1px solid black;
-      margin: 10px;
-  }
-      </style>
 </body>
 
 </html>

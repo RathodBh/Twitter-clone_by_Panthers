@@ -127,7 +127,7 @@ function change_month(select) {
 
 async function checkusername(e) {
     console.log(e.value);
-    const save_req = await fetch(`http://localhost:3008/user/sign-up/checkusername`, {
+    const save_req = await fetch(`/user/sign-up/checkusername`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
@@ -162,7 +162,7 @@ async function checkusername(e) {
   async function checkuserEmail(e) {
     let email = e.value
 
-    const save_req = await fetch(`http://localhost:3008/user/sign-up/checkemail`, {
+    const save_req = await fetch(`/user/sign-up/checkemail`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
@@ -197,7 +197,7 @@ async function checkusername(e) {
   async function checkemailforlogin(e) {
     let email = e.value
 
-    const save_req = await fetch(`http://localhost:3008/user-login/checkemail`, {
+    const save_req = await fetch(`/user-login/checkemail`, {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
