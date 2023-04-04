@@ -25,19 +25,19 @@
         <div class="footer p-2 mt-2">
             <ul class="d-flex flex-wrap list-unstyled footer-link-container mb-0">
                 <li>
-                    <a href="">Terms and Service</a>
+                    <a href="https://twitter.com/en/tos" target="blank">Terms and Service</a>
                 </li>
                 <li>
-                    <a href="">Privacy Policy</a>
+                    <a href="https://twitter.com/en/privacy" target="blank">Privacy Policy</a>
                 </li>
                 <li>
-                    <a href="">Cookie Policy</a>
+                    <a href="https://help.twitter.com/en/rules-and-policies/twitter-cookies" target="blank">Cookie Policy</a>
                 </li>
                 <li>
-                    <a href="">Accessibility</a>
+                    <a href="https://help.twitter.com/en/resources/accessibility" target="blank">Accessibility</a>
                 </li>
                 <li>
-                    <a href="">Ads info</a>
+                    <a href="https://business.twitter.com/en/help/troubleshooting/how-twitter-ads-work.html?ref=web-twc-ao-gbl-adsinfo&utm_source=twc&utm_medium=web&utm_campaign=ao&utm_content=adsinfo" target="blank">Ads info</a>
                 </li>
                 <li>
                     <a href="">More ...</a>
@@ -61,6 +61,42 @@
     crossorigin="anonymous"></script>
 <script>
 
+    function logout() {
+        Swal.fire({
+            title: 'Do you want to Logout?',
+            text: "",
+            position: "center",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Logout!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Logout successfully',
+
+                })
+                setTimeout(() => {
+                    location.href = "/user-logout";
+                }, 2000)
+            }
+        })
+
+    }
     //for print latest year
     document.querySelector("#footer-year").innerText = new Date().getFullYear();
     async function search() {
@@ -95,7 +131,7 @@
         document.getElementById("addHere").innerHTML = user_details;
     }
     async function getTargetProfile(e) {
-        console.log(e.id);
+        // console.log(e.id);
         const save_req = await fetch(`/profile/user/search/?id=${e.id}`);
         const data = await save_req.json();
         location.href = `/profile/user/${e.id}`;
@@ -105,10 +141,8 @@
 
 
     async function follow(follower_id, flag) {
-
-
-        if (flag == 0) {//follow btn clicked 0
-            console.log("Unfollow");
+        if (flag == 0) {
+            // console.log("Unfollow");
             await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
             document.getElementById(`f${follower_id}`).innerHTML = "Unfollow";
             document.getElementById(`f${follower_id}`).setAttribute("onclick", `follow(${follower_id},1)`);
@@ -116,7 +150,7 @@
             document.getElementById(`f${follower_id}`).style.color = "black";
 
         } else {
-            console.log("Follow");
+            // console.log("Follow");
 
             await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
             document.getElementById(`f${follower_id}`).innerHTML = "Follow";
@@ -133,19 +167,18 @@
 
         let ans = await data.json();
         let fuser = [];
-        let fuser2 = ans.fuser;
 
         let followers = ans.fuser;
         let unfollowers = ans.unfollowers;
+        
         for (let i = 0; i < 3; i++) {
             fuser.push(unfollowers[Math.floor(Math.random() * (unfollowers.length))])
         }
         let unfollowersIds = [];
 
-        for(let x of unfollowers){
+        for (let x of unfollowers) {
             unfollowersIds.push(x.id)
         }
-        console.log("unollowers arr", unfollowersIds);
         let whoToFollowData = ""
         fuser.forEach(sql => {
             whoToFollowData += `
@@ -170,15 +203,6 @@
     }
 
     getFollowUser();
-
-
-
-    //add Comment func for stopPropagation
-    document.querySelectorAll(".clickComment").forEach((cur) => {
-        cur.addEventListener("click", (e) => {
-            e.stopPropagation();
-        })
-    })
 
 </script>
 </body>

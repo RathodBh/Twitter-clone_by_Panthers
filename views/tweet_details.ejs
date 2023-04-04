@@ -6,8 +6,7 @@
             <div class="inner-main commentInfo ">
                 <div class="blur-ui p-3">
                     <div class="d-flex align-items-center my-2">
-                        <a href="/dashboard"
-                            class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "></a>
+                        <a href="/dashboard" class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "></a>
                         <h5 class="text-black d-inline-block mb-0">Tweet</h5>
                     </div>
 
@@ -16,19 +15,20 @@
                 <div class="tab-content">
                     <div id="for-you" class="tab-pane active">
                         <div class="tweet-container all-center">
-                            <div class="tweet w-100 p-3 row pt-4 border-bottom border-top">
+                            <div class="tweet w-100 p-3 row pt-4 border-bottom border-top position-relative">
                                 <div class="col-1 p-0">
-                                    <img src="<%= tweet_data.user_image %>" alt="" class="profile-size me-2 border">
+                                    <img src="<%= tweet_data.user_image %>" alt="" class="profile-size me-2 border ">
                                 </div>
-                                <div class="col-10 px-4">
+                                <div class="col-10 px-4 position-relative">
                                     <div class="d-flex align-items-center user-info">
-                                        <span class="text-black fs-16 me-1 fw-600">
+                                        <span class="text-black fs-16 me-1 fw-600 ">
                                             <%= tweet_data.name %>
                                         </span>
                                     </div>
-                                    <span class="fs-16 text-gray me-1">
+                                    <span class="fs-16 text-gray me-1 ">
                                         @<%= tweet_data.user_name %>
                                     </span>
+
                                 </div>
                                 <div class="col-1 ">
                                     <a href="" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false"> •••
@@ -101,21 +101,21 @@
                                                         <li class="col">
                                                             <a class="retweet">
                                                                 <i class="fa-solid fa-retweet"
-                                                                onclick="retweetpost(event,this)"
-                                                                id="k<%= tweet_data.id %>"></i>
-                                                            <span id="retweet<%= tweet_data.id %>">
-                                                                <%= tweet_data.tweet_retweets %>
-                                                            </span>
+                                                                    onclick="retweetpost(event,this)"
+                                                                    id="k<%= tweet_data.id %>"></i>
+                                                                <span id="retweet<%= tweet_data.id %>">
+                                                                    <%= tweet_data.tweet_retweets %>
+                                                                </span>
                                                             </a>
                                                         </li>
                                                         <li class="col">
                                                             <a class="like">
                                                                 <i class="fa-regular fa-heart"
-                                                                onclick="likepost(event,this)"
-                                                                id="<%= tweet_data.id %>"></i>
-                                                            <span id="like<%= tweet_data.id %>">
-                                                                <%= tweet_data.tweet_likes %>
-                                                            </span>
+                                                                    onclick="likepost(event,this)"
+                                                                    id="<%= tweet_data.id %>"></i>
+                                                                <span id="like<%= tweet_data.id %>">
+                                                                    <%= tweet_data.tweet_likes %>
+                                                                </span>
                                                             </a>
                                                         </li>
                                                         <li class="col">
@@ -124,10 +124,22 @@
                                                             </a>
                                                         </li>
                                                         <li class="col">
-                                                            <a href="" class="share">
+                                                            <a href="" class="share p-2" data-bs-toggle="dropdown"
+                                                                aria-expanded="false" onclick="stopProp(event)">
                                                                 <i class="fa-solid fa-arrow-up-from-bracket"></i>
 
                                                             </a>
+                                                            <ul class="dropdown-menu p-0">
+                                                                <li class="d-flex">
+                                                                    <a class="dropdown-item text-dark"
+                                                                        onclick="copyContent(event,`/tweet/tweet_details/<%= tweet_data.id %>`)">
+                                                                        <i class="fa-regular fa-clipboard me-2"></i>
+
+                                                                        Click to copy link
+
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -140,18 +152,18 @@
                                                         <% }else{ %>
                                                             <% comments.forEach((c,i)=>{ %>
                                                                 <div class="comment row border py-2">
-                                                                    <div class="col-1">
+                                                                    <div class="col-1 position-relative">
                                                                         <img src="<%= c.user_image %>" alt=""
-                                                                            class="profile-size me-2 border">
+                                                                            class="profile-size me-2 border ">
                                                                     </div>
                                                                     <div class="col-10">
                                                                         <div
-                                                                            class="d-flex align-items-center user-info">
+                                                                            class="d-flex align-items-center user-info position-relative">
                                                                             <a href="/profile/user/<%= c.user_id %>"
-                                                                                class="text-black fs-16 me-1 fw-600">
+                                                                                class="text-black fs-16 me-1 fw-600 ">
                                                                                 <%= c.name %>
                                                                             </a>
-                                                                            <span class="fs-16 text-gray me-1">
+                                                                            <span class="fs-16 text-gray me-1 ">
                                                                                 @<%= c.user_name %>
                                                                             </span>
                                                                             <i
@@ -159,6 +171,7 @@
                                                                             <span class="date fs-16 me-1 text-gray">
                                                                                 <%= comment_at[i] %>
                                                                             </span>
+
                                                                         </div>
                                                                         <div class="sub-info">
                                                                             <p class="text-gray fs-16 fw-300 mb-0">
@@ -215,9 +228,9 @@
                             </div>
                         </div>
                     </div>
-                    <div id="following-home" class="tab-pane container">
+                    <!-- <div id="following-home" class="tab-pane container">
                         Part2
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -229,6 +242,37 @@
                 document.querySelector(".modal-body #tweetId").value = id;
                 document.querySelector("#comment_area").value = "";
             })
+
+            //copy to clipboard
+
+            async function copyContent(e, text) {
+                e.stopPropagation();
+                const ToastCopy = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+                try {
+                    await navigator.clipboard.writeText(text);
+
+
+
+                    ToastCopy.fire({
+                        icon: 'success',
+                        title: 'Link copied successfully',
+
+                    })
+                } catch (err) {
+                    console.error('Failed to copy: ', err);
+                }
+            }
+
 
             let form = document.querySelector('#addCommentForm')
             form.addEventListener('submit', async (e) => {
@@ -243,7 +287,6 @@
                         comment_text: document.querySelector("#comment_area").value
                     })
                 })
-
                 let ans = await data.json();
 
                 allComments = ans.all_comments;
@@ -285,7 +328,7 @@
                                                                                     @<%= tweet_data.user_name %></span>
                                                                             </p>
                                                                             <!-- </a> -->
-                                                                            <p class="coemment-i mb-0">
+                                                                            <p class="coemment-i mb-0 word-wrap">
                                                                                 ${allComments[i].comment}
                                                                             </p>
                                                                         </div>

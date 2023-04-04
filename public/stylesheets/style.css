@@ -6,7 +6,9 @@
     --text-gray: #909ba4;
     --text-black: #0f1419;
 }
-
+/* body{
+    overflow: hidden;
+} */
 a {
     text-decoration: none;
 }
@@ -158,6 +160,10 @@ a {
     border-radius: 50%;
     object-fit: cover;
     aspect-ratio: 1/1;
+}
+.profile-size2{
+    height: 66px;
+    width: 66px;
 }
 
 .bottom-dots {
@@ -381,7 +387,12 @@ a {
     cursor: pointer;
 }
 
-.flw{
+.mt-6rem{
+    margin-top: 5rem !important
+}
+.login-now:disabled{
+    opacity: 0.5
+}.flw{
     height:500px;
     overflow-y:scroll;
 } 

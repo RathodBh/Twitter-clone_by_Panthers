@@ -28,8 +28,7 @@ const loginHandler = async (req, res) => {
         let log_qry = `select * from users where email='${email}' and is_active = '1'`;
         const result = await queryExecuter(log_qry);
         if (result.length == 0) {
-            ErrorHandler.message = "Invalid Login Credentials"
-            return res.render("login", { flag: ErrorHandler });
+            return res.render("login", { error1: true});
         } else if (result[0].isActive == "0") {
             let id = result[0].id;
             return res.render("active", {
@@ -48,7 +47,7 @@ const loginHandler = async (req, res) => {
         if (!match) {
 
             let error = true;
-            return res.render("login", { error });
+            return res.render("login", { error1:true});
 
             // res.cookie('Access_token', token, { httpOnly: true })
         }
@@ -80,7 +79,7 @@ const loginGet = asyncHandler(async (req, res) => {
     let solve;
     let error;
     error = false;
-    res.render("login", { error });
+    res.render("login", { error1:false });
 
 });
 

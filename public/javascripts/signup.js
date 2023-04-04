@@ -415,17 +415,5 @@ async function checkemailforlogin(e) {
     })
   });
 
-  var resSave = await save_req.json();
-  if (resSave.isNew == true) {
-    let usermsg = document.getElementById('emailError')
-    let content = `<span style="color: #1c800f;"></span>`
-    usermsg.innerHTML = content
-    return true
-  }
-  else {
-    let usermsg = document.getElementById('emailError')
-    let content = `<span style="color: #b9370f;">User Already Exists!</span>`
-    usermsg.innerHTML = content;
-    return false
-  }
+
 }

@@ -183,6 +183,12 @@ var tweet_ids
 
 
 const getDashboard = asyncHandler(async (req, res) => {
+    const token = req.session.email
+    if (!token) {
+        res.redirect('/user-login');
+        return
+    }
+    res.render('dashboard')
     const user_id = req.session.user_id
     let db = `twitter_clone`;
     try {
@@ -372,7 +378,7 @@ const tweetit = asyncHandler(async function (req, res) {
 
 
 const postTweet = asyncHandler(async (req, res) => {
-    console.log('req.file :>> ', req);
+    // console.log('req.file :>> ', req);
     const token = req.session.email
     if (!token) {
         res.redirect('/user-login')

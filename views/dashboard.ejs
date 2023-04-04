@@ -5,14 +5,14 @@
 
     <%- include("add_comment") -%>
         <!-- main panel  -->
-
         <div class="col-6 px-0 border">
             <div class="inner-main home">
                 <div class="blur-ui p-3 pb-0">
                     <h4 class="text-black">Home</h4>
                     <ul class="nav nav-tabs">
                         <li class="nav-item w-50 text-center all-center">
-                            <a class="nav-link w-100 fw-600 active" data-bs-toggle="tab" href="#for-you">
+                            <a class="nav-link w-100 fw-600 active" data-bs-toggle="tab" href="#for-you" id="forYou"
+                                onclick="forYouDataLoad()">
                                 <span>
                                     For you
                                 </span>
@@ -20,7 +20,8 @@
                             </a>
                         </li>
                         <li class="nav-item w-50 text-center all-center">
-                            <a class="nav-link w-100 fw-600 " data-bs-toggle="tab" href="#following-home">
+                            <a class="nav-link w-100 fw-600 " data-bs-toggle="tab" href="#following-home"
+                                id="yourFollowing" onclick="followingTab()">
                                 <span>
                                     Following
                                 </span>
@@ -31,290 +32,13 @@
                 <div class="all-data">
                     <div class="tab-content">
                         <div id="for-you" class="tab-pane active">
-                            <div class="tweet-container all-center flex-column ">
-                                <% tweet_data.forEach((t,index)=>{ %>
+                            <div class="tweet-container all-center flex-column" id="forYouPart">
 
-                                    <div onclick="test(`<%=t.id%>`)"
-                                        class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
-                                        <div class="col-1 p-0">
-                                            <img src="<%= t.user_image %>" alt="" class="profile-size me-2 border">
-                                        </div>
-                                        <div class="col-10 px-4">
-                                            <div class="d-flex flex-wrap align-items-center user-info">
-                                                <a href="/profile/user/<%= t.user_id %>"
-                                                    class="text-black fs-16 me-1 fw-600">
-                                                    <%= t.name %>
-                                                </a>
-                                                <span class="fs-16 text-gray me-1">
-                                                    @<%= t.user_name %>
-                                                </span>
-                                                <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
-                                                <span class="date fs-16 me-1 text-gray">
-                                                    <%= post_date[index] %>
-                                                </span>
-                                            </div>
-                                            <div class="tweet-content">
-
-                                                <p class="text-black fs-16 fw-300 word-wrap">
-                                                    <%= t.tweet %>
-                                                </p>
-
-                                            </div>
-
-                                            <% if(t.media_type.includes("image")){ %>
-                                                <div class="tweet-img-container">
-                                                    <img src="<%= t.media_url %>" alt="" class="w-100">
-                                                </div>
-                                                <% }else if(t.media_type.includes("video") ){ %>
-                                                    <div class="tweet-video-container">
-                                                        <video controls loop onclick="vid(event,this)">
-                                                            <source src="<%= t.media_url %>" type="video/mp4">
-                                                        </video>
-                                                    </div>
-                                                    <% } %>
-                                                        <div class="tweet-reactions-container mt-3">
-                                                            <ul class="list-unstyled row">
-                                                                <li class="col">
-                                                                    <a href="" data-bs-toggle="modal"
-                                                                        class="comment clickComment"
-                                                                        data-bs-target="#commentModal"
-                                                                        data-id="<%= t.id %>" id="clickComment">
-                                                                        <i class="fa-regular fa-comment"></i>
-                                                                        <span id="allComment<%= t.id %>">
-                                                                            <%= all_comments[index] %>
-                                                                        </span>
-
-                                                                    </a>
-                                                                </li>
-                                                                <li class="col">
-                                                                    <a class="retweet">
-                                                                        <i class="fa-solid fa-retweet"
-                                                                            onclick="retweetpost(event,this)"
-                                                                            id="k<%= t.id %>"></i>
-                                                                        <span id="retweet<%= t.id %>">
-                                                                            <%= t.tweet_retweets %>
-                                                                        </span>
-                                                                    </a>
-                                                                </li>
-                                                                <li class="col">
-                                                                    <a class="like">
-                                                                        <i class="fa-regular fa-heart"
-                                                                            onclick="likepost(event,this)"
-                                                                            id="<%= t.id %>"></i>
-                                                                        <span id="like<%= t.id %>">
-                                                                            <%= t.tweet_likes %>
-                                                                        </span>
-
-                                                                    </a>
-                                                                </li>
-                                                                <!-- <li class="col">
-                                                                        <a href="" class="chart">
-                                                                            <i class="fa-solid fa-chart-simple"></i>
-
-                                                                        </a>
-                                                                    </li> -->
-                                                                <li class="col">
-                                                                    <a href="" class="share" data-bs-toggle="dropdown"
-                                                                        aria-expanded="false">
-                                                                        <i
-                                                                            class="fa-solid fa-arrow-up-from-bracket"></i>
-
-                                                                    </a>
-                                                                    <ul class="dropdown-menu p-0">
-                                                                        <li class="d-flex">
-                                                                            <a class="dropdown-item text-dark"
-                                                                                onclick="copyContent(event,`/tweet/tweet_details/<%= t.id %>`)">
-                                                                                <i
-                                                                                    class="fa-regular fa-clipboard me-2"></i>
-
-                                                                                Click to copy link
-
-                                                                            </a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
-                                        </div>
-                                        <div class="col-1 dropstart">
-                                            <a href="" class="text-dark" data-bs-toggle="dropdown"
-                                                aria-expanded="false" onclick="vid(event,this)">
-                                                •••
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                                <li class="d-flex">
-                                                    <a class="dropdown-item" href="#"><i
-                                                            class="fa-solid fa-user-plus me-2"></i>
-                                                        Follow <span class="text-blue">@<%= t.user_name %></span>
-
-                                                    </a>
-                                                </li>
-
-
-                                                <li class="d-flex">
-                                                    <a class="dropdown-item" href="#"><i
-                                                            class="fa-solid fa-user-minus me-2"></i> Unfollow <span
-                                                            class="text-blue">@<%= t.user_name %></span>
-
-                                                    </a>
-                                                </li>
-
-                                                <li class="d-flex">
-                                                    <a class="dropdown-item" href="/profile/user"><i
-                                                            class="fa-regular fa-eye me-2"></i>
-                                                        Visit profile <span class="text-blue">@<%= t.user_name %>
-                                                        </span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <% }) %>
                             </div>
                         </div>
-                        <div id="following-home" class="tab-pane ">
-                            <div id="following" class="tab-pane  active">
-                                <div class="tweet-container all-center flex-column ">
-                                    <% following_data.forEach((t,index)=>{ %>
+                        <div id="following-home" class="tab-pane">
+                            <div class="tweet-container all-center flex-column " id="followingShowData">
 
-                                        <div onclick="test(`<%=t.id%>`)"
-                                            class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
-                                            <div class="col-1 p-0">
-                                                <img src="<%= t.user_image %>" alt="" class="profile-size me-2 border">
-                                            </div>
-                                            <div class="col-10 px-4">
-                                                <div class="d-flex flex-wrap align-items-center user-info">
-                                                    <a href="/profile/user/<%= t.user_id %>"
-                                                        class="text-black fs-16 me-1 fw-600">
-                                                        <%= t.name %>
-                                                    </a>
-                                                    <span class="fs-16 text-gray me-1">
-                                                        @<%= t.user_name %>
-                                                    </span>
-                                                    <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
-                                                    <span class="date fs-16 me-1 text-gray">
-                                                        <%= post_date[index] %>
-                                                    </span>
-                                                </div>
-                                                <div class="tweet-content">
-
-                                                    <p class="text-black fs-16 fw-300 word-wrap">
-                                                        <%= t.tweet %>
-                                                    </p>
-
-                                                </div>
-
-                                                <% if(t.media_type.includes("image")){ %>
-                                                    <div class="tweet-img-container">
-                                                        <img src="<%= t.media_url %>" alt="" class="w-100">
-                                                    </div>
-                                                    <% }else if(t.media_type.includes("video") ){ %>
-                                                        <div class="tweet-video-container">
-                                                            <video controls loop onclick="vid(event,this)">
-                                                                <source src="<%= t.media_url %>" type="video/mp4">
-                                                            </video>
-                                                        </div>
-                                                        <% } %>
-                                                            <div class="tweet-reactions-container mt-3">
-                                                                <ul class="list-unstyled row">
-                                                                    <li class="col">
-                                                                        <a href="" data-bs-toggle="modal"
-                                                                            class="comment clickComment"
-                                                                            data-bs-target="#commentModal"
-                                                                            data-id="<%= t.id %>" id="clickComment">
-                                                                            <i class="fa-regular fa-comment"></i>
-                                                                            <span id="allComment<%= t.id %>">
-                                                                                <%= all_comments[index] %>
-                                                                            </span>
-
-                                                                        </a>
-                                                                    </li>
-                                                                    <li class="col">
-                                                                        <a class="retweet">
-                                                                            <i class="fa-solid fa-retweet"
-                                                                                onclick="retweetpost(event,this)"
-                                                                                id="k<%= t.id %>"></i>
-                                                                            <span id="retweet<%= t.id %>">
-                                                                                <%= t.tweet_retweets %>
-                                                                            </span>
-                                                                        </a>
-                                                                    </li>
-                                                                    <li class="col">
-                                                                        <a class="like">
-                                                                            <i class="fa-regular fa-heart"
-                                                                                onclick="likepost(event,this)"
-                                                                                id="<%= t.id %>"></i>
-                                                                            <span id="like<%= t.id %>">
-                                                                                <%= t.tweet_likes %>
-                                                                            </span>
-
-                                                                        </a>
-                                                                    </li>
-                                                                    <!-- <li class="col">
-                                                                            <a href="" class="chart">
-                                                                                <i class="fa-solid fa-chart-simple"></i>
-    
-                                                                            </a>
-                                                                        </li> -->
-                                                                    <li class="col">
-                                                                        <a href="" class="share"
-                                                                            data-bs-toggle="dropdown"
-                                                                            aria-expanded="false">
-                                                                            <i
-                                                                                class="fa-solid fa-arrow-up-from-bracket"></i>
-
-                                                                        </a>
-                                                                        <ul class="dropdown-menu p-0">
-                                                                            <li class="d-flex">
-                                                                                <a class="dropdown-item text-dark"
-                                                                                    onclick="copyContent(event,`/tweet/tweet_details/<%= t.id %>`)">
-                                                                                    <i
-                                                                                        class="fa-regular fa-clipboard me-2"></i>
-
-                                                                                    Click to copy link
-
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                            </div>
-                                            <div class="col-1 dropstart">
-                                                <a href="" class="text-dark" data-bs-toggle="dropdown"
-                                                    aria-expanded="false" onclick="vid(event,this)" >
-                                                    •••
-                                                </a>
-                                                <ul class="dropdown-menu">
-                                                    <li class="d-flex">
-                                                        <a class="dropdown-item" href="#"><i
-                                                                class="fa-solid fa-user-plus me-2"></i>
-                                                            Follow <span class="text-blue">@<%= t.user_name %></span>
-
-                                                        </a>
-                                                    </li>
-
-
-                                                    <li class="d-flex">
-                                                        <a class="dropdown-item" href="#"><i
-                                                                class="fa-solid fa-user-minus me-2"></i> Unfollow <span
-                                                                class="text-blue">@<%= t.user_name %></span>
-
-                                                        </a>
-                                                    </li>
-
-                                                    <li class="d-flex">
-                                                        <a class="dropdown-item" href="/profile/user"><i
-                                                                class="fa-regular fa-eye me-2"></i>
-                                                            Visit profile <span class="text-blue">@<%= t.user_name %>
-                                                            </span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                        <% }) %>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -325,30 +49,28 @@
             window.addEventListener("load", function () {
                 const loader = document.querySelector(".loader");
                 loader.className += " hidden"; // class "loader hidden"
+                allClicks()
+
             });
 
-            let allClicks = document.querySelectorAll(".clickComment")
-            allClicks.forEach((cur) => {
-                // let linkModal = document.querySelector("#clickComment");
-                cur.addEventListener("click", (e) => {
-                    let id = e.currentTarget.getAttribute("data-id");
-                    document.querySelector(".modal-body #tweetId").value = id;
-                    document.querySelector("#comment_area").value = "";
+            function allClicks() {
+                let allClicks = document.querySelectorAll(".clickComment")
+                allClicks.forEach((cur) => {
+                    // let linkModal = document.querySelector("#clickComment");
+                    cur.addEventListener("click", (e) => {
+                        e.stopPropagation()
+                        let id = e.currentTarget.getAttribute("data-id");
+                        document.querySelector(".modal-body #tweetId").value = id;
+                        document.querySelector("#comment_area").value = "";
+                    })
                 })
-            })
-
-            async function vid(e) {
-                e.stopPropagation()
             }
 
-            //done by jigar
             async function likepost(e, t_id) {
-                console.log('e', e)
-
                 e.stopPropagation()
                 let tweet_id = t_id.id
 
-                if (t_id.classList.value == 'fa-regular fa-heart') {
+                if (t_id.classList.contains('fa-regular')) {
                     t_id.classList.value = 'fa-solid fa-heart text-danger';
                     let like = true
                     const save_req = await fetch(`/dashboard/like`, {
@@ -387,21 +109,414 @@
                 }
             }
 
+            //copy to clipboard
 
-            var userLike = [];
-            '<%for(let i=0;i<arrlikeid.length;i++){%>'
-            userLike.push('<%=arrlikeid[i]%>');
-            '<%}%>'
-            userLike.forEach(element => {
+            async function copyContent(e, text) {
+                e.stopPropagation();
+                const ToastCopy = Swal.mixin({
+                    toast: true,
+                    position: 'top',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+                try {
+                    await navigator.clipboard.writeText(text);
 
-                document.getElementById(element).classList = "fa-solid fa-heart text-danger";
-            });
-            
+
+
+                    ToastCopy.fire({
+                        icon: 'success',
+                        title: 'Link copied successfully',
+
+                    })
+                } catch (err) {
+                    console.error('Failed to copy: ', err);
+                }
+            }
+            const test = (id) => {
+                window.location.href = (`/tweet/tweet_details/${id}`)
+            }
+
+            async function forYouDataLoad() {
+                let fetchDashboard = await fetch(`/dashboardData`);
+                let ansData = await fetchDashboard.json();
+
+                let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
+
+                let part1 = document.querySelector("#forYouPart");
+                let part1Data = '';
+
+                tweet_data.forEach((t, index) => {
+                    part1Data +=
+                        `
+                    <div onclick="test(${t.id})"
+                                            class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
+                                            <div class="col-1 p-0">
+                                                <img src="${t.user_image}" alt="" class="profile-size me-2 border">
+                                            </div>
+                                            <div class="col-10 px-4 " >
+                                                <div class="d-flex align-items-center user-info position-relative">
+                                                    
+                                                    <a href="/profile/user/${t.user_id}"
+                                                        class="text-black fs-16 me-1 fw-600 ">
+                                                        ${t.name} 
+                                                    </a>
+                                                    <span class="fs-16 text-gray me-1 "  >
+                                                        @${t.user_name} 
+                                                    </span>
+                                                    <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
+                                                    <span class="date fs-16 me-1 text-gray">
+                                                        ${post_date[index]} 
+                                                    </span>
+                                                    
+                                            </div>
+                                                
+                                                <div class="tweet-content">
+    
+                                                    <p class="text-black fs-16 fw-300 word-wrap">
+                                                        ${t.tweet} 
+                                                    </p>
+    
+                                                </div>
+                                                ` ;
+
+                    if (t.media_type.includes("image")) {
+
+                        part1Data += `<div class="tweet-img-container">
+                                                        <img src="${t.media_url}" alt="" class="w-100">
+                                                    </div>`;
+                    } else if (t.media_type.includes("video")) {
+                        part1Data += `<div class="tweet-video-container">
+                                                            <video controls loop onclick="stopProp(event)">
+                                                                <source src="${t.media_url}" type="video/mp4">
+                                                            </video>
+                                                        </div>`;
+                    } else {
+
+                    }
+
+                    part1Data += `<div class="tweet-reactions-container mt-3">
+                                                                <ul class="list-unstyled row">
+                                                                    <li class="col">
+                                                                        <a href="" data-bs-toggle="modal"
+                                                                            class="comment clickComment p-2"
+                                                                            data-bs-target="#commentModal"
+                                                                            data-id="${t.id}" id="clickComment" onclick="stopProp(event)">
+                                                                            <i class="fa-regular fa-comment"></i>
+                                                                            <span id="allComment${t.id}">
+                                                                                ${all_comments[index]} 
+                                                                            </span>
+    
+                                                                        </a>
+                                                                    </li>
+                                                                    <li class="col">
+                                                                        <a class="retweet p-2" >
+                                                                            <i class="fa-solid fa-retweet"
+                                                                                onclick="retweetpost(event,this)"
+                                                                                id="k${t.id}"></i>
+                                                                            <span id="retweet${t.id}">
+                                                                                ${t.tweet_retweets} 
+                                                                            </span>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li class="col">
+                                                                        <a class="like p-2">
+                                                                            <i class="fa-regular fa-heart"
+                                                                                onclick="likepost(event,this)"
+                                                                                id="${t.id}"></i>
+                                                                            <span id="like${t.id}">
+                                                                                ${t.tweet_likes} 
+                                                                            </span>
+    
+                                                                        </a>
+                                                                    </li>
+                                                                    <!-- <li class="col">
+                                                                            <a href="" class="chart">
+                                                                                <i class="fa-solid fa-chart-simple"></i>
+    
+                                                                            </a>
+                                                                        </li> -->
+                                                                    <li class="col">
+                                                                        <a href="" class="share p-2" data-bs-toggle="dropdown"
+                                                                            aria-expanded="false" onclick="stopProp(event)">
+                                                                            <i
+                                                                                class="fa-solid fa-arrow-up-from-bracket"></i>
+    
+                                                                        </a>
+                                                                        <ul class="dropdown-menu p-0">
+                                                                            <li class="d-flex">
+                                                                                <a class="dropdown-item text-dark"
+                                                                                    onclick="copyContent(event,'/tweet/tweet_details/${t.id}')">
+                                                                                    <i
+                                                                                        class="fa-regular fa-clipboard me-2"></i>
+    
+                                                                                    Click to copy link
+    
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                            </div>
+                                            <div class="col-1 dropstart">
+                                                <a href="" class="text-dark" data-bs-toggle="dropdown"
+                                                    aria-expanded="false" onclick="stopProp(event)">
+                                                    •••
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li class="d-flex">
+                                                        <a class="dropdown-item" href="#"><i
+                                                                class="fa-solid fa-user-plus me-2"></i>
+                                                            Follow <span class="text-blue">@${t.user_name}</span>
+    
+                                                        </a>
+                                                    </li>
+    
+    
+                                                    <li class="d-flex">
+                                                        <a class="dropdown-item" href="#"><i
+                                                                class="fa-solid fa-user-minus me-2"></i> Unfollow <span
+                                                                class="text-blue">@${t.user_name}</span>
+    
+                                                        </a>
+                                                    </li>
+    
+                                                    <li class="d-flex">
+                                                        <a class="dropdown-item" href="/profile/user"><i
+                                                                class="fa-regular fa-eye me-2"></i>
+                                                            Visit profile <span class="text-blue">@${t.user_name} 
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                    `;
+
+
+                })
+                part1.innerHTML = part1Data;
+                document.querySelector("#followingShowData").innerHTML = ""
+
+                var userLike = [];
+                for (let i = 0; i < arrlikeid.length; i++) {
+                    userLike.push(arrlikeid[i]);
+                }
+                userLike.forEach(element => {
+                    document.getElementById(element).classList = "fa-solid fa-heart text-danger";
+                });
+
+
+                load()
+                allClicks()
+            }
+
+            forYouDataLoad()
 
 
 
+            async function followingTab() {
+                let fetchDashboard = await fetch(`/dashboardData`);
+                let ansData = await fetchDashboard.json();
+
+                let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
+
+                let part2 = document.querySelector("#followingShowData");
+                let part2Data = '';
+                tweet_data.forEach((t, index) => {
+                    if (following_data.includes(t.user_id)) {
+                        part2Data +=
+                            `
+                            <div onclick="test(${t.id})"
+                                            class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
+                                            <div class="col-1 p-0">
+                                                <img src="${t.user_image}" alt="" class="profile-size me-2 border" >
+                                            </div>
+                                            <div class="col-10 px-4 " >
+                                                <div class="d-flex align-items-center user-info position-relative">
+                                                    
+                                                    <a href="/profile/user/${t.user_id}"
+                                                        class="text-black fs-16 me-1 fw-600" >
+                                                        ${t.name} 
+                                                    </a>
+                                                    <span class="fs-16 text-gray me-1" >
+                                                        @${t.user_name} 
+                                                    </span>
+                                                    <i class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
+                                                    <span class="date fs-16 me-1 text-gray">
+                                                        ${post_date[index]} 
+                                                    </span>
+                                                
+                                                </div>
+                                                
+                                                <div class="tweet-content">
+    
+                                                    <p class="text-black fs-16 fw-300 word-wrap">
+                                                        ${t.tweet} 
+                                                    </p>
+    
+                                                </div>
+                                                ` ;
+
+                        if (t.media_type.includes("image")) {
+
+                            part2Data += `<div class="tweet-img-container">
+                                                        <img src="${t.media_url}" alt="" class="w-100">
+                                                    </div>`;
+                        } else if (t.media_type.includes("video")) {
+                            part2Data += `<div class="tweet-video-container">
+                                                            <video controls loop onclick="stopProp(event)">
+                                                                <source src="${t.media_url}" type="video/mp4">
+                                                            </video>
+                                                        </div>`;
+                        } else {
+
+                        }
+
+                        part2Data += `<div class="tweet-reactions-container mt-3">
+                                                                <ul class="list-unstyled row">
+                                                                    <li class="col">
+                                                                        <a href="" data-bs-toggle="modal"
+                                                                            class="comment clickComment"
+                                                                            data-bs-target="#commentModal"
+                                                                            data-id="${t.id}" id="clickComment" onclick="(e)=>{e.stopPrapogation()}">
+                                                                            <i class="fa-regular fa-comment"></i>
+                                                                            <span id="allComment${t.id}">
+                                                                                ${all_comments[index]} 
+                                                                            </span>
+    
+                                                                        </a>
+                                                                    </li>
+                                                                    <li class="col">
+                                                                        <a class="retweet">
+                                                                            <i class="fa-solid fa-retweet"
+                                                                                onclick="retweetpost(event,this)"
+                                                                                id="k${t.id}"></i>
+                                                                            <span id="retweet${t.id}">
+                                                                                ${t.tweet_retweets} 
+                                                                            </span>
+                                                                        </a>
+                                                                    </li>
+                                                                    <li class="col">
+                                                                        <a class="like">
+                                                                            <i class="fa-regular fa-heart"
+                                                                                onclick="likepost(event,this)"
+                                                                                id="${t.id}"></i>
+                                                                            <span id="like${t.id}">
+                                                                                ${t.tweet_likes} 
+                                                                            </span>
+    
+                                                                        </a>
+                                                                    </li>
+                                                                    <!-- <li class="col">
+                                                                            <a href="" class="chart">
+                                                                                <i class="fa-solid fa-chart-simple"></i>
+    
+                                                                            </a>
+                                                                        </li> -->
+                                                                    <li class="col">
+                                                                        <a href="" class="share p-2" data-bs-toggle="dropdown"
+                                                                            aria-expanded="false" onclick="stopProp(event)">
+                                                                            <i
+                                                                                class="fa-solid fa-arrow-up-from-bracket"></i>
+    
+                                                                        </a>
+                                                                        <ul class="dropdown-menu p-0">
+                                                                            <li class="d-flex">
+                                                                                <a class="dropdown-item text-dark"
+                                                                                    onclick="copyContent(event,'/tweet/tweet_details/${t.id}')">
+                                                                                    <i
+                                                                                        class="fa-regular fa-clipboard me-2"></i>
+    
+                                                                                    Click to copy link
+    
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                            </div>
+                                            <div class="col-1 dropstart">
+                                                <a href="" class="text-dark" data-bs-toggle="dropdown"
+                                                    aria-expanded="false" onclick="stopProp(event)">
+                                                    •••
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    <li class="d-flex">
+                                                        <a class="dropdown-item" href="#"><i
+                                                                class="fa-solid fa-user-minus me-2"></i> Unfollow <span
+                                                                class="text-blue">@${t.user_name} </span>
+    
+                                                        </a>
+                                                    </li>
+    
+                                                    <li class="d-flex">
+                                                        <a class="dropdown-item" href="/profile/user"><i
+                                                                class="fa-regular fa-eye me-2"></i>
+                                                            Visit profile <span class="text-blue">@${t.user_name} 
+                                                            </span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                    `;
+                    }
+
+                })
+                part2.innerHTML = part2Data;
+                document.querySelector("#forYouPart").innerHTML = ""
+
+
+                var userLike = [];
+                for (let i = 0; i < arrlikeid.length; i++) {
+                    userLike.push(arrlikeid[i]);
+                }
+                userLike.forEach(element => {
+                    try {
+                        document.getElementById(element).classList = "fa-solid fa-heart text-danger";
+                    } catch (e) {
+                        //console.log("Error: " + e)
+                    }
+                });
+
+
+
+
+                load()
+                allClicks()
+            }
+            async function load() {
+                let fetchDashboard = await fetch(`/dashboardData`);
+                let ansData = await fetchDashboard.json();
+
+                let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
+
+
+                var userretweet = [];
+                for (let i = 0; i < arrretweetid.length; i++) {
+                    userretweet.push(arrretweetid[i]);
+                }
+                userretweet.forEach(element => {
+                    try {
+                        document.getElementById("k" + element).classList = "fa-solid fa-retweet text-success";
+                    } catch (e) {
+                        //console.log("Error: " + e)
+                    }
+                });
+
+            }
+            load()
             async function retweetpost(e, t_id) {
                 e.stopPropagation();
+
                 let temp = t_id.id
                 let id = temp.slice(1);
                 let tweet_id = parseInt(id)
@@ -421,8 +536,13 @@
                     var resSave = await save_req.json();
 
                     if (resSave.flag == true) {
-                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
-                        retweetSpan.innerHTML = resSave.allretweetcount
+                        try {
+                            let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                            retweetSpan.innerHTML = resSave.allretweetcount
+                        } catch (e) {
+                            //console.log("Error: " + e)
+                        }
+
                     }
                 }
                 else if (t_id.classList.value == 'fa-solid fa-retweet text-success') {
@@ -439,23 +559,19 @@
                     });
                     var resSave = await save_req.json();
                     if (resSave.flag == false) {
-                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
-                        retweetSpan.innerHTML = resSave.allretweetcount
+                        try {
+                            let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                            retweetSpan.innerHTML = resSave.allretweetcount
+                        } catch (e) {
+                            //console.log("Error: " + e)
+                        }
+
                     }
                 }
 
-
+                load()
             }
 
-
-            var userretweet = [];
-            '<%for(let i=0;i<arrretweetid.length;i++){%>'
-            userretweet.push('<%=arrretweetid[i]%>');
-            '<%}%>'
-            userretweet.forEach(element => {
-
-                document.getElementById("k" + element).classList = "fa-solid fa-retweet text-success";
-            });
 
             let form = document.querySelector('#addCommentForm')
             form.addEventListener('submit', async (e) => {
@@ -477,23 +593,8 @@
                 // loadComments()
             })
 
-
-            //copy to clipboard
-
-
-            async function copyContent(e, text) {
-                e.stopPropagation()
-                console.log(e, text+"text");
-                try {
-                    await navigator.clipboard.writeText(text.value);
-                    alert("Copy to clipboard")
-                    console.log(e, text+"text");
-                } catch (err) {
-                    console.error('Failed to copy: ', err);
-                }
-            }
-            const test = (id) => {
-                window.location.href = (`/tweet/tweet_details/${id}`)
+            function stopProp(e) {
+                e.stopPropagation();
             }
 
 
