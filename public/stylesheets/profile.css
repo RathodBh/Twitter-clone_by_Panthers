@@ -83,4 +83,13 @@
   #edit_content input{
     border: 2px solid var(--text-gray);
   }
-  
+  #retweet_p{
+    word-break: break-all;
+  }
+  #following:hover{
+    text-decoration: underline;
+  }
+  #follower:hover{
+    text-decoration: underline;
+  }
+

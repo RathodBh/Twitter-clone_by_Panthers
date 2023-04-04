@@ -392,4 +392,9 @@ a {
 }
 .login-now:disabled{
     opacity: 0.5
-}
+}.flw{
+    height:500px;
+    overflow-y:scroll;
+} 
+
+.pointer {cursor: pointer;}
