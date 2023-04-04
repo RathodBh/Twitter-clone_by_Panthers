@@ -192,7 +192,7 @@
                                                     </div>`;
                     } else if (t.media_type.includes("video")) {
                         part1Data += `<div class="tweet-video-container">
-                                                            <video controls loop>
+                                                            <video controls loop onclick="stopProp(event)">
                                                                 <source src="${t.media_url}" type="video/mp4">
                                                             </video>
                                                         </div>`;
@@ -371,7 +371,7 @@
                                                     </div>`;
                         } else if (t.media_type.includes("video")) {
                             part2Data += `<div class="tweet-video-container">
-                                                            <video controls loop>
+                                                            <video controls loop onclick="stopProp(event)">
                                                                 <source src="${t.media_url}" type="video/mp4">
                                                             </video>
                                                         </div>`;
@@ -421,8 +421,8 @@
                                                                             </a>
                                                                         </li> -->
                                                                     <li class="col">
-                                                                        <a href="" class="share" data-bs-toggle="dropdown"
-                                                                            aria-expanded="false" >
+                                                                        <a href="" class="share p-2" data-bs-toggle="dropdown"
+                                                                            aria-expanded="false" onclick="stopProp(event)">
                                                                             <i
                                                                                 class="fa-solid fa-arrow-up-from-bracket"></i>
     
@@ -430,7 +430,7 @@
                                                                         <ul class="dropdown-menu p-0">
                                                                             <li class="d-flex">
                                                                                 <a class="dropdown-item text-dark"
-                                                                                    onclick="copyContent(event,'/tweet/tweet_details/${t.id}')" >
+                                                                                    onclick="copyContent(event,'/tweet/tweet_details/${t.id}')">
                                                                                     <i
                                                                                         class="fa-regular fa-clipboard me-2"></i>
     
@@ -575,7 +575,7 @@
 
             let form = document.querySelector('#addCommentForm')
             form.addEventListener('submit', async (e) => {
-                e.preventDefault();
+                e.preventDefault()
                 let data = await fetch(`/tweet/tweet_comment`, {
                     method: "POST",
                     headers: {

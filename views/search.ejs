@@ -20,7 +20,7 @@
 
 
 
-            <a href="" class="p-2 fs-14 text-blue">Show more</a>
+                    <a href="" class="p-2 fs-14 text-blue">Show more</a>
         </div>
         <div class="footer p-2 mt-2">
             <ul class="d-flex flex-wrap list-unstyled footer-link-container mb-0">
@@ -194,9 +194,7 @@
                             ${(!unfollowersIds.includes(sql.id)) ? `<div id="f${sql.id}" onclick="follow('${sql.id}',1)" class="followButton btn btn-light rounded-pill px-3 border-dark" >Unfollow</div>` : `<div id="f${sql.id}" onclick="follow('${sql.id}',0)" class="followButton btn btn-dark rounded-pill px-3" >Follow</div>`}
                         </div>
                     </div>
-                   
-                </div>
-               
+                </div>               
             </div>`
         });
 

@@ -22,6 +22,7 @@ function emoji_clk() {
 // document.querySelector("#sub_btn").disabled = 'false'
 
 var limit_img = 0;
+
 const previewImage = (event) => {
     const imageFiles = event.target.files;
     limit_img+=imageFiles.length;
@@ -69,7 +70,6 @@ const previewImage = (event) => {
         }
     }
 }
-
 
 
 
