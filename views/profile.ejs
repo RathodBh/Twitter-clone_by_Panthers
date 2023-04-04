@@ -7,13 +7,13 @@
         <link rel="stylesheet" href="/stylesheets/profile.css">
         <link rel="stylesheet" href="/stylesheets/style.css">
      
-        <div class="col-6 p-2">
-            <div class="inner-main">
+        <div class="col-6 p-2 home ">
+            <div class="inner-main ">
 
-                <div class="card" id="card">
+                <div class="card border-bottom-0" id="card">
 
                 </div>
-                <ul class="nav nav-tabs">
+                <ul class="nav nav-tabs border border-top-0">
                     <li class="nav-item w-50 text-center all-center">
                         <a class="nav-link w-100 fw-600 active" data-bs-toggle="tab" href="#Tweets">
                             <span>
@@ -119,7 +119,7 @@
                     <div id="Tweets" class="tab-pane active">
                         <div class="tweet-container all-center flex-column ">
                             <% tweet_data.forEach((t,index)=>{ %>
-                                <div class="tweet w-100 p-3 row pt-4 border-bottom border-top">
+                                <div class="tweet w-100 p-3 row pt-4 border">
                                     <div class="col-1 p-0">
                                         <img src="<%= users[0].user_image %>" alt="" class="profile-size me-2 border">
                                     </div>
@@ -245,11 +245,11 @@
                         </div>
                     </div>
                     <!-- for retweet -->
-                    <div id="Retweets" class="tab-pane active">
+                    <div id="Retweets" class="tab-pane">
                         <div class="tweet-container all-center flex-column ">
                             <%var a=0;%>
                                 <% all_retweet.forEach((t,index)=>{ %>
-                                    <div class="tweet w-100 p-3 row pt-4 border-bottom border-top">
+                                    <div class="tweet w-100 p-3 row pt-4 border">
                                         <div class="col-1 p-0">
                                             <img src="<%= users[0].user_image %>" alt=""
                                                 class="profile-size me-2 border">

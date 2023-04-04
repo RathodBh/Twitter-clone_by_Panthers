@@ -170,7 +170,7 @@ app.get("/addfollow", async (req, res) => {
         await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
     }
 
-    res.send({ message: "update" });
+    return res.send({ message: "update" });
 })
 
 app.get('/getFollowUserData', async (req, res) => {

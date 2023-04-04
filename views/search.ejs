@@ -20,7 +20,7 @@
 
 
 
-                    <a href="" class="p-2 fs-14 text-blue">Show more</a>
+            <a href="" class="p-2 fs-14 text-blue">Show more</a>
         </div>
         <div class="footer p-2 mt-2">
             <ul class="d-flex flex-wrap list-unstyled footer-link-container mb-0">
@@ -31,13 +31,15 @@
                     <a href="https://twitter.com/en/privacy" target="blank">Privacy Policy</a>
                 </li>
                 <li>
-                    <a href="https://help.twitter.com/en/rules-and-policies/twitter-cookies" target="blank">Cookie Policy</a>
+                    <a href="https://help.twitter.com/en/rules-and-policies/twitter-cookies" target="blank">Cookie
+                        Policy</a>
                 </li>
                 <li>
                     <a href="https://help.twitter.com/en/resources/accessibility" target="blank">Accessibility</a>
                 </li>
                 <li>
-                    <a href="https://business.twitter.com/en/help/troubleshooting/how-twitter-ads-work.html?ref=web-twc-ao-gbl-adsinfo&utm_source=twc&utm_medium=web&utm_campaign=ao&utm_content=adsinfo" target="blank">Ads info</a>
+                    <a href="https://business.twitter.com/en/help/troubleshooting/how-twitter-ads-work.html?ref=web-twc-ao-gbl-adsinfo&utm_source=twc&utm_medium=web&utm_campaign=ao&utm_content=adsinfo"
+                        target="blank">Ads info</a>
                 </li>
                 <li>
                     <a href="">More ...</a>
@@ -152,11 +154,44 @@
         } else {
             // console.log("Follow");
 
-            await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
-            document.getElementById(`f${follower_id}`).innerHTML = "Follow";
-            document.getElementById(`f${follower_id}`).setAttribute("onclick", `follow(${follower_id},0)`);
-            document.getElementById(`f${follower_id}`).style.background = "black";
-            document.getElementById(`f${follower_id}`).style.color = "white";
+            Swal.fire({
+                title: 'Do you want to Unfollow?',
+                text: "",
+                position: "center",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Unfollow!'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: 'top',
+                        showConfirmButton: false,
+                        timer: 2000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.addEventListener('mouseenter', Swal.stopTimer)
+                            toast.addEventListener('mouseleave', Swal.resumeTimer)
+                        }
+                    })
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Unfollow successfully',
+
+                    })
+
+                    await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
+                    document.getElementById(`f${follower_id}`).innerHTML = "Follow";
+                    document.getElementById(`f${follower_id}`).setAttribute("onclick", `follow(${follower_id},0)`);
+                    document.getElementById(`f${follower_id}`).style.background = "black";
+                    document.getElementById(`f${follower_id}`).style.color = "white";
+
+                }
+            })
+
         }
 
     }
@@ -170,10 +205,20 @@
 
         let followers = ans.fuser;
         let unfollowers = ans.unfollowers;
-        
-        for (let i = 0; i < 3; i++) {
-            fuser.push(unfollowers[Math.floor(Math.random() * (unfollowers.length))])
+
+        let max = 3;
+        if (unfollowers.length <= 3) {
+            max = unfollowers.length;
+
+            for (let i = 0; i < max; i++) {
+                fuser.push(unfollowers[i])
+            }
+        } else {
+            for (let i = 0; i < max; i++) {
+                fuser.push(unfollowers[Math.floor(Math.random() * (unfollowers.length))])
+            }
         }
+
         let unfollowersIds = [];
 
         for (let x of unfollowers) {
