@@ -6,7 +6,7 @@
         </div>
         <link rel="stylesheet" href="/stylesheets/profile.css">
         <link rel="stylesheet" href="/stylesheets/style.css">
-     
+
         <div class="col-6 p-2 home ">
             <div class="inner-main ">
 
@@ -526,7 +526,11 @@
                             })
                         });
                         var resSave = await save_req.json();
-                        if (resSave.flag) {
+                        if (resSave.flag == false) {
+                            let likeSpan = document.querySelector("#like" + tweet_id)
+                            likeSpan.innerHTML = resSave.alllikecount
+                        }
+                        if (resSave.flag == true) {
                             let likeSpan = document.querySelector("#like" + tweet_id)
                             likeSpan.innerHTML = resSave.alllikecount
                         }
@@ -581,7 +585,14 @@
                             })
                         });
                         var resSave = await save_req.json();
-                        if (resSave.flag) {
+                        if (resSave.flag == false) {
+
+                            let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                            retweetSpan.innerHTML = resSave.allretweetcount
+
+
+                        }
+                        if (resSave.flag == true) {
                             let retweetSpan = document.querySelector("#retweet" + tweet_id)
                             retweetSpan.innerHTML = resSave.allretweetcount
                         }
