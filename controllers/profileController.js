@@ -171,9 +171,11 @@ const getProfile = asyncHandler(async (req, res) => {
             var twt_user = await query(`SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id=tweets.id inner join twitter_clone.users on tweets.user_id=users.id where retweet.user_id='${user_id}' AND retweet.is_deleted='0' order by retweet.id DESC `);
         }
 
+        // for retweet likes in profile
+        let retwt_like=await queryExecuter(`select likes.tweet_id from retweet inner join likes on retweet.tweet_id=likes.tweet_id where likes.is_deleted='0' and retweet.is_deleted='0' and retweet.user_id='${user_id}'; `)
         //i need to show the get request for register page
         let changepass = false
-        res.render('profile', { twt_user: twt_user, all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, arrretweetid, users, changepass, fuser: followuser, followers: getfollowerId });
+        res.render('profile', {retwt_like:retwt_like, twt_user: twt_user, all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, arrretweetid, users, changepass, fuser: followuser, followers: getfollowerId });
 
     } catch (err) {
         console.log("Error Dashboard:", err);
@@ -185,7 +187,7 @@ const getProfile = asyncHandler(async (req, res) => {
 const updateProfilepoint = asyncHandler(async (req, res) => {
     try {
         const arr = { name, user_email, user_bio, user_dob } = req.body;
-        console.log(arr);
+        // console.log(arr);
 
         try {
             let uid = req.query.uid || 3;
@@ -413,13 +415,13 @@ const getTargetProfile = asyncHandler(async (req, res) => {
 // app.get("/user-dash",async(req,res)=>{
 const fflist = asyncHandler(async (req, res) => {
     let user_idd=req.session.user_id;
-    console.log("user id profile="+user_idd);
+    // console.log("user id profile="+user_idd);
 
     let uid = req.params.id || user_idd;
 
     let user_id = req.params.id;
-    console.log("user id in controller="+user_id);
-    console.log("uid in controller="+uid);
+    // console.log("user id in controller="+user_id);
+    // console.log("uid in controller="+uid);
     var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${uid})`);
     var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
     var followers = [];

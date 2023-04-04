@@ -23,21 +23,25 @@ function emoji_clk() {
 
 var limit_img = 0;
 
+// for profile image preview
+
+
+
 const previewImage = (event) => {
     const imageFiles = event.target.files;
-    limit_img+=imageFiles.length;
+    limit_img += imageFiles.length;
     document.querySelector("#sub_btn").disabled = "false"
 
     console.log(limit_img);
     //limit upload files
-    if(limit_img > 5){
+    if (limit_img > 5) {
         document.querySelector("#errLimit").innerHTML = `<div class="alert alert-danger alert-dismissible fade show my-1" role="alert">
         <strong>Error!</strong> You can't upload more than five files at a time <a href="#" onclick="location.reload()">try again</a>
         
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>`;
         document.querySelector("#sub_btn").disabled = "true"
-    }else{
+    } else {
         document.querySelector("#errLimit").innerHTML = ``;
         document.querySelector("#sub_btn").disabled = false
     }
@@ -99,7 +103,7 @@ function twt_clk1() {
 }
 
 
-let gg=0;
+let gg = 0;
 
 function emoji_picker1() {
     if (gg == 0) {

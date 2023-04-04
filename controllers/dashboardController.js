@@ -187,8 +187,8 @@ const getDashboard = asyncHandler(async (req, res) => {
     if (!token) {
         res.redirect('/user-login');
         return
-    }
-    res.render('dashboard')
+    }   
+    // res.render('dashboard')
     const user_id = req.session.user_id
     let db = `twitter_clone`;
     try {
@@ -321,9 +321,7 @@ const getDashboard = asyncHandler(async (req, res) => {
         var arr_of_retweet = [];
 
         for (let i = 0; i < some; i++) {
-
             const qrt = `SELECT *  FROM retweet where tweet_id=${allretweert_id[i].id} and user_id=${user_id} and is_deleted=0;`
-
             const retweetdata = await queryExecuter(qrt);
             arr_of_retweet[i] = retweetdata
 
@@ -340,16 +338,9 @@ const getDashboard = asyncHandler(async (req, res) => {
 
             }
         }
-
-
-
-
-
-
-     
         //i need to show the get request for register page
         let flag = false;
-// console.log("following user data=",following_data);
+        // console.log("following user data=",following_data);
         return res.render('dashboard', {following_data:following_data, tweet_data: all_tweet_data, post_date: post_at, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid });
     }
 
@@ -367,14 +358,6 @@ const tweetit = asyncHandler(async function (req, res) {
     console.log("tweet");
     res.render('tweet', { flag })
 });
-
-// const tweetit1 = asyncHandler(async function (req, res)  {
-//     // console.log(req.file.path);
-//     // i need to show the get request for tweet page
-//     let flag = false;
-//     console.log("hello,hii");
-//     res.render('dashboard',{flag})
-// });
 
 
 const postTweet = asyncHandler(async (req, res) => {

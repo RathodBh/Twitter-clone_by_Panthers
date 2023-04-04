@@ -311,7 +311,6 @@ app.get('/dashboardData',async (req,res) => {
             
             const likeddata = await queryExecuter(qrt);
             arr_of_liked[i] = likeddata
-
         }
 
         let ispostlikebyuser = []
@@ -362,12 +361,6 @@ app.get('/dashboardData',async (req,res) => {
 
             }
         }
-
-
-
-
-
-
         // let all_comments = []
         // let all_likes = []
         // let all_retweets = []
@@ -421,29 +414,22 @@ console.log("Getfollowerid :::::::",followers);
 
 // for time zone
 function calcTime(city, offset) {
-
     // create Date object for current location
     d = new Date();
-    
     // convert to msec
     // add local time zone offset
     // get UTC time in msec
     utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-    
     // create new Date object for different city
     // using supplied offset
     nd = new Date(utc + (3600000*offset));
-    
     // return time as a string
     return 'The local time in ' + city + ' is ' + nd.toLocaleString();
-    
     }
-    
     // get Bombay time
     console.log(calcTime('Bombay', +5.5));
-    
-
 // for time zone end
+
 // try end
 app.get("*", (req, res) => {
     res.render("404")
