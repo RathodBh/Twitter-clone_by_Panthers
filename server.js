@@ -109,36 +109,9 @@ app.post("/updateProfile", uploads.fields([{
 
 app.get("/srch?", async (req, res) => {
     var srchval = req.query.val;
-    var sql = `select user_name from  users`;
-    var names = await queryExec(sql);
-    var arr = [];
-    var newArr = [];
-    for (let i = 0; i < names.length; i++) {
-        arr.push(names[i].user_name)
-    }
-    var counter = 0;
-    var arrVal;
-    for (let j = 0; j < arr.length; j++) {
-        var arrValLength = arr[j].length;
-        arrVal = arr[j];
-        for (let k = 0; k < srchval.length; k++) {
-            if (arrVal.includes(srchval[k])) {
-                var firstIndex = arrVal.indexOf(srchval[k]);
-                arrVal = arrVal.substr(firstIndex + 1, arrValLength + 1)
-                counter++;
-            }
-        }
-        if (counter == srchval.length) {
-            newArr.push(arr[j])
-        }
-        counter = 0;
-    }
-    var matchedResult = [];
-    for (let m = 0; m < newArr.length; m++) {
-        var sql2 = `SELECT id,name,user_name,user_image FROM  users where user_name="${newArr[m]}"`;;
-        resultantName = await queryExec(sql2);
-        matchedResult.push(resultantName)
-    }
+    var sql = `SELECT id,name,user_name,user_image FROM twitter_clone.users where user_name like "%${srchval}%" or name like "%${srchval}%" `;
+    var matchedResult = await queryExec(sql);
+    console.log(matchedResult);
     res.json(matchedResult)
 
 })

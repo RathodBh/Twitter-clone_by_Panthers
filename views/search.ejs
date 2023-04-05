@@ -20,7 +20,7 @@
 
 
 
-                    <a href="" class="p-2 fs-14 text-blue">Show more</a>
+            <a href="" class="p-2 fs-14 text-blue">Show more</a>
         </div>
         <div class="footer p-2 mt-2">
             <ul class="d-flex flex-wrap list-unstyled footer-link-container mb-0">
@@ -101,27 +101,28 @@
     }
     //for print latest year
     document.querySelector("#footer-year").innerText = new Date().getFullYear();
+
     async function search() {
 
         var val = document.getElementById("searchInput").value;
-
-        if (val == "") {
-            document.querySelector("#searchRes").classList.add("d-none");
-        } else {
+        if (val) {
             document.querySelector("#searchRes").classList.remove("d-none");
         }
-
+        else {
+            document.querySelector("#searchRes").classList.add("d-none");
+        }
         let data1 = await fetch(`/srch?val=${val}`)
         let data = await data1.json();
         let user_details = ``;
+        console.log(data);
         for (let i = 0; i < data.length; i++) {
             user_details += `
-<div class="my-4 d-flex justify-content-between align-items-center w-100" id="${data[i][0].id}" onclick="getTargetProfile(this)" style="cursor: pointer;">
+    <div class="my-4 d-flex justify-content-between align-items-center w-100" id="${data[i].id}" onclick="getTargetProfile(this)" style="cursor: pointer;">
         <div class="d-flex">
-            <img src="${data[i][0].user_image}" alt="" class="profile-size me-2 border">
+            <img src="${data[i].user_image}" alt="" class="profile-size me-2 border">
             <div class="info" > 
-                <h6>${data[i][0].name}</h6>
-                <span class="text-gray">@${data[i][0].user_name}</span>
+                <h6>${data[i].name}</h6>
+                <span class="text-gray">@${data[i].user_name}</span>
             </div>
         </div>
 </div>
