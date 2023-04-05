@@ -2,7 +2,6 @@ const express = require("express")
 const app = express();
 const router = express.Router()
 const { protectRegistration } = require('../Middlewares/registerAuth')
-// console.log(router);
 
 const {registerUser,getregisterUser, getEmailCheck,getUserNameCheck, activeUser} = require('../controllers/registerController')
 
