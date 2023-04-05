@@ -395,7 +395,6 @@
 
                 async function likepost(e) {
                     let tweet_id = e.id
-                    console.log(tweet_id);
                     if (e.classList.value == 'fa-regular fa-heart') {
                         e.classList.value = 'fa-solid fa-heart text-danger';
                         let like = true
@@ -410,8 +409,6 @@
                             })
                         });
                         var resSave = await save_req.json();
-                        console.log(resSave.flag);
-
                         if (resSave.flag == true) {
                             let likeSpan = document.querySelector("#like" + tweet_id)
                             likeSpan.innerHTML = resSave.alllikecount
@@ -432,7 +429,6 @@
                             })
                         });
                         var resSave = await save_req.json();
-                        console.log(resSave.flag);
 
                         if (resSave.flag == false) {
                             let likeSpan = document.querySelector("#like" + tweet_id)
@@ -525,13 +521,11 @@
                 //follow or not follow
                 async function follow(follower_id, flag) {
                     if (flag == 0) {
-                        // console.log("Unfollow");
                         await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
                         document.getElementById(`btnFollow`).innerHTML = "Unfollow";
                         document.getElementById(`btnFollow`).setAttribute("onclick", `follow(${follower_id},1)`);
 
                     } else {
-                        // console.log("Follow");
                         Swal.fire({
                             title: 'Do you want to Unfollow?',
                             text: "",
@@ -587,7 +581,6 @@
                         unfollowerIds.push(x.id);
                     }
 
-                    console.log(unfollowerIds, parseInt(targetId), unfollowerIds.includes(targetId));
                     if (unfollowerIds.includes(parseInt(targetId))) {
                         document.querySelector("#btnFollow").innerText = `Follow`;
                         document.querySelector("#btnFollow").setAttribute("onclick", `follow(${targetId},0)`);

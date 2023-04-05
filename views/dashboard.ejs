@@ -619,13 +619,11 @@ following_data.includes(t.user_id) ? `<li class="d-flex">
             async function followProp(e, follower_id, flag) {
                 e.stopPropagation()
                 if (flag == 0) {
-                    // console.log("Unfollow");
                     await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
                     document.getElementById(`prop${follower_id}`).innerHTML = "Unfollow";
                     document.getElementById(`prop${follower_id}`).setAttribute("onclick", `follow(${follower_id},1)`);
 
                 } else {
-                    // console.log("Follow");
                     Swal.fire({
                         title: 'Do you want to Unfollow?',
                         text: "",

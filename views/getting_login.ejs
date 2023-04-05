@@ -93,7 +93,6 @@
     </script>
     <script type="text/javascript">
         var timeleft = 5;
-        console.log("hello");
         var downloadTimer = setInterval(function () {
             timeleft--;
             document.getElementById("count").textContent = timeleft;
@@ -101,7 +100,6 @@
                 clearInterval(downloadTimer);
             }
             if (timeleft == 0) {
-                //we can also write fetch request
                 window.location.replace("/dashboard");
             }
 

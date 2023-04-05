@@ -1,4 +1,4 @@
-const conn = require("../connection/connectdb");
+const {queryExec} = require("../connection/conn");
 const jwt = require('jsonwebtoken')
 // const queryExecuter = require('../queryExecute/queryExecuter')
 const express = require("express");
@@ -9,16 +9,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const asyncHandler = require("express-async-handler");
-async function queryExecuter(query) {
-    return new Promise((resolve, rejects) => {
-        conn.query(query, (err, result) => {
-            if (err) {
-                rejects(err);
-            }
-            resolve(result);
-        });
-    });
-}
+
 
 //post login details
 const loginHandler = async (req, res) => {
@@ -26,7 +17,7 @@ const loginHandler = async (req, res) => {
         const { email, password } = req.body;
         const ErrorHandler = {}
         let log_qry = `select * from users where email='${email}' and is_active = '1'`;
-        const result = await queryExecuter(log_qry);
+        const result = await queryExec(log_qry);
         if (result.length == 0) {
             return res.render("login", { error1: true});
         } else if (result[0].isActive == "0") {
@@ -41,7 +32,6 @@ const loginHandler = async (req, res) => {
         let UserData = result[0];
         // let username = UserData.username
 
-        // console.log(UserData);
 
         const match = await bcrypt.compare(password, dbPassword);
         if (!match) {
@@ -68,6 +58,7 @@ const loginHandler = async (req, res) => {
         return res.redirect('/dashboard')
        
     } catch (error) {
+        console.log("came heer");
         throw error;
     }
 };
@@ -88,7 +79,7 @@ const getEmailCheckLogin = asyncHandler(async (req, res) => {
     //i need to show the post request for checkEmail fetch request
     const { data } = req.body
     const qry1 = `select * from users where email='${data}'`
-    const oldUser = await queryExecuter(qry1)
+    const oldUser = await queryExec(qry1)
     if (oldUser.length == 0) {
         let isNew = true
         res.json({ isNew });

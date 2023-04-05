@@ -21,7 +21,8 @@
                                 </div>
                                 <div class="col-10 px-4 position-relative">
                                     <div class="d-flex align-items-center user-info">
-                                        <a href="/profile/user/<%= tweet_data.user_id%>" class="text-black fs-16 me-1 fw-600 ">
+                                        <a href="/profile/user/<%= tweet_data.user_id%>"
+                                            class="text-black fs-16 me-1 fw-600 ">
                                             <%= tweet_data.name %>
                                         </a>
                                     </div>
@@ -31,7 +32,7 @@
 
                                 </div>
                                 <div class="col-1 ">
-                                   
+
                                 </div>
 
                                 <div class="col-12 py-3 p-0">
@@ -160,7 +161,7 @@
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-1">
-                                                                       
+
                                                                     </div>
                                                                 </div>
                                                                 <% }) } %>
@@ -236,7 +237,6 @@
                 allComments = ans.all_comments;
                 allCommentsLen = ans.len;
                 allCommentAt = ans.comment_at;
-                console.log(allCommentAt);
                 var comment_section = document.querySelector("#commentSection");
 
                 if (allComments.length <= 0) {

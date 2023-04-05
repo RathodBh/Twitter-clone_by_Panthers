@@ -91,7 +91,6 @@
 
         <script>
             async function getTargetProfile(e) {
-                console.log(e.id);
                 const save_req = await fetch(`/profile/user/search/?id=${e.id}`);
                 const data = await save_req.json();
                 location.href = `/profile/user/${e.id}`;

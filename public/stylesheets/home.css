@@ -1,0 +1,117 @@
+:root{
+    --bg-blue: #1D9BF0;
+    --text-blue: #1D9BF0;
+    --bg-gray: #EFF3F4;
+    --bg-light-gray: #F7F9F9;
+    --text-gray: #909BA4;
+    --text-black: #0F1419;
+    }
+.brand-text{
+    font-size: 30px;
+    font-family: sans-serif;
+    margin-left: 0.5rem;
+    font-weight: bold   ;    
+}
+
+
+.login-btn a{
+    text-decoration: none;
+    color: var(--text-black);
+    text-align: center;
+}
+.login-btn{
+    margin-right: 2rem;
+}
+.sign-btn{
+    background: var(--bg-blue);
+    color:#fff;
+}
+
+.left-data{
+    width:50%;  
+}
+.right-data{
+    width:50%;
+    
+}
+.right-data img{
+    width: 950px;
+}
+
+.first-img{
+    width: 50%;
+}
+.first-img img{
+    width: 500px;
+}
+.twitter-blue{
+    margin-left: 4rem;
+}
+.twitter-blue p{
+    margin-top: 2rem;
+    width: 200px;
+    font-size: 24px;
+}
+
+.card{
+    border: 2px solid gainsboro;
+    text-align: center;
+    width: 200px;
+}
+
+h4{
+    border: 2px solid var(--text-gray);
+    border-radius: 16px;
+    /* width: 300px;
+    height: 170px; */
+    font-family: sans-serif;
+    text-align: center;
+    padding: 50px 20px 50px 20px;
+    margin-left: 2rem;
+    box-shadow: 12px 12px 5px var(--text-gray);
+}
+.blue-tweet{
+    border: 2px solid  #909BA4;
+    border-radius: 16px;
+}
+
+.globe-info h1{
+    font-size: 50px;
+
+}
+.globe-info p{
+    margin-left: 4rem;
+    color: var(--bg-blue);
+}
+.mobile-tweet img{
+    margin-top: 2rem;
+
+    width: 700px;
+}
+.down-twitter{
+    margin-top: 5rem;
+}
+.text-tweet{
+    color: var(--text-blue);
+}
+
+.download {
+    margin-left: 0rem;
+}
+.download a{
+    text-decoration: none;
+}
+.down a{
+    text-decoration: none;
+}
+.twiiter-footer{
+
+    display: block;
+    width: 100%;
+    border: none;
+   
+    padding: 20px 0px 20px 0px;
+    font-size: 16px;
+    cursor: pointer;
+   
+}
