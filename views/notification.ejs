@@ -1,0 +1,37 @@
+<%-include("menu")-%>
+<link rel="stylesheet" href="/stylesheets/notify.css">
+<div class="col-6">
+    <div class=" d-flex notify">
+        <p><i class="fa-regular fa-bell"></i></p>
+        <span class="ms-3">Notifications</span>
+    </div>
+    <div class="messages bg-gray border border-white border-3 ">
+        <% notify_msg.forEach(sql=>{%>
+        <div class="d-flex mt-2 bg-light n-block">
+            <img src="<%=sql.dp%>" alt="" srcset="" class="profile-size border ms-2">
+            <p class="ms-2"><%=sql.nm%></p>
+            <p class="ms-2">@<%=sql.unm%></p>
+
+        
+            <div class="n-msg d-flex">
+                <span><%=sql.msg%></span>
+                <span class="ms-5"><%=sql.time.toJSON("yy-mm-dd").slice(0,10)%></span>
+                
+            </div>
+        </div>
+        <%});%>
+    
+    </div>
+</div>
+
+
+
+<script>
+    var msg = document.querySelector(".messages");
+
+
+
+</script>
+
+
+<%-include("search")-%>

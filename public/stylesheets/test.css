@@ -1,0 +1,91 @@
+:root{
+    --primary:#38bdf8;
+    --link:#0c4a6e;
+    --gray:#666666;
+    --text-black: #0F1419;
+    --text-gray: #909BA4;
+}
+
+.form-control{
+    width: 300px;
+    margin-top: 0.3rem;
+}
+.model-content{
+    background: transparent;
+}
+.card{
+     /* margin-left: 2rem;  */
+    width: 500px;
+ 
+    /* border: 1px solid var(--gray); */
+    border-radius: 26px;
+    box-shadow: 10px 10px 2px var(--gray) ;
+    /* padding-top: 2rem; */
+    /* padding-bottom: 2rem;    */
+}
+.head{
+    text-align: center;
+   background: var(--primary);
+   padding-top: 0.5rem;
+   padding-bottom: 1rem;
+    border-top-right-radius: 26px;
+    border-top-left-radius: 26px;
+}
+
+.card-body{
+    
+    /* margin-top: 2rem; */
+    margin-left: 5rem;
+    line-height: 3rem;
+}
+.register{
+    margin-top: 2rem;
+}
+.register input{
+    background:var(--primary);
+    color: #fff;
+}
+.register input:hover{
+    background:var(--text-black);
+    color:#fff;
+}
+.bottom{
+
+    border-bottom-left-radius: 26px;
+    border-bottom-right-radius: 26px;
+    background: var(--primary);
+    text-align: center;
+
+    /* border: 2px solid var(--gray); */
+}
+.form-group input{
+    border: 2px solid var(--gray);
+}
+.form-group label{
+    color: var(--text-black);
+    font-weight: 500;
+}
+.bottom a{
+  
+    color: var(--text-black);
+    text-decoration: none;
+}
+.bottom p{
+    margin-top: 1rem;
+    color: #fff;
+} 
+.btn{
+    margin-top: 14rem;
+    margin-left:30rem;
+}
+
+
+#togglePassword{
+    cursor: pointer;
+    margin-top: 1rem;
+    margin-left: -2rem;
+}
+/* .close{
+    
+    margin-left: 10rem;
+} */

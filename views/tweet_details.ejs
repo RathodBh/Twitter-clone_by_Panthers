@@ -1,0 +1,564 @@
+<%- include("menu") -%>
+    <%- include("add_comment") -%>
+
+        <!-- main panel  -->
+        <div class="col-6 px-0 border">
+            <div class="inner-main commentInfo ">
+                <div class="blur-ui p-3">
+                    <div class="d-flex align-items-center my-2">
+                        <a href="/dashboard" class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "></a>
+                        <h5 class="text-black d-inline-block mb-0">Tweet</h5>
+                    </div>
+
+                </div>
+
+                <div class="tab-content">
+                    <div id="for-you" class="tab-pane active">
+                        <div class="tweet-container all-center">
+                            <div class="tweet w-100 p-3 row pt-4 border-bottom border-top position-relative">
+                                <div class="col-1 p-0">
+                                    <img src="<%= tweet_data.user_image %>" alt=""
+                                        class="profile-size me-2 border toastbtn"
+                                        data-toast="toast<%= tweet_data.user_id %>">
+                                </div>
+                                <div class="col-10 px-4 position-relative">
+                                    <div class="d-flex align-items-center user-info">
+                                        <span class="text-black fs-16 me-1 fw-600 toastbtn"
+                                            data-toast="toast<%= tweet_data.user_id %>">
+                                            <%= tweet_data.name %>
+                                        </span>
+                                    </div>
+                                    <span class="fs-16 text-gray me-1 toastbtn"
+                                        data-toast="toast<%= tweet_data.user_id %>">
+                                        @<%= tweet_data.user_name %>
+                                    </span>
+                                    <div class="toast toast-profile bg-light toastbtn"
+                                        id="toast<%= tweet_data.user_id %>" data-toast="toast<%= tweet_data.user_id %>">
+                                        <div class="toast-body">
+                                            <div class="w-100 mb-1 d-flex justify-content-between align-items-center">
+                                                <img src="<%= tweet_data.user_image %>" alt=""
+                                                    class="profile-size profile-size2 me-2 border">
+                                                <a
+                                                    class="followButton btn btn-light rounded-pill px-3 border-dark mb-0">Follow</a>
+                                            </div>
+                                            <a href="/profile/user/<%= tweet_data.user_id %>"
+                                                class="text-black d-block fs-16 me-1 fw-600 ">
+                                                <%= tweet_data.name %>
+
+                                            </a>
+                                            <span class="fs-16 d-block text-gray me-1">
+                                                @<%= tweet_data.user_name %>
+                                            </span>
+                                            <p class="text-black fs-16 fw-300 word-wrap">
+                                                <%= tweet_data.bio %>
+                                            </p>
+
+                                            <div class="d-flex fs-16 d-block ">
+                                                <p class="text-dark">
+                                                    <%= tweet_data.following %> <span
+                                                            class="text-gray me-3">Following</span>
+                                                </p>
+                                                <p class="text-dark">
+                                                    <%= tweet_data.followers %> <span class="text-gray">Followers</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-1 ">
+                                    <a href="" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false"> •••
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li class="d-flex">
+                                            <a class="dropdown-item" href="#"><i class="fa-solid fa-user-plus me-2"></i>
+                                                Follow <span class="text-blue">@<%= tweet_data.user_name %></span>
+
+                                            </a>
+                                        </li>
+
+
+                                        <li class="d-flex">
+                                            <a class="dropdown-item" href="#"><i
+                                                    class="fa-solid fa-user-minus me-2"></i>
+                                                Unfollow <span class="text-blue">@<%= tweet_data.user_name %></span>
+
+                                            </a>
+                                        </li>
+
+                                        <li class="d-flex">
+                                            <a class="dropdown-item" href="#"><i class="fa-regular fa-eye me-2"></i>
+                                                Visit
+                                                profile <span class="text-blue">@<%= tweet_data.user_name %></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="col-12 py-3 p-0">
+                                    <div class="tweet-content">
+                                        <p class="text-black fs-16 fw-300 word-wrap">
+                                            <%= tweet_data.tweet %>
+                                        </p>
+                                    </div>
+                                    <% if(tweet_data.media_type.includes("image") ){ %>
+                                        <div class="tweet-img-container">
+                                            <img src="<%= tweet_data.media_url %>" alt="" class="w-100">
+                                        </div>
+                                        <% }else if(tweet_data.media_type.includes("video") ){ %>
+                                            <div class="tweet-video-container">
+                                                <video controls loop autoplay>
+                                                    <source src="<%= tweet_data.media_url %>" type="video/mp4">
+                                                </video>
+                                            </div>
+                                            <% } %>
+                                                <div class="text-gray py-2 border-bottom" title="">
+                                                    <%= post_date[0] %>
+                                                </div>
+                                                <div class="text-gray py-2 border-bottom">
+                                                    <p class="d-inline-block me-3 mb-0"><span class="text-dark fw-600">
+                                                            <%= tweet_data.tweet_retweets %>
+                                                        </span> retweets</p>
+                                                    <p class="d-inline-block mb-0"><span class="text-dark fw-600">
+                                                            <%= tweet_data.tweet_likes %>
+                                                        </span> likes</p>
+
+                                                </div>
+
+                                                <div class="tweet-reactions-container py-2 border-bottom">
+                                                    <ul class="list-unstyled row my-0">
+                                                        <li class="col">
+                                                            <a href="" class="comment clickComment"
+                                                                data-bs-toggle="modal" data-bs-target="#commentModal"
+                                                                data-id="<%= tweet_data.id %>" id="clickComment">
+                                                                <i class="fa-regular fa-comment"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="col">
+                                                            <a class="retweet">
+                                                                <i class="fa-solid fa-retweet"
+                                                                    onclick="retweetpost(event,this)"
+                                                                    id="k<%= tweet_data.id %>"></i>
+                                                                <span id="retweet<%= tweet_data.id %>">
+                                                                    <%= tweet_data.tweet_retweets %>
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="col">
+                                                            <a class="like">
+                                                                <i class="fa-regular fa-heart"
+                                                                    onclick="likepost(event,this)"
+                                                                    id="<%= tweet_data.id %>"></i>
+                                                                <span id="like<%= tweet_data.id %>">
+                                                                    <%= tweet_data.tweet_likes %>
+                                                                </span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="col">
+                                                            <a href="" class="chart">
+                                                                <i class="fa-solid fa-chart-simple"></i>
+                                                            </a>
+                                                        </li>
+                                                        <li class="col">
+                                                            <a href="" class="share">
+                                                                <i class="fa-solid fa-arrow-up-from-bracket"></i>
+
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+
+                                                <!-- comments  -->
+                                                <div class="comments py-3" id="commentSection">
+                                                    <% if(comments.length <=0){ %>
+                                                        <span class="d-inline-block mt-2 text-secondary">No Comments
+                                                            yet.</span>
+                                                        <% }else{ %>
+                                                            <% comments.forEach((c,i)=>{ %>
+                                                                <div class="comment row border py-2">
+                                                                    <div class="col-1 position-relative">
+                                                                        <img src="<%= c.user_image %>" alt=""
+                                                                            class="profile-size me-2 border commentModBtn"
+                                                                            data-toast="commentMod<%= i %>">
+                                                                    </div>
+                                                                    <div class="col-10">
+                                                                        <div
+                                                                            class="d-flex align-items-center user-info position-relative">
+                                                                            <a href="/profile/user/<%= c.user_id %>"
+                                                                                class="text-black fs-16 me-1 fw-600 commentModBtn"
+                                                                                data-toast="commentMod<%= i %>">
+                                                                                <%= c.name %>
+                                                                            </a>
+                                                                            <span
+                                                                                class="fs-16 text-gray me-1 commentModBtn"
+                                                                                data-toast="commentMod<%= i %>">
+                                                                                @<%= c.user_name %>
+                                                                            </span>
+                                                                            <i
+                                                                                class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
+                                                                            <span class="date fs-16 me-1 text-gray">
+                                                                                <%= comment_at[i] %>
+                                                                            </span>
+                                                                            <div class="toast toast-profile bg-light commentModBtn"
+                                                                                id="commentMod<%= i %>"
+                                                                                data-toast="commentMod<%= i %>">
+                                                                                <div class="toast-body">
+                                                                                    <div
+                                                                                        class="w-100 mb-1 d-flex justify-content-between align-items-center">
+                                                                                        <img src="<%= c.user_image %>"
+                                                                                            alt=""
+                                                                                            class="profile-size profile-size2 me-2 border">
+                                                                                        <a
+                                                                                            class="followButton btn btn-light rounded-pill px-3 border-dark mb-0">Follow</a>
+                                                                                    </div>
+                                                                                    <a href="/profile/user/<%= c.user_id %>"
+                                                                                        class="text-black d-block fs-16 me-1 fw-600 ">
+                                                                                        <%= c.name %>
+
+                                                                                    </a>
+                                                                                    <span
+                                                                                        class="fs-16 d-block text-gray me-1">
+                                                                                        @<%= c.user_name %>
+                                                                                    </span>
+                                                                                    <p
+                                                                                        class="text-black fs-16 fw-300 word-wrap">
+                                                                                        <%= c.bio %>
+                                                                                    </p>
+
+                                                                                    <div class="d-flex fs-16 d-block ">
+                                                                                        <p class="text-dark">
+                                                                                            <%= c.following %> <span
+                                                                                                    class="text-gray me-3">Following</span>
+                                                                                        </p>
+                                                                                        <p class="text-dark">
+                                                                                            <%= c.followers %> <span
+                                                                                                    class="text-gray">Followers</span>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="sub-info">
+                                                                            <p class="text-gray fs-16 fw-300 mb-0">
+                                                                                replying to <span class="text-blue">
+                                                                                    @<%= tweet_data.user_name %></span>
+                                                                            </p>
+                                                                            <!-- </a> -->
+                                                                            <p class="coemment-i mb-0 word-wrap">
+                                                                                <%= c.comment %>
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-1">
+                                                                        <a href="" class="text-dark"
+                                                                            data-bs-toggle="dropdown"
+                                                                            aria-expanded="false"> ••• </a>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li class="d-flex">
+                                                                                <a class="dropdown-item" href="#"><i
+                                                                                        class="fa-solid fa-user-plus me-2"></i>
+                                                                                    Follow
+                                                                                    <span class="text-blue">@<%=
+                                                                                            c.user_name %>
+                                                                                    </span>
+
+                                                                                </a>
+                                                                            </li>
+
+
+                                                                            <li class="d-flex">
+                                                                                <a class="dropdown-item" href="#"><i
+                                                                                        class="fa-solid fa-user-minus me-2"></i>
+                                                                                    Unfollow <span class="text-blue">@
+                                                                                        <%= c.user_name %>
+                                                                                    </span>
+
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li class="d-flex">
+                                                                                <a class="dropdown-item" href="#"><i
+                                                                                        class="fa-regular fa-eye me-2"></i>
+                                                                                    Visit
+                                                                                    profile <span class="text-blue">@<%=
+                                                                                            c.user_name %></span>
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                                <% }) } %>
+                                                </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div id="following-home" class="tab-pane container">
+                        Part2
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let linkModal = document.querySelector("#clickComment");
+            linkModal.addEventListener("click", (e) => {
+                let id = e.currentTarget.getAttribute("data-id");
+                document.querySelector(".modal-body #tweetId").value = id;
+                document.querySelector("#comment_area").value = "";
+            })
+           
+            document.querySelectorAll(".toastbtn").forEach((cur) => {
+                cur.addEventListener("mouseover", function (e) {
+                    let curId = e.target.getAttribute("data-toast")
+                    var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
+                    var toastList = toastElList.map(function (toastEl) {
+                        return new bootstrap.Toast(toastEl)
+                    })
+                    toastList.forEach(toast => toast.show())
+                })
+            })
+
+            document.querySelectorAll(".toastbtn").forEach((cur) => {
+                cur.addEventListener("mouseout", function (e) {
+                    let curId = e.target.getAttribute("data-toast")
+                    var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
+                    var toastList = toastElList.map(function (toastEl) {
+                        return new bootstrap.Toast(toastEl)
+                    })
+                    setTimeout(() => {
+                        toastList.forEach(toast => toast.hide())
+                    }, 2000)
+                })
+            })
+
+            document.querySelectorAll(".commentModBtn").forEach((cur) => {
+                cur.addEventListener("mouseover", function (e) {
+                    let curId = e.target.getAttribute("data-toast")
+                    var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
+                    var toastList = toastElList.map(function (toastEl) {
+                        return new bootstrap.Toast(toastEl)
+                    })
+                    toastList.forEach(toast => toast.show())
+                })
+            })
+
+            document.querySelectorAll(".commentModBtn").forEach((cur) => {
+                cur.addEventListener("mouseout", function (e) {
+                    let curId = e.target.getAttribute("data-toast")
+                    var toastElList = [].slice.call(document.querySelectorAll('#' + curId))
+                    var toastList = toastElList.map(function (toastEl) {
+                        return new bootstrap.Toast(toastEl)
+                    })
+                    toastList.forEach(toast => toast.hide())
+                })
+            })
+
+
+            let form = document.querySelector('#addCommentForm')
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                let data = await fetch(`/tweet/tweet_comment`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        tweetId: document.querySelector("#tweetId").value,
+                        comment_text: document.querySelector("#comment_area").value
+                    })
+                })
+                let ans = await data.json();
+
+                allComments = ans.all_comments;
+                allCommentsLen = ans.len;
+                allCommentAt = ans.comment_at;
+                console.log(allCommentAt);
+                var comment_section = document.querySelector("#commentSection");
+
+                if (allComments.length <= 0) {
+                    comment_section.innerHTML = `<span class="d-inline-block mt-2 text-secondary">No Comments yet.</span>`;
+                }
+                else {
+                    let comment_data = ""
+                    for (let i = 0; i < allComments.length; i++) {
+                        comment_data +=
+                            `<div class="comment row border py-2">
+                                                                    <div class="col-1">
+                                                                        <img src="${allComments[i].user_image}" alt=""
+                                                                            class="profile-size me-2 border">
+                                                                    </div>
+                                                                    <div class="col-10">
+                                                                        <div
+                                                                            class="d-flex align-items-center user-info">
+                                                                            <a href="/profile/user/${allComments[i].user_id}" class="text-black fs-16 me-1 fw-600">
+                                                                                ${allComments[i].name}
+                                                                            </a>
+                                                                            <span class="fs-16 text-gray me-1">
+                                                                                @${allComments[i].user_name}
+                                                                            </span>
+                                                                            <i
+                                                                                class="fa-solid fa-circle bottom-dots fs-16 text-gray me-1"></i>
+                                                                            <span class="date fs-16 me-1 text-gray">
+                                                                               ${allCommentAt[i]}
+                                                                            </span>
+                                                                        </div>
+                                                                        <div class="sub-info">
+                                                                            <p class="text-gray fs-16 fw-300 mb-0">
+                                                                                replying to <span class="text-blue">
+                                                                                    @<%= tweet_data.user_name %></span>
+                                                                            </p>
+                                                                            <!-- </a> -->
+                                                                            <p class="coemment-i mb-0 word-wrap">
+                                                                                ${allComments[i].comment}
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-1">
+                                                                        <a href="" class="text-dark"
+                                                                            data-bs-toggle="dropdown"
+                                                                            aria-expanded="false"> ••• </a>
+                                                                        <ul class="dropdown-menu">
+                                                                            <li class="d-flex">
+                                                                                <a class="dropdown-item" href="#"><i
+                                                                                        class="fa-solid fa-user-plus me-2"></i>
+                                                                                    Follow
+                                                                                    <span class="text-blue">@${allComments[i].user_name}
+                                                                                             
+                                                                                    </span>
+
+                                                                                </a>
+                                                                            </li>
+
+
+                                                                            <li class="d-flex">
+                                                                                <a class="dropdown-item" href="#"><i
+                                                                                        class="fa-solid fa-user-minus me-2"></i>
+                                                                                    Unfollow <span class="text-blue">@
+                                                                                        ${allComments[i].user_name}</span>
+
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li class="d-flex">
+                                                                                <a class="dropdown-item" href="#"><i
+                                                                                        class="fa-regular fa-eye me-2"></i>
+                                                                                    Visit
+                                                                                    profile <span class="text-blue">@${allComments[i].user_name}</span>
+                                                                                </a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>`;
+                    }
+
+                    comment_section.innerHTML = comment_data;
+                }
+
+            })
+
+
+            async function likepost(e, t_id) {
+
+                e.stopPropagation()
+                let tweet_id = t_id.id
+                if (t_id.classList.value == 'fa-regular fa-heart') {
+                    t_id.classList.value = 'fa-solid fa-heart text-danger';
+                    let like = true
+                    const save_req = await fetch(`/dashboard/like`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { like, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    if (resSave.flag == true) {
+                        let likeSpan = document.querySelector("#like" + tweet_id)
+                        likeSpan.innerHTML = resSave.alllikecount
+                    }
+                }
+                else if (t_id.classList.value == 'fa-solid fa-heart text-danger') {
+                    t_id.classList.value = 'fa-regular fa-heart'
+                    let like = false;
+                    const save_req = await fetch(`/dashboard/like`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { like, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    if (resSave.flag == false) {
+                        let likeSpan = document.querySelector("#like" + tweet_id)
+                        likeSpan.innerHTML = resSave.alllikecount
+                    }
+                }
+            }
+
+            var userLike = [];
+            '<%for(let i=0;i<arrlikeid.length;i++){%>'
+            userLike.push('<%=arrlikeid[i]%>');
+            '<%}%>'
+            userLike.forEach(element => {
+
+                document.getElementById(element).classList = "fa-solid fa-heart text-danger";
+            });
+
+            async function retweetpost(e, t_id) {
+                e.stopPropagation();
+                let temp = t_id.id
+                let id = temp.slice(1);
+                let tweet_id = parseInt(id)
+                if (t_id.classList.value == 'fa-solid fa-retweet') {
+                    t_id.classList.value = 'fa-solid fa-retweet text-success';
+                    let retweet = true
+                    const save_req = await fetch(`/dashboard/retweet`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { retweet, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    if (resSave.flag == true) {
+                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                        retweetSpan.innerHTML = resSave.allretweetcount
+                    }
+                }
+                else if (t_id.classList.value == 'fa-solid fa-retweet text-success') {
+                    t_id.classList.value = 'fa-solid fa-retweet'
+                    let retweet = false;
+                    const save_req = await fetch(`/dashboard/retweet`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            data: { retweet, tweet_id }
+                        })
+                    });
+                    var resSave = await save_req.json();
+                    if (resSave.flag == false) {
+                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                        retweetSpan.innerHTML = resSave.allretweetcount
+                    }
+                }
+            }
+
+            var userretweet = [];
+            '<%for(let i=0;i<arrretweetid.length;i++){%>'
+            userretweet.push('<%=arrretweetid[i]%>');
+            '<%}%>'
+            userretweet.forEach(element => {
+
+                document.getElementById("k" + element).classList = "fa-solid fa-retweet text-success";
+            });
+
+        </script>
+        <%- include("search") -%>
