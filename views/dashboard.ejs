@@ -1,8 +1,8 @@
 <%- include("menu") -%>
-    <div class="loader">
-        <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
-    </div>
-
+    
+<div class="loader">
+    <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
+</div>
     <%- include("add_comment") -%>
         <!-- main panel  -->
         <div class="col-6 px-0 border">
@@ -106,12 +106,21 @@
                         let likeSpan = document.querySelector("#like" + tweet_id)
                         likeSpan.innerHTML = resSave.alllikecount
                     }
+                    if (resSave.flag == true) {
+                        let likeSpan = document.querySelector("#like" + tweet_id)
+                        likeSpan.innerHTML = resSave.alllikecount
+                    }
                 }
             }
 
             //copy to clipboard
 
             async function copyContent(e, text) {
+                //
+
+                let link = location.href.split('/')[0] + "//" + location.href.split('/')[2];
+                let myData = `/tweet/tweet_details/${text}`
+
                 e.stopPropagation();
                 const ToastCopy = Swal.mixin({
                     toast: true,
@@ -125,10 +134,7 @@
                     }
                 })
                 try {
-                    await navigator.clipboard.writeText(text);
-
-
-
+                    await navigator.clipboard.writeText(link + myData);
                     ToastCopy.fire({
                         icon: 'success',
                         title: 'Link copied successfully',
@@ -143,10 +149,11 @@
             }
 
             async function forYouDataLoad() {
-                let fetchDashboard = await fetch(`/dashboardData`);
+                let fetchDashboard = await fetch(`/dashboard/dashboardData`);
                 let ansData = await fetchDashboard.json();
 
                 let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
+
 
                 let part1 = document.querySelector("#forYouPart");
                 let part1Data = '';
@@ -251,7 +258,7 @@
                                                                         <ul class="dropdown-menu p-0">
                                                                             <li class="d-flex">
                                                                                 <a class="dropdown-item text-dark"
-                                                                                    onclick="copyContent(event,'/tweet/tweet_details/${t.id}')">
+                                                                                    onclick="copyContent(event,'${t.id}')">
                                                                                     <i
                                                                                         class="fa-regular fa-clipboard me-2"></i>
     
@@ -270,25 +277,22 @@
                                                     •••
                                                 </a>
                                                 <ul class="dropdown-menu">
-                                                    <li class="d-flex">
-                                                        <a class="dropdown-item" href="#"><i
-                                                                class="fa-solid fa-user-plus me-2"></i>
-                                                            Follow <span class="text-blue">@${t.user_name}</span>
-    
-                                                        </a>
-                                                    </li>
-    
-    
-                                                    <li class="d-flex">
-                                                        <a class="dropdown-item" href="#"><i
-                                                                class="fa-solid fa-user-minus me-2"></i> Unfollow <span
-                                                                class="text-blue">@${t.user_name}</span>
-    
-                                                        </a>
-                                                    </li>
+                                                    ${following_data.includes(t.user_id) ? `<li class="d-flex">
+                            <a class="dropdown-item" onclick="followProp(event,'${t.user_id}','1')" ><i
+                                class="fa-solid fa-user-minus me-2" ></i><span id="prop${t.user_id}"> Unfollow</span> <span
+                                    class="text-blue">@${t.user_name}</span>
+
+                            </a>
+                        </li>` : `<li class="d-flex">
+                            <a class="dropdown-item" onclick="followProp(event,'${t.user_id}','0')"><i
+                                class="fa-solid fa-user-plus me-2" ></i>
+                                <span id="prop${t.user_id}"> Follow</span><span class="text-blue">@${t.user_name}</span>
+                            </a>
+                        </li>`}
+                                                    
     
                                                     <li class="d-flex">
-                                                        <a class="dropdown-item" href="/profile/user"><i
+                                                        <a class="dropdown-item" href="/profile/user/${t.user_id}"><i
                                                                 class="fa-regular fa-eye me-2"></i>
                                                             Visit profile <span class="text-blue">@${t.user_name} 
                                                             </span>
@@ -322,7 +326,7 @@
 
 
             async function followingTab() {
-                let fetchDashboard = await fetch(`/dashboardData`);
+                let fetchDashboard = await fetch(`/dashboard/dashboardData`);
                 let ansData = await fetchDashboard.json();
 
                 let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
@@ -430,7 +434,7 @@
                                                                         <ul class="dropdown-menu p-0">
                                                                             <li class="d-flex">
                                                                                 <a class="dropdown-item text-dark"
-                                                                                    onclick="copyContent(event,'/tweet/tweet_details/${t.id}')">
+                                                                                    onclick="copyContent(event,'${t.id}')">
                                                                                     <i
                                                                                         class="fa-regular fa-clipboard me-2"></i>
     
@@ -449,16 +453,22 @@
                                                     •••
                                                 </a>
                                                 <ul class="dropdown-menu">
-                                                    <li class="d-flex">
-                                                        <a class="dropdown-item" href="#"><i
-                                                                class="fa-solid fa-user-minus me-2"></i> Unfollow <span
-                                                                class="text-blue">@${t.user_name} </span>
+                                                    ${following_data.includes(t.user_id) ? `<li class="d-flex">
+                            <a class="dropdown-item" onclick="followProp(event,'${t.user_id}','1')" ><i
+                                class="fa-solid fa-user-minus me-2" ></i><span id="prop${t.user_id}"> Unfollow</span> <span
+                                    class="text-blue">@${t.user_name}</span>
+
+                            </a>
+                        </li>` : `<li class="d-flex">
+                            <a class="dropdown-item" onclick="followProp(event,'${t.user_id}','0')"><i
+                                class="fa-solid fa-user-plus me-2" ></i>
+                                <span id="prop${t.user_id}"> Follow</span><span class="text-blue">@${t.user_name}</span>
+                            </a>
+                        </li>`}
+                                                    
     
-                                                        </a>
-                                                    </li>
-    
                                                     <li class="d-flex">
-                                                        <a class="dropdown-item" href="/profile/user"><i
+                                                        <a class="dropdown-item" href="/profile/user/${t.user_id}"><i
                                                                 class="fa-regular fa-eye me-2"></i>
                                                             Visit profile <span class="text-blue">@${t.user_name} 
                                                             </span>
@@ -494,7 +504,7 @@
                 allClicks()
             }
             async function load() {
-                let fetchDashboard = await fetch(`/dashboardData`);
+                let fetchDashboard = await fetch(`/dashboard/dashboardData`);
                 let ansData = await fetchDashboard.json();
 
                 let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
@@ -559,13 +569,15 @@
                     });
                     var resSave = await save_req.json();
                     if (resSave.flag == false) {
-                        try {
-                            let retweetSpan = document.querySelector("#retweet" + tweet_id)
-                            retweetSpan.innerHTML = resSave.allretweetcount
-                        } catch (e) {
-                            //console.log("Error: " + e)
-                        }
 
+                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                        retweetSpan.innerHTML = resSave.allretweetcount
+
+
+                    }
+                    if (resSave.flag == true) {
+                        let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                        retweetSpan.innerHTML = resSave.allretweetcount
                     }
                 }
 
@@ -598,5 +610,51 @@
             }
 
 
+            async function followProp(e, follower_id, flag) {
+                e.stopPropagation()
+                if (flag == 0) {
+                    // console.log("Unfollow");
+                    await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
+                    document.getElementById(`prop${follower_id}`).innerHTML = "Unfollow";
+                    document.getElementById(`prop${follower_id}`).setAttribute("onclick", `follow(${follower_id},1)`);
+
+                } else {
+                    // console.log("Follow");
+                    Swal.fire({
+                        title: 'Do you want to Unfollow?',
+                        text: "",
+                        position: "center",
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes, Unfollow!'
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: 'top',
+                                showConfirmButton: false,
+                                timer: 2000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                                }
+                            })
+
+                            Toast.fire({
+                                icon: 'success',
+                                title: 'Unfollow successfully',
+
+                            })
+
+                            await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
+                            document.getElementById(`prop${follower_id}`).innerHTML = "Follow";
+                            document.getElementById(`prop${follower_id}`).setAttribute("onclick", `follow(${follower_id},0)`);
+                        }
+                    })
+                }
+            }
         </script>
         <%- include("search") -%>

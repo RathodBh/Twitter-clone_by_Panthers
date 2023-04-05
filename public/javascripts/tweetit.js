@@ -1,7 +1,3 @@
-
-// window.onload = () => {
-//     $('#myModal').modal('show');
-// }
 var ff = 0;
 
 function emoji_clk() {

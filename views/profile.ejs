@@ -8,13 +8,13 @@
         <link rel="stylesheet" href="/stylesheets/style.css">
         <script type="text/javascript" src="/javascripts/tweetit.js"></script>
      
-        <div class="col-6 p-2">
-            <div class="inner-main">
+        <div class="col-6 p-2 home ">
+            <div class="inner-main ">
 
-                <div class="card" id="card">
+                <div class="card border-bottom-0" id="card">
 
                 </div>
-                <ul class="nav nav-tabs">
+                <ul class="nav nav-tabs border border-top-0">
                     <li class="nav-item w-50 text-center all-center">
                         <a class="nav-link w-100 fw-600 active" data-bs-toggle="tab" href="#Tweets">
                             <span>
@@ -120,7 +120,7 @@
                     <div id="Tweets" class="tab-pane active">
                         <div class="tweet-container all-center flex-column ">
                             <% tweet_data.forEach((t,index)=>{ %>
-                                <div class="tweet w-100 p-3 row pt-4 border-bottom border-top">
+                                <div class="tweet w-100 p-3 row pt-4 border">
                                     <div class="col-1 p-0">
                                         <img src="<%= users[0].user_image %>" alt="" class="profile-size me-2 border">
                                     </div>
@@ -244,11 +244,11 @@
                         </div>
                     </div>
                     <!-- for retweet -->
-                    <div id="Retweets" class="tab-pane ">
+                    <div id="Retweets" class="tab-pane">
                         <div class="tweet-container all-center flex-column ">
                             <%var a=0;%>
                                 <% all_retweet.forEach((t,index)=>{ %>
-                                    <div class="tweet w-100 p-3 row pt-4 border-bottom border-top">
+                                    <div class="tweet w-100 p-3 row pt-4 border">
                                         <div class="col-1 p-0">
                                             <img src="<%= users[0].user_image %>" alt=""
                                                 class="profile-size me-2 border">
@@ -300,14 +300,14 @@
                                                                 <li class="col">
                                                                     <a class="like <%= t.id %>">
                                                                         <i class="fa-regular fa-heart"
-                                                                            onclick="likepost(event,this)"
-                                                                            id="<%= t.id %>rl"></i>
-                                                                        <span id="like<%= t.id %>">
+                                                                        onclick="likepostrwt(event,this)"
+                                                                            id="<%= t.id %>"></i>
+                                                                        <span id="likee<%= t.id %>">
                                                                             <%= t.tweet_likes %>
                                                                         </span>
                                                                     </a>
                                                                 </li>
-
+                                                               
                                                                 <li class=" col">
                                                                     <a href="" class="chart">
                                                                         <i class="fa-solid fa-chart-simple"></i>
@@ -488,8 +488,10 @@
                     console.log('e', e)
 
                     e.stopPropagation()
-                    let tweet_id = t_id.id
-
+                    var tweet_id = t_id.id
+                    console.log("tweet id "+tweet_id.split(" "));
+                    var tweet_id=tweet_id.split(" ");
+                    console.log("tweet value="+tweet_id[0]);
                     if (t_id.classList.value == 'fa-regular fa-heart') {
                         t_id.classList.value = 'fa-solid fa-heart text-danger';
                         let like = true
@@ -522,12 +524,60 @@
                             })
                         });
                         var resSave = await save_req.json();
-                        if (resSave.flag == false) {
-                            let likeSpan = document.querySelector("#like"+tweet_id);
-                            likeSpan.innerHTML = resSave.alllikecount;
+                        if (resSave.flag==false) {
+                            let likeSpan = document.querySelector("#like"+tweet_id)
+                            likeSpan.innerHTML = resSave.alllikecount
                         }
                     }
                 }
+
+                async function likepostrwt(e, t_id) {
+                    console.log('e', e)
+
+                    e.stopPropagation()
+                    var tweet_id = t_id.id
+                    console.log("tweet id "+tweet_id.split(" "));
+                    var tweet_id=tweet_id.split(" ");
+                    console.log("tweet value="+tweet_id[0]);
+                    if (t_id.classList.value == 'fa-regular fa-heart') {
+                        t_id.classList.value = 'fa-solid fa-heart text-danger';
+                        let like = true
+                        const save_req = await fetch(`/dashboard/like`, {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                data: { like, tweet_id }
+                            })
+                        });
+                        var resSave = await save_req.json();
+
+                        if (resSave.flag == true) {
+                            let likeSpan = document.querySelector("#likee"+tweet_id);
+                            likeSpan.innerHTML = resSave.alllikecount;
+                        }
+                    }
+                    else if (t_id.classList.value == 'fa-solid fa-heart text-danger') {
+                        t_id.classList.value = 'fa-regular fa-heart'
+                        let like = false;
+                        const save_req = await fetch(`/dashboard/like`, {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                data: { like, tweet_id }
+                            })
+                        });
+                        var resSave = await save_req.json();
+                        if (resSave.flag == false) {
+                            let likeSpan = document.querySelector("#likee"+tweet_id)
+                            likeSpan.innerHTML = resSave.alllikecount
+                        }
+                    }
+                }
+
 
 
                 var userLike = [];
@@ -544,7 +594,7 @@
                     userLikerwt.push('<%=retwt_like[i].tweet_id%>');
                 '<%}%>'
                 userLikerwt.forEach(element => {
-                    document.getElementById(element+"rl").classList = "fa-solid fa-heart text-danger";
+                    document.getElementById(element).classList = "fa-solid fa-heart text-danger";
                 console.log("for retweet like"+userLikerwt);
                 });
 
@@ -587,7 +637,7 @@
                             })
                         });
                         var resSave = await save_req.json();
-                        if (resSave.flag == false) {
+                        if (resSave.flag) {
                             let retweetSpan = document.querySelector("#retweet" + tweet_id)
                             retweetSpan.innerHTML = resSave.allretweetcount
                         }

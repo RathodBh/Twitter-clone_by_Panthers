@@ -172,7 +172,7 @@ const getProfile = asyncHandler(async (req, res) => {
         }
 
         // for retweet likes in profile
-        let retwt_like=await queryExecuter(`select likes.tweet_id from retweet inner join likes on retweet.tweet_id=likes.tweet_id where likes.is_deleted='0' and retweet.is_deleted='0' and retweet.user_id='${user_id}'; `)
+        let retwt_like=await queryExecuter(`select likes.tweet_id from retweet inner join likes on retweet.tweet_id=likes.tweet_id where likes.is_deleted='0' and retweet.is_deleted='0' and retweet.user_id='${user_id}' and likes.user_id='${user_id}'; `)
         //i need to show the get request for register page
         let changepass = false
         res.render('profile', {retwt_like:retwt_like, twt_user: twt_user, all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, arrretweetid, users, changepass, fuser: followuser, followers: getfollowerId });
@@ -245,10 +245,7 @@ const getTagetProfiledata = async (req, res) => {
             res.redirect('/user-login')
         }
         let user_id = req.query.id;
-        console.log(user_id);
-
-
-
+        console.log("search",user_id);
 
     } catch (err) {
         console.log("Error Dashboard:", err);
@@ -271,6 +268,9 @@ const getTargetProfile = asyncHandler(async (req, res) => {
             res.redirect('/user-login')
         }
         let user_id = req.params.id;
+        if (user_id == req.session.user_id) {
+            return res.redirect('/profile/user')
+        }
         let sel_tweets = `select * from tweets where user_id=${user_id} order by id DESC`;
         const all_tweet_data = await query(sel_tweets);
 
@@ -316,8 +316,6 @@ const getTargetProfile = asyncHandler(async (req, res) => {
                     hours = hours - 12;
                 }
                 if (diffYears) {
-
-
                     post_at.push(`${hours}:${d.getMinutes()} ${is_am_pm} • ${month[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`)
                 } else {
                     post_at.push(`${hours}:${d.getMinutes()} ${is_am_pm} • ${month[d.getMonth()]} ${d.getDate()}`)
@@ -400,9 +398,11 @@ const getTargetProfile = asyncHandler(async (req, res) => {
         for (let b = 0; b < all_retweet_data.length; b++) {
             var twt_user = await query(`SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id=tweets.id inner join twitter_clone.users on tweets.user_id=users.id where retweet.user_id='${user_id}' AND retweet.is_deleted='0' order by retweet.id DESC `);
         }
+        let retwt_like=await queryExecuter(`select likes.tweet_id from retweet inner join likes on retweet.tweet_id=likes.tweet_id where likes.is_deleted='0' and retweet.is_deleted='0' and retweet.user_id='${user_id}' and likes.user_id='${user_id}'; `)
 
-        res.render('targetProfile', { twt_user: twt_user, all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, users, arrretweetid, fuser: followuser, followers: getfollowerId })
-
+        console.log("retweet id",arrretweetid);
+        console.log("retweet like",retwt_like[0].tweet_id);
+        res.render('targetProfile', { retwt_like:retwt_like,twt_user: twt_user, all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, users, arrretweetid, fuser: followuser, followers: getfollowerId })
     }
     catch (err) {
         return err
@@ -414,27 +414,59 @@ const getTargetProfile = asyncHandler(async (req, res) => {
 
 // app.get("/user-dash",async(req,res)=>{
 const fflist = asyncHandler(async (req, res) => {
-    let user_idd=req.session.user_id;
-    // console.log("user id profile="+user_idd);
 
-    let uid = req.params.id || user_idd;
-
-    let user_id = req.params.id;
-    // console.log("user id in controller="+user_id);
-    // console.log("uid in controller="+uid);
+    let uid =  req.session.user_id;
+    if(req.query.id){
+        uid = req.query.id;
+    }
     var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${uid})`);
+    var curuser = await queryExecuter(`select id,name,user_name,user_image from users where id = '${uid}'`);
     var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
     var followers = [];
     getfollowerId.forEach(id => {
         followers.push(id.follower_id);
     });
-    var following = await queryExecuter(`select users.id,users.name,users.user_name,users.user_image from users left join following on users.id = following.user_id where following_id = ${uid}`)
+    var following = await queryExecuter(`select users.id,users.name,users.user_name,users.user_image from users INNER join following on users.id = following.following_id where following.user_id = '${uid}'`)
 
-    var follower = await queryExecuter(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.user_id where follower_id = ${uid}`)
+    var follower = await queryExecuter(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.follower_id where followers.user_id = ${uid}`)
 
     // console.log("Getfollowerid fflist:::::::", follower);
-    res.render('follow_following', { fuser: getuser, followers, following, follower })
+    res.render('follow_following', { fuser: getuser, followers, following, follower, userInfo: curuser[0] })
 })
 
 
-module.exports = { fflist,getProfile, getProfiledata, updateProfilepoint, editprofile, getUserInfo, getTagetProfiledata, getTargetProfile }
+// const ffTarget = asyncHandler(async (req, res) => {
+//     let user_id = req.session.user_id;
+//     let uid = req.query.id || user_id;
+//     if (uid == undefined) {
+//         uid = req.session.user_id;
+//     }
+//     console.log("sdjfhauifhadukfajiafdifj", uid, user_id);
+//     if (uid == user_id) {
+//         res.render("/profile/user")
+//     }
+
+//     var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${uid})`);
+//     var curuser = await queryExecuter(`select id,name,user_name,user_image from users where id = '${uid}'`);
+//     var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
+//     var followers = [];
+//     getfollowerId.forEach(id => {
+//         followers.push(id.follower_id);
+//     });
+
+//     var following = await queryExecuter(`select users.id,users.name,users.user_name,users.user_image from users INNER join following on users.id = following.following_id where following.user_id = '${uid}'`)
+
+//     var follower = await queryExecuter(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.follower_id where followers.user_id = ${uid}`)
+
+
+//     res.render('follow_following', { fuser: getuser, followers, following, follower, userInfo: curuser[0] })
+// })
+
+
+
+
+
+module.exports = { fflist, getProfile, getProfiledata, updateProfilepoint, editprofile, getUserInfo, getTagetProfiledata, getTargetProfile }
+
+
+

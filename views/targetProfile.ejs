@@ -6,9 +6,9 @@
         </div>
         <link rel="stylesheet" href="/stylesheets/profile.css">
         <div class="col-6 p-2">
-            <div class="inner-main">
+            <div class="inner-main home">
 
-                <div class="card" id="card">
+                <div class="card border border-bottom-0" id="card">
                     <div class="cover">
                         <img src="<%= users[0].cover_image%>" alt="">
                     </div>
@@ -28,7 +28,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body home">
                         <div class="user-data">
 
                             <label for="" class="bold">
@@ -57,14 +57,14 @@
                             </p>
                         </div>
                         <div class="d-flex">
-                            <a href="/user-dash?id=<%=users[0].id%>" class="d-flex text-dark" id="following">
+                            <a href="/profile/user-dash?id=<%=users[0].id%>" class="d-flex text-dark" id="following">
                             <p>
                                 <%= users[0].following %>
 
                                     <p class="ms-2">Following</p>
                             </p>
                         </a>
-                        <a href="/user-dash?id=<%=users[0].id%>" class="d-flex text-dark" id="follower">
+                        <a href="/profile/user-dash?id=<%=users[0].id%>" class="d-flex text-dark" id="follower">
                             <p class="ms-3">
                                 <%= users[0].followers %>
                                     <p class="ms-2">Followers</p>
@@ -74,7 +74,7 @@
                     </div>
                 </div>
 
-                <ul class="nav nav-tabs">
+                <ul class="nav nav-tabs border border-top-0">
                     <li class="nav-item w-50 text-center all-center">
                         <a class="nav-link w-100 fw-600 active" data-bs-toggle="tab" href="#Tweets">
                             <span>
@@ -104,7 +104,7 @@
                         <div class="tweet-container all-center flex-column ">
 
                             <% tweet_data.forEach((t,index)=>{ %>
-                                <div class="tweet w-100 p-3 row pt-4 border-bottom border-top">
+                                <div class="tweet w-100 p-3 row pt-4 border">
                                     <div class="col-1 p-0">
                                         <img src="<%= users[0].user_image %>" alt="" class="profile-size me-2 border">
                                     </div>
@@ -160,7 +160,7 @@
                                                                 <a class="retweet">
                                                                     <i class="fa-solid fa-retweet"
                                                                         onclick="retweetpost(this)"
-                                                                        id="k<%= t.id %>"></i>
+                                                                        id="k<%=t.id%>"></i>
                                                                     <span id="retweet<%= t.id %>">
                                                                         <%= t.tweet_retweets %>
                                                                     </span>
@@ -283,11 +283,11 @@
                                                                 <li class="col">
                                                                     <a class="like <%= t.id %>">
                                                                         <i class="fa-regular fa-heart"
-                                                                            onclick="likepost(this)"
-                                                                            id="<%= t.id %>"></i>
+                                                                            onclick="likepostrwt(this)"
+                                                                            id="rl<%= t.id %>"></i>
 
 
-                                                                        <span id="like<%= t.id %>">
+                                                                        <span id="likee<%= t.id %>">
                                                                             <%= t.tweet_likes %>
                                                                         </span>
 
@@ -434,8 +434,58 @@
                         var resSave = await save_req.json();
                         console.log(resSave.flag);
 
-                        if (resSave.flag == false) {
+                        if (resSave.flag) {
                             let likeSpan = document.querySelector("#like" + tweet_id)
+                            likeSpan.innerHTML = resSave.alllikecount
+                        }
+                    }
+
+                }
+
+                // for retweet like
+                async function likepostrwt(e) {
+                    let tweet_id = e.id
+                    console.log(tweet_id);
+                    if (e.classList.value == 'fa-regular fa-heart') {
+                        e.classList.value = 'fa-solid fa-heart text-danger';
+                        let like = true
+                        const save_req = await fetch(`/dashboard/like`, {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                data: { like, tweet_id }
+
+                            })
+                        });
+                        var resSave = await save_req.json();
+                        console.log(resSave.flag);
+
+                        if (resSave.flag == true) {
+                            let likeSpan = document.querySelector("#likee" + tweet_id)
+                            likeSpan.innerHTML = resSave.alllikecount
+                        }
+
+                    }
+                    else if (e.classList.value == 'fa-solid fa-heart text-danger') {
+                        e.classList.value = 'fa-regular fa-heart'
+                        let like = false;
+                        const save_req = await fetch(`/dashboard/like`, {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                data: { like, tweet_id }
+
+                            })
+                        });
+                        var resSave = await save_req.json();
+                        console.log(resSave.flag);
+
+                        if (resSave.flag==false) {
+                            let likeSpan = document.querySelector("#likee" + tweet_id)
                             likeSpan.innerHTML = resSave.alllikecount
                         }
                     }
@@ -452,6 +502,15 @@
 
                     document.getElementById(element).classList = "fa-solid fa-heart text-danger";
                 });
+
+
+                // for retweet likes
+                // '<%for(let i=0;i<retwt_like.length;i++){%>'
+                // userLike.push('<%=retwt_like[i].tweet_id%>');
+                // '<%}%>'
+                // userLike.forEach(element => {
+                //     document.getElementById('rl'+element).classList = "fa-solid fa-heart text-danger";
+                // });
 
 
 
@@ -476,7 +535,7 @@
                         var resSave = await save_req.json();
 
                         if (resSave.flag == true) {
-                            let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                            let retweetSpan = document.querySelector("#retweet"+tweet_id)
                             retweetSpan.innerHTML = resSave.allretweetcount
                         }
                     }
@@ -493,8 +552,8 @@
                             })
                         });
                         var resSave = await save_req.json();
-                        if (resSave.flag == false) {
-                            let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                        if (resSave.flag==false) {
+                            let retweetSpan = document.querySelector("#retweet"+tweet_id)
                             retweetSpan.innerHTML = resSave.allretweetcount
                         }
                     }
@@ -506,9 +565,9 @@
                 '<%for(let i=0;i<arrretweetid.length;i++){%>'
                 userretweet.push('<%=arrretweetid[i]%>');
                 '<%}%>'
+                console.log("user retweet",userretweet);
                 userretweet.forEach(element => {
-
-                    document.getElementById("k" + element).classList = "fa-solid fa-retweet text-success";
+                    document.getElementById('k'+element).classList = "fa-solid fa-retweet text-success";
                 });
 
                 //follow or not follow
@@ -562,7 +621,7 @@
                 let getFollowUser2 = async () => {
 
                     let targetId = `<%= users[0].id %>`;
-                    let data = await fetch(`/getFollowUserData`);
+                    let data = await fetch(`/follow`);
 
                     let ans = await data.json();
                     let fuser = [];
@@ -571,7 +630,6 @@
                     let unfollowers = ans.unfollowers;
 
                     let unfollowerIds = []
-                    console.log("🚀 ~ file: targetProfile.ejs:541 ~ getFollowUser2 ~ unfollowers:", unfollowers, targetId)
                     let myId = ans.myUserId;
                     for (const x of unfollowers) {
                         unfollowerIds.push(x.id);
