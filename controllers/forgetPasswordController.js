@@ -1,5 +1,6 @@
 const conn = require("../connection/connectdb");
 const jwt = require('jsonwebtoken')
+const util = require('util')
 // const queryExecuter = require('../queryExecute/queryExecuter')
 const express = require("express");
 const bcrypt = require("bcrypt");
@@ -8,7 +9,7 @@ const nodemailer = require("nodemailer");
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+const query = util.promisify(conn.query).bind(conn)
 const asyncHandler = require("express-async-handler");
 async function queryExecuter(query) {
     return new Promise((resolve, rejects) => {
@@ -80,6 +81,8 @@ const resetPassword = asyncHandler(async(req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, salt);
     const qry = `update  users set password = "${hashedPassword}" where email="${email}"`
     const result = await queryExecuter(qry);
+    const updtip = `update users set ip= "" where email="${email}"`;
+    await query(updtip)
     console.log("password updated");
     // res.render("dashboard")
 })

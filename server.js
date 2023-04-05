@@ -177,35 +177,16 @@ app.get("/addfollow", async (req, res) => {
 
 
 app.get('/deleteip', async (req, resp) => {
-    if (req.session) {
+    
         let userid = req.session.user_id;
         var sql11 = `update users set ip="" where id=${userid}`;
         await query(sql11);
         resp.json('ok');
-    }
+    
     
        
 
 })
-
-// try
-// app.get("/prof",async(req,res)=>{
-
-
-//     let uid = req.query.uid || 3;
-//     var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(3)`);
-//     var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
-//     var followers =[];
-//     getfollowerId.forEach(id => {
-//         followers.push(id.follower_id);
-//     });
-
-//     res.render('profile',{fuser:getuser,followers})
-// })
-
-
-
-
 
 
 

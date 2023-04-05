@@ -70,29 +70,36 @@ const loginHandler = async (req, res) => {
         var ip1 = [];
         var ips = `select ip  from twitter_clone.users where email = "${email}"`;
         var ipres = await queryExecuter(ips)
-        console.log('this is ipres');
+        console.log('this is ipres((ip result)ip of user who is trying to login)');
         console.log(ipres);
 
-        console.log(ip1);
         console.log('ip address is: ');
-
         var ip = address.ip();
         console.log(ip);
+        if (ipres[0]['ip'] != '' ) {
+            res.redirect('/forget')
+        }
+        else {
+            console.log('ip is pushed in ip1, and value of resulting ip is below');
+            ip1.push(ip)
+            var insip = `update twitter_clone.users set ip = "${ip1}" where email = "${email}"`;
+            await queryExecuter(insip);
+            console.log(ip1);
+            res.redirect('/dashboard')
+        }
 
-
-        ip1.push(ip)
-        console.log('another ip address is: ');
-        console.log(ip1);
-        console.log('ip is entered');
+        // ip1.push(ip)
+        // console.log('another ip address is: ');
+        // console.log(ip1);
+        // console.log('ip is entered');
         // if (ipres[0].ip != '' || ipres[0].length != 0) {
         //     return res.redirect('/user-login')
         // }
-        res.redirect('/dashboard')
-        
+
+
         // ip1.push(ipres[0].ip)
 
-        var insip = `update twitter_clone.users set ip = "${ip1}" where email = "${email}"`;
-        await queryExecuter(insip);
+
 
 
 
