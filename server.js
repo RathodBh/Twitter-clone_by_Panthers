@@ -9,6 +9,7 @@ const profile = require('./Routes/profile')
 const commentInfo = require('./Routes/commentInfo')
 const dashboard = require('./Routes/dashboard')
 const logout = require('./Routes/logout')
+const follow = require('./Routes/follow')
 const forgetPassword = require('./Routes/forgetPassword');
 const notification = require('./Routes/notification')
 var cookieParser = require('cookie-parser');
@@ -20,9 +21,6 @@ app.use(session({
     resave: false,
     saveUninitialized: true,
 }));
-
-
-
 
 const path = require('path');
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -37,77 +35,6 @@ const crypto = require('crypto');
 
 var query = util.promisify(conn.query).bind(conn)
 app.set('view engine','ejs')
-// const conn = require('../connection/connectdb');
-
-// const storages=multer.diskStorage({
-//     destination:(req,file,cb)=>{
-//         cb(null,"./public/uploads")`
-//     },
-//     filename:(req,file,cb)=>{
-//         console.log(file);
-//         cb(null, Date.now() +path.extname(file.originalname))
-//     }
-// })
-
-// app.post("/updateProfile",uploads.fields([{
-    
-//     name: 'cover_image', maxCount: 1
-//   }, {
-//     name: 'profile_image', maxCount: 1
-//   }]), async(req,res)=>{
-//     // const registerUser = asyncHandler(async (req, res) => {
-//         try {
-//             const arr={name,user_email,user_bio, user_dob} = req.body;
-//             // async function edit(user_name, user_email,user_bio, user_dob) {
-//                 try {
-//                     let uid = req.query.uid || 3;
-//                     const file = req.files;
-//                     var users = await query(`select user_image as dp , cover_image as cover from users where id=${uid}`);
-//                     console.log(users[0].dp);
-//                     console.log(users[0].cover);
-//                      console.log("here");
-//                      console.log(req.files);
-//                     // console.log(file.cover_image[0].filename);
-//                     // console.log(file.profile_image[0].filename);
-//                     // var cover_imgsrc =  'http://localhost:3008/uploads/' + file.cover_image[0].filename || users[0].cover ;
-//                     // var profile_imgsrc = 'http://localhost:3008/uploads/' + file.profile_image[0].filename ||  users[0].dp ;
-//                     var cover_imgsrc = req.files.cover_image;
-//                     var profile_imgsrc = req.files.profile_image;
-//                     console.log(cover_imgsrc);
-//                     console.log(profile_imgsrc);
-//                     if(cover_imgsrc){
-//                         cover_imgsrc = 'http://localhost:3008/uploads/' + file.cover_image[0].filename;
-//                     }else{
-//                         cover_imgsrc = users[0].cover;
-//                     }
-
-//                     if(profile_imgsrc ){
-//                         profile_imgsrc = 'http://localhost:3008/uploads/' + file.profile_image[0].filename
-//                     }else{
-//                         profile_imgsrc = users[0].dp 
-//                     }
-
-//                     console.log("Image uploaded")
-                    
-
-//                     await query(`update users set  bio="${user_bio}" ,birth_date="${user_dob}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id=${uid}`);
-//                     res.redirect("prof")
-//                     // const oldUser = await queryExecuter(qry1)
-//                     // res.render("dashboard", {cover_imgsrc,profile_imgsrc })
-                    
-//                 } catch (error) {
-//                     throw error;
-//                 }
-//             // }
-    
-//         } catch (error) {
-//             throw error;
-//         }
-//         var name = req.body.name;
-//     var mail = req.body.user_email;
-//     var bio = req.body.user_bio;
-//     var dob = req.body.user_dob;
-//     });
 
 // my all end points
 app.set('view engine', 'ejs')
@@ -118,8 +45,10 @@ app.use('/dashboard', dashboard)
 app.use("/profile", profile)
 app.use("/tweet", commentInfo)
 app.use("/forget", forgetPassword)
-app.use("/notification",notification)
+app.use("/follow", follow)
+app.use("/notification", notification)
 const multer = require('multer');
+const { protect } = require('./Middlewares/auth');
 
 async function queryExecuter(query) {
     return new Promise((resolve, rejects) => {
@@ -236,10 +165,8 @@ app.get("/addfollow", async (req, res) => {
     
     if (req.query.flag == 0) {
         cnt++;
-        await queryExecuter(`insert into   followers (user_id,follower_id,isdelete) values("${followerId}","${userId}","${0}");`);
-
-        await queryExecuter(`insert into  following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
-
+        await queryExecuter(`insert into followers (user_id,follower_id,isdelete) values("${followerId}","${userId}","${0}");`);
+        await queryExecuter(`insert into following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
         let a = await queryExecuter(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
         let b=await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
 
@@ -255,29 +182,56 @@ app.get("/addfollow", async (req, res) => {
             let notify_follow =  await queryExecuter(`insert into notify(user_id,target_id,notify_msg) values('${userId}','${followerId}','Unfollowing you !')`);
     }
 
-    res.send({ message: "update" });
+    return res.send({ message: "update" });
 })
 
-app.get('/getFollowUserData', async (req, res) => {
+// try
+// app.get("/prof",async(req,res)=>{
 
-    let uid = req.session.user_id;
-    var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in('${uid}')`);
+    
+//     let uid = req.query.uid || 3;
+//     var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(3)`);
+//     var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
+//     var followers =[];
+//     getfollowerId.forEach(id => {
+//         followers.push(id.follower_id);
+//     });
 
-    var getfollowerId = await queryExecuter(`select follower_id from followers where user_id='${uid}'`);
-    var followers = [];
-    getfollowerId.forEach(id => {
-        followers.push(id.follower_id);
-    });
+//     res.render('profile',{fuser:getuser,followers})
+// })
 
 
-    let notFollow = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id !='${uid}' && id not in(SELECT following_id FROM following WHERE user_id='${uid}' && following_id != '${uid}')`);
+
+
+
+
+
+// for time zone
+function calcTime(city, offset) {
+
+    // create Date object for current location
+    d = new Date();
+    
+    // convert to msec
+    // add local time zone offset
+    // get UTC time in msec
+    utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+    
+    // create new Date object for different city
+    // using supplied offset
+    nd = new Date(utc + (3600000*offset));
+    
+    // return time as a string
+    return 'The local time in ' + city + ' is ' + nd.toLocaleString();
+    
+    }
+    
+    // get Bombay time
+    // console.log(calcTime('Bombay', +5.5));
     
 
-    res.json( { fuser: getuser, followers, unfollowers:notFollow, myUserId:uid});
-    // res.render('profile',)
-})
-
-
+// for time zone end
+// try end
 app.get("*", (req, res) => {
     res.render("404")
 })
@@ -285,3 +239,5 @@ app.listen(PORT, () => {
     console.log(`I am listining on ${PORT}`);
     console.log(`CLick here http://localhost:3008/user-login`);
 })
+
+

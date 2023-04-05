@@ -21,7 +21,7 @@
 
 
     <link rel="stylesheet" href="/stylesheets/style.css">
-
+    <script type="text/javascript" src="/javascripts/tweetit.js"></script>  
     <title>Twitter | Home</title>
 
     <!-- sweet alert  -->
@@ -29,7 +29,6 @@
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
 
 </head>
-
 <body>
 
     <!-- Tweet modal  -->
@@ -137,7 +136,6 @@
                                     Tweet
                                 </a>
                             </li>
-
                         </ul>
 
                         <div class="bottom-menu dropup" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -213,49 +211,5 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal fade " id="settingsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog ">
-                        <div class="modal-content border-dark">
-                            <!-- <div class="modal-header">
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div> -->
-                            <div class="modal-body d-flex flex-column">
-                                <button type="button" class="btn btn-light " data-bs-toggle="modal" data-bs-target="#edit_profile" id="button1">
-                                    Edit Profile
-                                </button>
-                                <button type="button" class="btn btn-light" data-bs-toggle="modal"
-                                    data-bs-target="#change_password">Change Password</button>
-                                <button type="button" class="btn btn-light" onclick="logout()">Logout</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
                 
-
-
-                <script>
-                   
-async function demo(){
-    let data1= await fetch("http://localhost:3008/profile");
-   let data =await data1.json();
-   // Converting received data to JSON
-   console.log("data::::",data);
-   let udata = ``;
-
-   data.forEach(users => {
-        udata +=`
-                 <img src="${users.user_image}" alt="" class="bottom-pic me-2 border">
-                 <div class="info">
-                     <h6>${users.name}</h6>
-                    <span class="text-gray">${users.user_name}</span>
-                </div>
-        
-        `;
-   });
-   document.getElementById("status").innerHTML = udata;
-}
-demo();
-                </script>
-            </body>
-
-            </html>                

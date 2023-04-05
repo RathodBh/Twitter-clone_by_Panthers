@@ -226,7 +226,7 @@ a {
     height: 100vh;
     max-height: 100vh;
     position: sticky;
-<<<<<<< HEAD
+
     top: 0px;  
 }
 
@@ -234,9 +234,6 @@ a {
         height:500px;
         overflow-y:scroll;
     } 
-=======
-    top: 0px;
-}
 
 /* home  */
 .tweet-container .tweet {
@@ -401,5 +398,9 @@ a {
 }
 .login-now:disabled{
     opacity: 0.5
-}
->>>>>>> 8a1e7f834f7e55547e22ac3ac90a1c382615f6d2
+}.flw{
+    height:500px;
+    overflow-y:scroll;
+} 
+
+.pointer {cursor: pointer;}
