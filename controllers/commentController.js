@@ -129,9 +129,9 @@ const addTweetComment = asyncHandler(async (req, res) => {
     const q = `INSERT INTO comments(user_id,comment,tweet_id) VALUES(?,?,?)`
     await queryExec(q,[userId,comment_text,tweetId]);
       
-    const tweet_comments = `UPDATE tweets SET tweet_comments=tweet_comments + ${1} WHERE id=${tweetId}`
+    const tweet_comments = `UPDATE tweets SET tweet_comments=tweet_comments + ${1} WHERE id=?`
     
-    await queryExec(tweet_comments);
+    await queryExec(tweet_comments,[tweetId]);
 
     const all_comments = await queryExec(`SELECT u.id as user_id, u.user_name,u.name,u.user_image,c.comment,c.created_at  FROM comments as c JOIN users as u ON c.user_id = u.id WHERE c.tweet_id = '${tweetId}' ORDER BY c.created_at DESC`);
     

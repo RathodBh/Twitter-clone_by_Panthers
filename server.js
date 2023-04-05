@@ -1,7 +1,8 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+require('dotenv').config("./.env")
 const app = express();
-const PORT = 3008
+const PORT = process.env.PORT
 const {queryExec} = require('./connection/conn');
 const register = require('./Routes/register')
 const login = require('./Routes/login')
@@ -16,7 +17,7 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 app.use(cookieParser());
 app.use(session({
-    secret: "secret key",
+    secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: true,
 }));
@@ -200,8 +201,7 @@ app.get("*", (req, res) => {
     res.render("404")
 })
 app.listen(PORT, () => {
-    console.log(`I am listining on ${PORT}`);
-    console.log(`CLick here http://localhost:3008/user-login`);
-})
+    console.log(`I am listining on ${PORT},\n Click here http://localhost:3008/user-login`);
+});
 
 
