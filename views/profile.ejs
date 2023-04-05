@@ -7,7 +7,7 @@
         <link rel="stylesheet" href="/stylesheets/profile.css">
         <link rel="stylesheet" href="/stylesheets/style.css">
         <script type="text/javascript" src="/javascripts/tweetit.js"></script>
-     
+
         <div class="col-6 p-2 home ">
             <div class="inner-main ">
 
@@ -300,14 +300,14 @@
                                                                 <li class="col">
                                                                     <a class="like <%= t.id %>">
                                                                         <i class="fa-regular fa-heart"
-                                                                        onclick="likepostrwt(event,this)"
+                                                                            onclick="likepostrwt(event,this)"
                                                                             id="<%= t.id %>"></i>
                                                                         <span id="likee<%= t.id %>">
                                                                             <%= t.tweet_likes %>
                                                                         </span>
                                                                     </a>
                                                                 </li>
-                                                               
+
                                                                 <li class=" col">
                                                                     <a href="" class="chart">
                                                                         <i class="fa-solid fa-chart-simple"></i>
@@ -489,9 +489,9 @@
 
                     e.stopPropagation()
                     var tweet_id = t_id.id
-                    console.log("tweet id "+tweet_id.split(" "));
-                    var tweet_id=tweet_id.split(" ");
-                    console.log("tweet value="+tweet_id[0]);
+                    console.log("tweet id " + tweet_id.split(" "));
+                    var tweet_id = tweet_id.split(" ");
+                    console.log("tweet value=" + tweet_id[0]);
                     if (t_id.classList.value == 'fa-regular fa-heart') {
                         t_id.classList.value = 'fa-solid fa-heart text-danger';
                         let like = true
@@ -507,54 +507,7 @@
                         var resSave = await save_req.json();
 
                         if (resSave.flag == true) {
-                            let likeSpan = document.querySelector("#like"+tweet_id);
-                            likeSpan.innerHTML = resSave.alllikecount;
-                        }
-                    }
-                    else if (t_id.classList.value == 'fa-solid fa-heart text-danger') {
-                        t_id.classList.value = 'fa-regular fa-heart'
-                        let like = false;
-                        const save_req = await fetch(`/dashboard/like`, {
-                            method: "POST",
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                data: { like, tweet_id }
-                            })
-                        });
-                        var resSave = await save_req.json();
-                        if (resSave.flag==false) {
-                            let likeSpan = document.querySelector("#like"+tweet_id)
-                            likeSpan.innerHTML = resSave.alllikecount
-                        }
-                    }
-                }
-
-                async function likepostrwt(e, t_id) {
-                    console.log('e', e)
-
-                    e.stopPropagation()
-                    var tweet_id = t_id.id
-                    console.log("tweet id "+tweet_id.split(" "));
-                    var tweet_id=tweet_id.split(" ");
-                    console.log("tweet value="+tweet_id[0]);
-                    if (t_id.classList.value == 'fa-regular fa-heart') {
-                        t_id.classList.value = 'fa-solid fa-heart text-danger';
-                        let like = true
-                        const save_req = await fetch(`/dashboard/like`, {
-                            method: "POST",
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                data: { like, tweet_id }
-                            })
-                        });
-                        var resSave = await save_req.json();
-
-                        if (resSave.flag == true) {
-                            let likeSpan = document.querySelector("#likee"+tweet_id);
+                            let likeSpan = document.querySelector("#like" + tweet_id);
                             likeSpan.innerHTML = resSave.alllikecount;
                         }
                     }
@@ -572,7 +525,58 @@
                         });
                         var resSave = await save_req.json();
                         if (resSave.flag == false) {
-                            let likeSpan = document.querySelector("#likee"+tweet_id)
+                            let likeSpan = document.querySelector("#like" + tweet_id)
+                            likeSpan.innerHTML = resSave.alllikecount
+                        }
+                    }
+                }
+
+                async function likepostrwt(e, t_id) {
+                    console.log('e', e)
+
+                    e.stopPropagation()
+                    var tweet_id = t_id.id
+                    console.log("tweet id " + tweet_id.split(" "));
+                    var tweet_id = tweet_id.split(" ");
+                    console.log("tweet value=" + tweet_id[0]);
+                    if (t_id.classList.value == 'fa-regular fa-heart') {
+                        t_id.classList.value = 'fa-solid fa-heart text-danger';
+                        let like = true
+                        const save_req = await fetch(`/dashboard/like`, {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                data: { like, tweet_id }
+                            })
+                        });
+                        var resSave = await save_req.json();
+
+                        if (resSave.flag == true) {
+                            let likeSpan = document.querySelector("#likee" + tweet_id);
+                            likeSpan.innerHTML = resSave.alllikecount;
+                        }
+                    }
+                    else if (t_id.classList.value == 'fa-solid fa-heart text-danger') {
+                        t_id.classList.value = 'fa-regular fa-heart'
+                        let like = false;
+                        const save_req = await fetch(`/dashboard/like`, {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                data: { like, tweet_id }
+                            })
+                        });
+                        var resSave = await save_req.json();
+                        if (resSave.flag == false) {
+                            let likeSpan = document.querySelector("#like" + tweet_id)
+                            likeSpan.innerHTML = resSave.alllikecount
+                        }
+                        if (resSave.flag == true) {
+                            let likeSpan = document.querySelector("#like" + tweet_id)
                             likeSpan.innerHTML = resSave.alllikecount
                         }
                     }
@@ -591,11 +595,11 @@
                 // for retweet likes
                 var userLikerwt = [];
                 '<%for(let i=0;i<retwt_like.length;i++){%>'
-                    userLikerwt.push('<%=retwt_like[i].tweet_id%>');
+                userLikerwt.push('<%=retwt_like[i].tweet_id%>');
                 '<%}%>'
                 userLikerwt.forEach(element => {
                     document.getElementById(element).classList = "fa-solid fa-heart text-danger";
-                console.log("for retweet like"+userLikerwt);
+                    console.log("for retweet like" + userLikerwt);
                 });
 
 
@@ -637,7 +641,12 @@
                             })
                         });
                         var resSave = await save_req.json();
-                        if (resSave.flag) {
+
+                        if (resSave.flag == true) {
+                            let retweetSpan = document.querySelector("#retweet" + tweet_id)
+                            retweetSpan.innerHTML = resSave.allretweetcount
+                        }
+                        if (resSave.flag == false) {
                             let retweetSpan = document.querySelector("#retweet" + tweet_id)
                             retweetSpan.innerHTML = resSave.allretweetcount
                         }

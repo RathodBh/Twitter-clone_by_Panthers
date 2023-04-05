@@ -48,12 +48,12 @@ const getProfile = asyncHandler(async (req, res) => {
         let sel_tweets = `select * from tweets where user_id=${user_id} order by id DESC`;
         const all_tweet_data = await query(sel_tweets);
         // for retweet
-        let sel_retweets = `SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id=tweets.id where retweet.user_id='${user_id}'AND retweet.is_deleted='0' order by retweet.id DESC`;
+        let sel_retweets = `SELECT * FROM  retweet inner join  tweets on retweet.tweet_id=tweets.id where retweet.user_id='${user_id}'AND retweet.is_deleted='0' order by retweet.id DESC`;
         const all_retweet_data = await query(sel_retweets);
 
 
         // //for retweet 
-        // let sel_retweets = `SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id = tweets.id where retweet.user_id = '${user_id}'AND retweet.is_deleted = '0' order by retweet.id DESC`;
+        // let sel_retweets = `SELECT * FROM  retweet inner join  tweets on retweet.tweet_id = tweets.id where retweet.user_id = '${user_id}'AND retweet.is_deleted = '0' order by retweet.id DESC`;
         // const all_retweet_data = await query(sel_retweets);
 
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -168,7 +168,7 @@ const getProfile = asyncHandler(async (req, res) => {
         var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${user_id}`);
 
         for (let b = 0; b < all_retweet_data.length; b++) {
-            var twt_user = await query(`SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id=tweets.id inner join twitter_clone.users on tweets.user_id=users.id where retweet.user_id='${user_id}' AND retweet.is_deleted='0' order by retweet.id DESC `);
+            var twt_user = await query(`SELECT * FROM  retweet inner join  tweets on retweet.tweet_id=tweets.id inner join  users on tweets.user_id=users.id where retweet.user_id='${user_id}' AND retweet.is_deleted='0' order by retweet.id DESC `);
         }
 
         // for retweet likes in profile
@@ -391,12 +391,12 @@ const getTargetProfile = asyncHandler(async (req, res) => {
         var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${user_id}`);
 
         //for retweet
-        let sel_retweets = `SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id = tweets.id where retweet.user_id = '${user_id}'AND retweet.is_deleted = '0' order by retweet.id DESC`;
+        let sel_retweets = `SELECT * FROM  retweet inner join  tweets on retweet.tweet_id = tweets.id where retweet.user_id = '${user_id}'AND retweet.is_deleted = '0' order by retweet.id DESC`;
         const all_retweet_data = await query(sel_retweets);
 
 
         for (let b = 0; b < all_retweet_data.length; b++) {
-            var twt_user = await query(`SELECT * FROM twitter_clone.retweet inner join twitter_clone.tweets on retweet.tweet_id=tweets.id inner join twitter_clone.users on tweets.user_id=users.id where retweet.user_id='${user_id}' AND retweet.is_deleted='0' order by retweet.id DESC `);
+            var twt_user = await query(`SELECT * FROM  retweet inner join  tweets on retweet.tweet_id=tweets.id inner join  users on tweets.user_id=users.id where retweet.user_id='${user_id}' AND retweet.is_deleted='0' order by retweet.id DESC `);
         }
         let retwt_like=await queryExecuter(`select likes.tweet_id from retweet inner join likes on retweet.tweet_id=likes.tweet_id where likes.is_deleted='0' and retweet.is_deleted='0' and retweet.user_id='${user_id}' and likes.user_id='${user_id}'; `)
 

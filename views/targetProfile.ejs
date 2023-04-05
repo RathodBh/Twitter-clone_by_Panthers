@@ -58,18 +58,18 @@
                         </div>
                         <div class="d-flex">
                             <a href="/profile/user-dash?id=<%=users[0].id%>" class="d-flex text-dark" id="following">
-                            <p>
-                                <%= users[0].following %>
+                                <p>
+                                    <%= users[0].following %>
 
-                                    <p class="ms-2">Following</p>
-                            </p>
-                        </a>
-                        <a href="/profile/user-dash?id=<%=users[0].id%>" class="d-flex text-dark" id="follower">
-                            <p class="ms-3">
-                                <%= users[0].followers %>
-                                    <p class="ms-2">Followers</p>
-                            </p>
-                        </a>
+                                        <p class="ms-2">Following</p>
+                                </p>
+                            </a>
+                            <a href="/profile/user-dash?id=<%=users[0].id%>" class="d-flex text-dark" id="follower">
+                                <p class="ms-3">
+                                    <%= users[0].followers %>
+                                        <p class="ms-2">Followers</p>
+                                </p>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -434,7 +434,11 @@
                         var resSave = await save_req.json();
                         console.log(resSave.flag);
 
-                        if (resSave.flag) {
+                        if (resSave.flag == false) {
+                            let likeSpan = document.querySelector("#like" + tweet_id)
+                            likeSpan.innerHTML = resSave.alllikecount
+                        }
+                        if (resSave.flag == true) {
                             let likeSpan = document.querySelector("#like" + tweet_id)
                             likeSpan.innerHTML = resSave.alllikecount
                         }
@@ -552,8 +556,8 @@
                             })
                         });
                         var resSave = await save_req.json();
-                        if (resSave.flag==false) {
-                            let retweetSpan = document.querySelector("#retweet"+tweet_id)
+                        if (resSave.flag) {
+                            let retweetSpan = document.querySelector("#retweet" + tweet_id)
                             retweetSpan.innerHTML = resSave.allretweetcount
                         }
                     }

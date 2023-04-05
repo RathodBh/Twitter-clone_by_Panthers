@@ -151,7 +151,7 @@ const addTweetComment = asyncHandler(async (req, res) => {
     await queryExecuter(tweet_comments);
 
     const all_comments = await queryExecuter(`SELECT u.id as user_id, u.user_name,u.name,u.user_image,c.comment,c.created_at  FROM comments as c JOIN users as u ON c.user_id = u.id WHERE c.tweet_id = '${tweetId}' ORDER BY c.created_at DESC`);
-
+    console.log(all_comments);
     let comment_post_dates = []
     for (let x of all_comments) {
         comment_post_dates.push(getDate(x.created_at))

@@ -37,7 +37,7 @@ const getpostLike1 = asyncHandler(async (req, res) => {
             
             
             if (like_data.length == 0) {
-                console.log("if");
+                // console.log("if");
                 const ins_qrt = `INSERT INTO likes (user_id,tweet_id,created_at) values (${user_id},${data.tweet_id},NOW())`
 
                 const like_entry = await queryExecuter(ins_qrt);
@@ -54,7 +54,7 @@ const getpostLike1 = asyncHandler(async (req, res) => {
                 res.json({ flag, alllikecount })
             }
             else if (like_data.length == 1) {
-                console.log("else if");
+                // console.log("else if");
 
                 const select_tweet_like = `select tweet_likes from tweets where id=${data.tweet_id}`
                 const tweet_like_count = await queryExecuter(select_tweet_like);
@@ -74,7 +74,7 @@ const getpostLike1 = asyncHandler(async (req, res) => {
         }
 
         else {
-            console.log("Else");
+            // console.log("Else");
             const select_tweet_like = `select tweet_likes from tweets where id=${data.tweet_id}`
             const tweet_like_count = await queryExecuter(select_tweet_like);
             alllikecount = tweet_like_count[0].tweet_likes
@@ -126,7 +126,7 @@ const getpostRetweet = asyncHandler(async (req, res) => {
 
                 var allretweetcount = tweet_retweet_count[0].tweet_retweets
                 allretweetcount = allretweetcount + 1
-                console.log(allretweetcount);
+                // console.log(allretweetcount);
 
                 const up_tweets_retweet = `Update tweets Set tweet_retweets=${allretweetcount} where id=${data.tweet_id}`
                 const Update_entry_retweet = await queryExecuter(up_tweets_retweet);
@@ -208,7 +208,7 @@ const getDashboard = asyncHandler(async (req, res) => {
 
         const all_tweet_data = await queryExecuter(sel_tweets);
 
-        let folllowing = `SELECT * FROM twitter_clone.following inner join users on users.id=following.following_id inner join tweets on following.following_id=tweets.user_id where following.user_id='${user_id}' and following.isdelete='0' order by tweets.id desc;`;
+        let folllowing = `SELECT * FROM  following inner join users on users.id=following.following_id inner join tweets on following.following_id=tweets.user_id where following.user_id='${user_id}' and following.isdelete='0' order by tweets.id desc;`;
         const following_data =await queryExecuter(folllowing);
 
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -359,7 +359,7 @@ const tweetit = asyncHandler(async function (req, res) {
     // console.log(req.file.path);
     // i need to show the get request for tweet page
     let flag = false;
-    console.log("tweet");
+    // console.log("tweet");
     res.render('tweet', { flag })
 });
 

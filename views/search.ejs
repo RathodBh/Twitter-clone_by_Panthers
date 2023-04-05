@@ -12,7 +12,7 @@
 
             </div>
         </div>
-        <div class="mt-3 follow-right bg-gray p-2 border-radius-12">
+        <div class="mt-3 follow-right bg-gray p-2 border-radius-12" id="whotofolow" onload="whoToFollow()">
             <h5 class="mt-2 mb-3">Who to follow</h5>
             <div id="whotofollow">
 
@@ -20,7 +20,7 @@
 
 
 
-            <a href="" class="p-2 fs-14 text-blue">Show more</a>
+                    <a href="" class="p-2 fs-14 text-blue">Show more</a>
         </div>
         <div class="footer p-2 mt-2">
             <ul class="d-flex flex-wrap list-unstyled footer-link-container mb-0">
@@ -119,7 +119,7 @@
 <div class="my-4 d-flex justify-content-between align-items-center w-100" id="${data[i][0].id}" onclick="getTargetProfile(this)" style="cursor: pointer;">
         <div class="d-flex">
             <img src="${data[i][0].user_image}" alt="" class="profile-size me-2 border">
-            <div class="info"> 
+            <div class="info" > 
                 <h6>${data[i][0].name}</h6>
                 <span class="text-gray">@${data[i][0].user_name}</span>
             </div>
