@@ -1,4 +1,5 @@
 const express = require('express')
+// const helmet = require("helmet");
 const bodyParser = require('body-parser')
 const app = express();
 const PORT = 3008
@@ -14,6 +15,7 @@ const forgetPassword = require('./Routes/forgetPassword');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 app.use(cookieParser());
+// app.use(helmet({ contentSecurityPolicy: false, }));
 app.use(session({
     secret: "secret key",
     resave: false,
@@ -21,7 +23,6 @@ app.use(session({
 }));
 
 const path = require('path');
-app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.urlencoded({ extended: true }))
 app.use(bodyParser.json());

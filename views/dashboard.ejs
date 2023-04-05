@@ -1,8 +1,8 @@
 <%- include("menu") -%>
-    
-<div class="loader">
-    <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
-</div>
+
+    <div class="loader">
+        <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
+    </div>
     <%- include("add_comment") -%>
         <!-- main panel  -->
         <div class="col-6 px-0 border">
@@ -21,7 +21,7 @@
                         </li>
                         <li class="nav-item w-50 text-center all-center">
                             <a class="nav-link w-100 fw-600 " data-bs-toggle="tab" href="#following-home"
-                                id="yourFollowing" onclick="followingTab()">
+                                id="yourFollowing" onclick="followingTab(limit)">
                                 <span>
                                     Following
                                 </span>
@@ -46,12 +46,36 @@
             </div>
         </div>
         <script>
+            let cont = document.querySelector('something')
+
+            var limit = 1;
+            var pageCount = 1
+            let postCount = 1;
             window.addEventListener("load", function () {
                 const loader = document.querySelector(".loader");
                 loader.className += " hidden"; // class "loader hidden"
                 allClicks()
 
             });
+
+            function showData(){
+                console.log(limit);
+                    setTimeout(()=>{
+                       limit=limit+2;
+                        forYouDataLoad(limit)
+                        followingTab(limit)
+                        load(limit)
+                    },300)
+            }
+
+            window.addEventListener('scroll',()=>{
+                const {scrollHeight,scrollTop,clientHeight } = document.documentElement;
+                if(scrollTop+clientHeight>=scrollHeight){
+                    console.log("ehbf");
+                    showData()
+
+                }
+            })
 
             function allClicks() {
                 let allClicks = document.querySelectorAll(".clickComment")
@@ -148,8 +172,8 @@
                 window.location.href = (`/tweet/tweet_details/${id}`)
             }
 
-            async function forYouDataLoad() {
-                let fetchDashboard = await fetch(`/dashboard/dashboardData`);
+            async function forYouDataLoad(limit) {
+                let fetchDashboard = await fetch(`/dashboard/dashboardData/?limit=${limit}&page=${pageCount}`);
                 let ansData = await fetchDashboard.json();
 
                 let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
@@ -162,7 +186,7 @@
                     part1Data +=
                         `
                     <div onclick="test(${t.id})"
-                                            class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
+                                            class="tweet w-100 p-3 row pt-4 border-bottom border-top cp something">
                                             <div class="col-1 p-0">
                                                 <img src="${t.user_image}" alt="" class="profile-size me-2 border">
                                             </div>
@@ -305,28 +329,23 @@
 
 
                 })
-                part1.innerHTML = part1Data;
+               
+                part1.insertAdjacentHTML("beforebegin",part1Data);
                 document.querySelector("#followingShowData").innerHTML = ""
 
-                var userLike = [];
-                for (let i = 0; i < arrlikeid.length; i++) {
-                    userLike.push(arrlikeid[i]);
-                }
-                userLike.forEach(element => {
-                    document.getElementById(element).classList = "fa-solid fa-heart text-danger";
-                });
+            
 
 
-                load()
+                load(limit)
                 allClicks()
             }
 
-            forYouDataLoad()
+            forYouDataLoad(limit)
 
 
 
-            async function followingTab() {
-                let fetchDashboard = await fetch(`/dashboard/dashboardData`);
+            async function followingTab(limit) {
+                let fetchDashboard = await fetch(`/dashboard/dashboardData/?limit=${limit}&page=${pageCount}`);
                 let ansData = await fetchDashboard.json();
 
                 let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
@@ -481,9 +500,21 @@
                     }
 
                 })
-                part2.innerHTML = part2Data;
+                part2.insertAdjacentHTML("beforebegin",part2Data);
+                // part2.innerHTML = part2Data;
                 document.querySelector("#forYouPart").innerHTML = ""
 
+
+        
+
+                load(limit)
+                allClicks()
+            }
+            async function load(limit) {
+                let fetchDashboard = await fetch(`/dashboard/dashboardData/?limit=${limit}&page=${pageCount}`);
+                let ansData = await fetchDashboard.json();
+
+                let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
 
                 var userLike = [];
                 for (let i = 0; i < arrlikeid.length; i++) {
@@ -496,19 +527,6 @@
                         //console.log("Error: " + e)
                     }
                 });
-
-
-
-
-                load()
-                allClicks()
-            }
-            async function load() {
-                let fetchDashboard = await fetch(`/dashboard/dashboardData`);
-                let ansData = await fetchDashboard.json();
-
-                let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
-
 
                 var userretweet = [];
                 for (let i = 0; i < arrretweetid.length; i++) {
@@ -523,7 +541,7 @@
                 });
 
             }
-            load()
+            load(limit)
             async function retweetpost(e, t_id) {
                 e.stopPropagation();
 
@@ -581,7 +599,7 @@
                     }
                 }
 
-                load()
+                load(limit)
             }
 
 
@@ -656,5 +674,11 @@
                     })
                 }
             }
+
+
+
+         
+
+
         </script>
         <%- include("search") -%>
