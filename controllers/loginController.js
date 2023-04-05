@@ -1,5 +1,6 @@
 const conn = require("../connection/connectdb");
 const jwt = require('jsonwebtoken')
+const address = require('address')
 // const queryExecuter = require('../queryExecute/queryExecuter')
 const express = require("express");
 const bcrypt = require("bcrypt");
@@ -28,7 +29,7 @@ const loginHandler = async (req, res) => {
         let log_qry = `select * from users where email='${email}' and is_active = '1'`;
         const result = await queryExecuter(log_qry);
         if (result.length == 0) {
-            return res.render("login", { error1: true});
+            return res.render("login", { error1: true });
         } else if (result[0].isActive == "0") {
             let id = result[0].id;
             return res.render("active", {
@@ -47,7 +48,7 @@ const loginHandler = async (req, res) => {
         if (!match) {
 
             let error = true;
-            return res.render("login", { error1:true});
+            return res.render("login", { error1: true });
 
             // res.cookie('Access_token', token, { httpOnly: true })
         }
@@ -65,8 +66,36 @@ const loginHandler = async (req, res) => {
         req.session.cookie.expires = new Date(Date.now() + hour)
         req.session.cookie.maxAge = hour
 
-        return res.redirect('/dashboard')
-       
+        // done by datta
+        var ip1 = [];
+        var ips = `select ip  from twitter_clone.users where email = "${email}"`;
+        var ipres = await queryExecuter(ips)
+        console.log('this is ipres');
+        console.log(ipres);
+
+        console.log(ip1);
+        console.log('ip address is: ');
+
+        var ip = address.ip();
+        console.log(ip);
+
+
+        ip1.push(ip)
+        console.log('another ip address is: ');
+        console.log(ip1);
+        console.log('ip is entered');
+        // if (ipres[0].ip != '' || ipres[0].length != 0) {
+        //     return res.redirect('/user-login')
+        // }
+        res.redirect('/dashboard')
+        
+        // ip1.push(ipres[0].ip)
+
+        var insip = `update twitter_clone.users set ip = "${ip1}" where email = "${email}"`;
+        await queryExecuter(insip);
+
+
+
     } catch (error) {
         throw error;
     }
@@ -79,7 +108,7 @@ const loginGet = asyncHandler(async (req, res) => {
     let solve;
     let error;
     error = false;
-    res.render("login", { error1:false });
+    res.render("login", { error1: false });
 
 });
 

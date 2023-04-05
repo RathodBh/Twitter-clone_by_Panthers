@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express();
 const PORT = 3008
+const util = require('util')
 const conn = require('./connection/connectdb');
 const register = require('./Routes/register')
 const login = require('./Routes/login')
@@ -13,6 +14,7 @@ const follow = require('./Routes/follow')
 const forgetPassword = require('./Routes/forgetPassword');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+const query = util.promisify(conn.query).bind(conn)
 app.use(cookieParser());
 app.use(session({
     secret: "secret key",
@@ -160,8 +162,8 @@ app.get("/addfollow", async (req, res) => {
         await queryExecuter(`insert into followers (user_id,follower_id,isdelete) values("${followerId}","${userId}","${0}");`);
         await queryExecuter(`insert into following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
         let a = await queryExecuter(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
-        let b=await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
-        
+        let b = await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
+
     } else {
         cnt--;
         await queryExecuter(`delete from  followers  where user_id = ${followerId} AND follower_id = ${userId};`);
@@ -173,10 +175,23 @@ app.get("/addfollow", async (req, res) => {
     return res.send({ message: "update" });
 })
 
+
+app.get('/deleteip', async (req, resp) => {
+    if (req.session) {
+        let userid = req.session.user_id;
+        var sql11 = `update users set ip="" where id=${userid}`;
+        await query(sql11);
+        resp.json('ok');
+    }
+    
+       
+
+})
+
 // try
 // app.get("/prof",async(req,res)=>{
 
-    
+
 //     let uid = req.query.uid || 3;
 //     var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(3)`);
 //     var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
@@ -199,24 +214,24 @@ function calcTime(city, offset) {
 
     // create Date object for current location
     d = new Date();
-    
+
     // convert to msec
     // add local time zone offset
     // get UTC time in msec
     utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-    
+
     // create new Date object for different city
     // using supplied offset
-    nd = new Date(utc + (3600000*offset));
-    
+    nd = new Date(utc + (3600000 * offset));
+
     // return time as a string
     return 'The local time in ' + city + ' is ' + nd.toLocaleString();
-    
-    }
-    
-    // get Bombay time
-    // console.log(calcTime('Bombay', +5.5));
-    
+
+}
+
+// get Bombay time
+// console.log(calcTime('Bombay', +5.5));
+
 
 // for time zone end
 // try end
