@@ -67,20 +67,22 @@
             }
 
             var totTimeLike = []
-            function likeCounter(){
+            function likeCounter() {
                 totTimeLike.push(new Date().getTime())
-                if(totTimeLike.length > 2){
-                    if(parseInt(totTimeLike[totTimeLike.length-1]) - parseInt(totTimeLike[totTimeLike.length - 2]) < 1000){
+                if (totTimeLike.length > 2) {
+                    if (parseInt(totTimeLike[totTimeLike.length - 1]) - parseInt(totTimeLike[totTimeLike.length - 2]) < 1000) {
                         totTimeLike = []
                         return false
                     }
                 }
                 return true
             }
+
             async function likepost(e, t_id) {
+
                 e.stopPropagation()
                 let is_true = await likeCounter()
-                if(is_true == false){
+                if (is_true == false) {
                     return false
                 }
                 let tweet_id = t_id.id
@@ -88,42 +90,47 @@
                 if (t_id.classList.contains('fa-regular')) {
                     t_id.classList.value = 'fa-solid fa-heart text-danger';
                     let like = true
-                    const save_req = await fetch(`/dashboard/like`, {
-                        method: "POST",
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            data: { like, tweet_id }
-                        })
-                    });
-                    var resSave = await save_req.json();
+                    if (t_id.classList.contains("fa-solid")) {
+                        const save_req = await fetch(`/dashboard/like`, {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                data: { like, tweet_id }
+                            })
+                        });
+                        var resSave = await save_req.json();
 
-                    if (resSave.flag == true) {
-                        let likeSpan = document.querySelector("#like" + tweet_id)
-                        likeSpan.innerHTML = resSave.alllikecount
+                        if (resSave.flag == true) {
+                            let likeSpan = document.querySelector("#like" + tweet_id)
+                            likeSpan.innerHTML = resSave.alllikecount;
+                        }
                     }
+
                 }
                 else if (t_id.classList.value == 'fa-solid fa-heart text-danger') {
                     t_id.classList.value = 'fa-regular fa-heart'
                     let like = false;
-                    const save_req = await fetch(`/dashboard/like`, {
-                        method: "POST",
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            data: { like, tweet_id }
-                        })
-                    });
-                    var resSave = await save_req.json();
-                    if (resSave.flag == false) {
-                        let likeSpan = document.querySelector("#like" + tweet_id)
-                        likeSpan.innerHTML = resSave.alllikecount
-                    }
-                    if (resSave.flag == true) {
-                        let likeSpan = document.querySelector("#like" + tweet_id)
-                        likeSpan.innerHTML = resSave.alllikecount
+                    if (t_id.classList.contains("fa-regular")) {
+                        const save_req = await fetch(`/dashboard/like`, {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                data: { like, tweet_id }
+                            })
+                        });
+                        var resSave = await save_req.json();
+                        if (resSave.flag == false) {
+                            let likeSpan = document.querySelector("#like" + tweet_id)
+                            likeSpan.innerHTML = resSave.alllikecount
+                        }
+                        if (resSave.flag == true) {
+                            let likeSpan = document.querySelector("#like" + tweet_id)
+                            likeSpan.innerHTML = resSave.alllikecount
+                        }
                     }
                 }
             }
@@ -347,7 +354,7 @@
                 let fetchDashboard = await fetch(`/dashboard/dashboardData`);
                 let ansData = await fetchDashboard.json();
 
-                let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid,userID } = ansData;
+                let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid, userID } = ansData;
 
                 let part2 = document.querySelector("#followingShowData");
                 let part2Data = '';
@@ -473,7 +480,7 @@
                                                 <ul class="dropdown-menu">
                                                     ${userID != t.user_id ?
 
-following_data.includes(t.user_id) ? `<li class="d-flex">
+                                following_data.includes(t.user_id) ? `<li class="d-flex">
 <a class="dropdown-item" onclick="followProp(event,'${t.user_id}','1')" ><i
     class="fa-solid fa-user-minus me-2" ></i><span id="prop${t.user_id}"> Unfollow</span> <span
         class="text-blue">@${t.user_name}</span>
@@ -485,7 +492,7 @@ following_data.includes(t.user_id) ? `<li class="d-flex">
     <span id="prop${t.user_id}"> Follow</span><span class="text-blue">@${t.user_name}</span>
 </a>
 </li>`
-: ""}
+                                : ""}
                                                     
     
                                                     <li class="d-flex">
@@ -605,24 +612,36 @@ following_data.includes(t.user_id) ? `<li class="d-flex">
                 load()
             }
 
+            // document.querySelector("#comment_area").addEventListener("input",(e)=>{
+
+            // })
 
             let form = document.querySelector('#addCommentForm')
             form.addEventListener('submit', async (e) => {
                 e.preventDefault()
-                let data = await fetch(`/tweet/tweet_comment`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        tweetId: document.querySelector("#tweetId").value,
-                        comment_text: document.querySelector("#comment_area").value
+                if (document.querySelector("#comment_area").value == "") {
+                            ToastBlank.fire({
+                                icon: 'warning',
+                                title: 'Please enter a comment',
+
+                            })
+                } else {
+                    let data = await fetch(`/tweet/tweet_comment`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            tweetId: document.querySelector("#tweetId").value,
+                            comment_text: document.querySelector("#comment_area").value
+                        })
                     })
-                })
-                let ans = await data.json();
-                allCommentsLen = ans.len;
-                var comment_section = document.querySelector("#allComment" + document.querySelector("#tweetId").value);
-                comment_section.innerHTML = allCommentsLen
+                    let ans = await data.json();
+                    allCommentsLen = ans.len;
+                    var comment_section = document.querySelector("#allComment" + document.querySelector("#tweetId").value);
+                    comment_section.innerHTML = allCommentsLen
+                }
+
                 // loadComments()
             })
 
