@@ -74,7 +74,7 @@ app.post("/updateProfile", uploads.fields([{
         try {
             let uid = req.session.user_id
             const file = req.files;
-            var users = await queryExec(`select user_image as dp , cover_image as cover from users where id=${uid}`);
+            var users = await queryExec(`select user_image as dp , cover_image as cover from users where id=?`,[uid]);
 
             var cover_imgsrc = req.files.cover_image;
             var profile_imgsrc = req.files.profile_image;
@@ -92,7 +92,7 @@ app.post("/updateProfile", uploads.fields([{
 
 
 
-            await queryExec(`update users set name="${name}" , bio="${user_bio}" ,birth_date="${user_dob}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id=${uid}`);
+            await queryExec(`update users set name=? , bio=? ,birth_date=? ,cover_image=?, user_image=? WHERE id=?`,[name,user_bio,user_dob,cover_imgsrc,profile_imgsrc,uid]);
 
             res.redirect('/profile/user')
 
@@ -109,9 +109,8 @@ app.post("/updateProfile", uploads.fields([{
 
 app.get("/srch?", async (req, res) => {
     var srchval = req.query.val;
-    var sql = `SELECT id,name,user_name,user_image FROM  users where user_name like "%${srchval}%" or name like "%${srchval}%" `;
-    var matchedResult = await queryExec(sql);
-    console.log(matchedResult);
+    var sql = `SELECT id,name,user_name,user_image FROM twitter_clone.users where user_name like ? or name like ? `;
+    var matchedResult = await queryExec(sql,["%"+srchval+"%","%"+srchval+"%"]);
     res.json(matchedResult)
 
 })
@@ -123,17 +122,17 @@ app.get("/addfollow", async (req, res) => {
     let followerId = req.query.followerId
     if (req.query.flag == 0) {
         cnt++;
-        await queryExec(`insert into followers (user_id,follower_id,isdelete) values("${followerId}","${userId}","${0}");`);
-        await queryExec(`insert into following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
-        let a = await queryExec(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
-        let b=await queryExec(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
+        await queryExec(`insert into followers (user_id,follower_id,isdelete) values(?,?,"${0}");`,[followerId,userId]);
+        await queryExec(`insert into following (user_id,following_id,isdelete) values(?,?,"${0}")`,[userId,followerId]);
+        let a = await queryExec(`UPDATE users SET following = following + ${cnt} WHERE id = ?`,[userId]);
+        let b=await queryExec(`UPDATE users SET followers = followers + ${cnt} WHERE id = ?`,[followerId]);
         
     } else {
         cnt--;
-        await queryExec(`delete from  followers  where user_id = ${followerId} AND follower_id = ${userId};`);
-        await queryExec(`delete from  following  where user_id = ${userId} AND following_id = ${followerId} ;`);
-        await queryExec(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
-        await queryExec(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
+        await queryExec(`delete from  followers  where user_id = ? AND follower_id = ?`,[followerId,userId]);
+        await queryExec(`delete from  following  where user_id = ? AND following_id = ? `,[userId,followerId]);
+        await queryExec(`UPDATE users SET following = following + ${cnt} WHERE id = ?`,[userId]);
+        await queryExec(`UPDATE users SET followers = followers + ${cnt} WHERE id = ?`,[followerId]);
     }
 
     return res.send({ message: "update" });

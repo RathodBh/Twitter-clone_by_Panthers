@@ -66,8 +66,8 @@ const asyncHandler = require("express-async-handler");
 const loginHandler = async (req, res) => {
     try {
         const { email, password } = req.body;
-        let query = `SELECT id,password,is_active FROM users where email="${email}";`;
-        var user_login_details = await queryExec(query);
+        let query = `SELECT id,password,is_active FROM users where email=?;`;
+        var user_login_details = await queryExec(query,[email]);
         if (user_login_details.length == 0) {
             res.send("WRONG EMAIL OR register first")
         } else if (user_login_details[0].is_active == "0") {
@@ -76,14 +76,14 @@ const loginHandler = async (req, res) => {
         } else {
             var user_password = await bcrypt.compare(password, user_login_details[0].password)
             if (!user_password) {
-                var loginAttemptQuery = `select login_attempts from users where email = "${email}"`;
-                var loginAttemptresult = await queryExec(loginAttemptQuery);
+                var loginAttemptQuery = `select login_attempts from users where email = ?`;
+                var loginAttemptresult = await queryExec(loginAttemptQuery,[email]);
                 var last_login_attempt_value = Number(loginAttemptresult[0].login_attempts);
                 if (last_login_attempt_value < 3) {
                     var increment_login_attempts = ++last_login_attempt_value;
                     let remainingAttempts = 3 - last_login_attempt_value;
-                    var update_login_attempts = `update users set login_attempts = ${increment_login_attempts}, login_time = NOW() where email = "${email}"`;
-                    var update_result = await queryExec(update_login_attempts);
+                    var update_login_attempts = `update users set login_attempts = ${increment_login_attempts}, login_time = NOW() where email =?`;
+                    var update_result = await queryExec(update_login_attempts,[email]);
                     if (remainingAttempts > 0) {
                         // 
                         res.render('login', {error1:`You have entered wrong password. Now only ${remainingAttempts} attempts remaining.`})
@@ -94,8 +94,8 @@ const loginHandler = async (req, res) => {
                     res.render('login', {error1:`You are blocked for next 2 hours`});
                 }
             } else {
-                var login_time = `select cast((select DATE_ADD((select login_time from users where email = "${email}"),interval 2 hour) as accountActivationTime) as time(0)) as loginActivationTime;`;
-                var login_time_result = await queryExec(login_time);
+                var login_time = `select cast((select DATE_ADD((select login_time from users where email = ?),interval 2 hour) as accountActivationTime) as time(0)) as loginActivationTime;`;
+                var login_time_result = await queryExec(login_time,[email]);
                 var loginActivationTime = login_time_result[0].loginActivationTime;
                 var date;
                 date = new Date();
@@ -109,11 +109,11 @@ const loginHandler = async (req, res) => {
                 var seconds = date.getSeconds();
                 var localTime = hours + ":" + minutes + ":" + seconds;
 
-                let curAtt = await queryExec(`SELECT login_attempts FROM users WHERE email ='${email}'`)
+                let curAtt = await queryExec(`SELECT login_attempts FROM users WHERE email =?`,[email])
                 if (curAtt[0].login_attempts >= 3) {
                     if (loginActivationTime < localTime) {
-                        let resetLoginAttempts = `update users set login_attempts = 0 where email = "${email}"`;
-                        let resetLoginAttemptsResult = await queryExec(resetLoginAttempts);
+                        let resetLoginAttempts = `update users set login_attempts = 0 where email = ?`;
+                        let resetLoginAttemptsResult = await queryExec(resetLoginAttempts,[email]);
                         let payload = { email };
                         const session_token = jwt.sign(payload, "JWT_SECRET");
                         req.session.user_id = user_login_details[0].id;
@@ -140,8 +140,8 @@ const loginHandler = async (req, res) => {
                     }
                 }
                 else {
-                    let resetLoginAttempts = `update users set login_attempts = 0 where email = "${email}"`;
-                    let resetLoginAttemptsResult = await queryExec(resetLoginAttempts);
+                    let resetLoginAttempts = `update users set login_attempts = 0 where email = ?`;
+                    let resetLoginAttemptsResult = await queryExec(resetLoginAttempts,[email]);
                     let payload = { email };
                     const session_token = jwt.sign(payload, "JWT_SECRET");
                     req.session.user_id = user_login_details[0].id;
@@ -176,8 +176,8 @@ const loginGet = asyncHandler(async (req, res) => {
 const getEmailCheckLogin = asyncHandler(async (req, res) => {
     //i need to show the post request for checkEmail fetch request
     const { data } = req.body
-    const qry1 = `select * from users where email='${data}'`
-    const oldUser = await queryExec(qry1)
+    const qry1 = `select * from users where email=?`
+    const oldUser = await queryExec(qry1,[data])
     if (oldUser.length == 0) {
         let isNew = true
         res.json({ isNew });

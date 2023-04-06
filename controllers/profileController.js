@@ -180,7 +180,7 @@ const updateProfilepoint = asyncHandler(async (req, res) => {
         try {
             let uid = req.query.uid || 3;
             const file = req.files;
-            var users = await queryExec(`select user_image as dp , cover_image as cover from users where id=${uid}`);
+            var users = await queryExec(`select user_image as dp , cover_image as cover from users where id=?`,[uid]);
 
             var cover_imgsrc = req.files.cover_image;
             var profile_imgsrc = req.files.profile_image;
@@ -200,7 +200,7 @@ const updateProfilepoint = asyncHandler(async (req, res) => {
 
 
 
-            await queryExec(`update users set  bio="${user_bio}" ,birth_date="${user_dob}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id=${uid}`);
+            await queryExec(`update users set  bio=? ,birth_date=? ,cover_image=?, user_image=? WHERE id=?`,[user_bio,user_dob,cover_imgsrc,profile_imgsrc,uid]);
             res.redirect("prof")
 
 
@@ -217,7 +217,6 @@ const updateProfilepoint = asyncHandler(async (req, res) => {
 
 const getUserInfo = asyncHandler(async (req, res) => {
     let userId = req.session.user_id;
-
     let user = await queryExec(`SELECT name,user_name,user_image from users WHERE id = ${userId}`)
     res.json({ name: user[0].name, username: user[0].user_name, user_img: user[0].user_image })
 })
@@ -259,8 +258,8 @@ const getTargetProfile = asyncHandler(async (req, res) => {
         if (user_id == req.session.user_id) {
             return res.redirect('/profile/user')
         }
-        let sel_tweets = `select * from tweets where user_id=${user_id} order by id DESC`;
-        const all_tweet_data = await queryExec(sel_tweets);
+        let sel_tweets = `select * from tweets where user_id=? order by id DESC`;
+        const all_tweet_data = await queryExec(sel_tweets,[user_id]);
 
 
 
@@ -407,16 +406,16 @@ const fflist = asyncHandler(async (req, res) => {
     if(req.query.id){
         uid = req.query.id;
     }
-    var getuser = await queryExec(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${uid})`);
-    var curuser = await queryExec(`select id,name,user_name,user_image from users where id = '${uid}'`);
-    var getfollowerId = await queryExec(`select follower_id from followers where user_id =${uid}`);
+    var getuser = await queryExec(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(?)`,[uid]);
+    var curuser = await queryExec(`select id,name,user_name,user_image from users where id = ?`,[uid]);
+    var getfollowerId = await queryExec(`select follower_id from followers where user_id =?`,[uid]);
     var followers = [];
     getfollowerId.forEach(id => {
         followers.push(id.follower_id);
     });
-    var following = await queryExec(`select users.id,users.name,users.user_name,users.user_image from users INNER join following on users.id = following.following_id where following.user_id = '${uid}'`)
+    var following = await queryExec(`select users.id,users.name,users.user_name,users.user_image from users INNER join following on users.id = following.following_id where following.user_id = ?`,[uid])
 
-    var follower = await queryExec(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.follower_id where followers.user_id = ${uid}`)
+    var follower = await queryExec(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.follower_id where followers.user_id = ?`,[uid])
 
     res.render('follow_following', { fuser: getuser, followers, following, follower, userInfo: curuser[0] })
 })

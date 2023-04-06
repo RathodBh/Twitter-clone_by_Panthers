@@ -21,7 +21,7 @@
 
 
     <link rel="stylesheet" href="/stylesheets/style.css">
-    <script type="text/javascript" src="/javascripts/tweetit.js"></script>  
+    <script type="text/javascript" src="/javascripts/tweetit.js"></script>
     <title>Twitter | Home</title>
 
     <!-- sweet alert  -->
@@ -29,13 +29,14 @@
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
 
 </head>
+
 <body>
 
     <!-- Tweet modal  -->
-    <div class="modal  fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal  fade" id="tweetModal" tabindex="-1" aria-labelledby="tweetModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content ps-3 pb-2">
-                <form action="/dashboard/tweet" method="post" enctype="multipart/form-data">
+                <form action="/dashboard/tweet" method="post" enctype="multipart/form-data" id="tweetSubmit">
                     <div class="d-flex p-2">
                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                     </div>
@@ -87,7 +88,20 @@
         </div>
     </div>
     <!-- end modal working -->
+    <script>
+        document.querySelector('#sub_btn').addEventListener('click', function (e) {
+            e.preventDefault();
+            if (document.querySelector("textarea.tweet-comment-box").value == "") {
+                ToastBlank.fire({
+                    icon: 'warning',
+                    title: 'Please enter a Tweet',
 
+                })
+            } else {
+                document.querySelector("#tweetSubmit").submit()
+            }
+        })
+    </script>
 
     <div class="wrapper">
 
@@ -132,7 +146,7 @@
                             <li class="">
                                 <a href=""
                                     class="menu-link bg-blue text-light text-center btn rounded-pill w-100 btn-tweet"
-                                    data-bs-toggle="modal" data-bs-target="#myModal">
+                                    data-bs-toggle="modal" data-bs-target="#tweetModal">
                                     Tweet
                                 </a>
                             </li>
@@ -187,7 +201,6 @@
                         document.querySelector("#userDataId").innerText = ans.username
                     }
 
-                   
                 </script>
 
                 <div class="modal fade " id="settingsModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -210,5 +223,3 @@
                         </div>
                     </div>
                 </div>
-
-                
