@@ -1,5 +1,5 @@
 const {queryExec} = require('../connection/conn');
-// const queryExecuter = require('../queryExecute/queryExecuter')
+// const queryExec = require('../queryExecute/queryExec')
 const express = require('express')
 const app = express();
 const asyncHandler = require("express-async-handler");

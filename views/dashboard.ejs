@@ -66,8 +66,23 @@
                 })
             }
 
+            var totTimeLike = []
+            function likeCounter(){
+                totTimeLike.push(new Date().getTime())
+                if(totTimeLike.length > 2){
+                    if(parseInt(totTimeLike[totTimeLike.length-1]) - parseInt(totTimeLike[totTimeLike.length - 2]) < 1000){
+                        totTimeLike = []
+                        return false
+                    }
+                }
+                return true
+            }
             async function likepost(e, t_id) {
                 e.stopPropagation()
+                let is_true = await likeCounter()
+                if(is_true == false){
+                    return false
+                }
                 let tweet_id = t_id.id
 
                 if (t_id.classList.contains('fa-regular')) {

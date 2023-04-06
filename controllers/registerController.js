@@ -1,6 +1,6 @@
 const {queryExec} = require('../connection/conn');
 const jwt = require('jsonwebtoken')
-// const queryExecuter = require('../queryExecute/queryExecuter')
+// const queryExec = require('../queryExecute/queryExec')
 const express = require('express')
 const crypto = require('crypto');
 const app = express();

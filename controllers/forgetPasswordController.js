@@ -15,9 +15,10 @@ const getForgetPasswordPage = asyncHandler(async (req, res) => {
     res.render("forgetPassword")
 
 });
-
+var emailID = ""
 const getMail = asyncHandler(async (req, res)=>{
     var mail = req.query.val;
+    emailID = mail
     var otp = Math.floor(100000 + Math.random() * 900000);
     var mailExistStatus;
     var dbMailsQry = `select email from  users;`;
@@ -44,7 +45,7 @@ const getMail = asyncHandler(async (req, res)=>{
     }).then(info => {
         // console.log({ info });
     }).catch(console.error);
-    var sql = `update  users set otp= "${otp}" where id="39";`;
+    var sql = `update users set otp= "${otp}" where email='${emailID}'`;
     var result = await queryExec(sql);
     res.json({ result, mailExistStatus });
 })
@@ -52,8 +53,8 @@ const getMail = asyncHandler(async (req, res)=>{
 
 const getOtp = asyncHandler(async (req, res) => {
     var otp = req.query.otp;
-    var sql = `select otp from  users where id="39";`;
-    var result = await queryExec(sql);
+    var sql = `select otp from  users where email=?`;
+    var result = await queryExec(sql,[emailID]);
     if (otp == result[0].otp) {
         res.json({ verified: true })
     } else {
@@ -63,12 +64,12 @@ const getOtp = asyncHandler(async (req, res) => {
 
 const resetPassword = asyncHandler(async(req, res) => {
     var newPassword = req.query.newPassword;
-    var email = req.query.email;
+    // var email = req.query.email;
     const salt = await bcrypt.genSalt(15);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
-    const qry = `update  users set password = "${hashedPassword}" where email="${email}"`
-    const result = await queryExec(qry);
-    // res.render("dashboard")
+    const qry = `update users set password = ? where email=?`
+    const result = await queryExec(qry,[hashedPassword,emailID]);
+    res.json({resetPassword: true})
 })
 
 
