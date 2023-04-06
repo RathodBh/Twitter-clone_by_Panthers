@@ -10,6 +10,7 @@ const con = createPool({
 
 
 let queryExec = async (q, param = "") => {
+    
     let [res] = await con.execute(q, param);
     return res;
 }

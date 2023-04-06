@@ -1,6 +1,6 @@
-<!-- right panel  -->
-<div class="col-3 right">
-    <div class="inner-right h-100 ">
+<!-- right panel  offset-lg-0 offset-md-0 offset-sm-4-->
+<div class="col-lg-3 col-md-3 col-sm-8 col-12 d-md-block d-sm-none d-none right" id="searchPage">
+    <div class="inner-right h-100 w-100 ">
         <div class="search-box position-relative">
             <input type="search" class="rounded-pill w-100" placeholder="Search Twitter" oninput=search()
                 id="searchInput">
@@ -12,7 +12,7 @@
 
             </div>
         </div>
-        <div class="mt-3 follow-right bg-gray p-2 border-radius-12" id="whotofolow" onload="whoToFollow()">
+        <div class="mt-3 follow-right bg-gray p-2 border-radius-12" onload="whoToFollow()">
             <h5 class="mt-2 mb-3">Who to follow</h5>
             <div id="whotofollow">
 
@@ -232,7 +232,7 @@
                             <h6>${sql.name}</h6>
                             <span class="text-gray">@${sql.user_name}</span>
                         </a>
-                        <div class="mt-1">
+                        <div class="mt-1 searchFollow">
                             ${(!unfollowersIds.includes(sql.id)) ? `<div id="f${sql.id}" onclick="follow('${sql.id}',1)" class="followButton btn btn-light rounded-pill px-3 border-dark" >Unfollow</div>` : `<div id="f${sql.id}" onclick="follow('${sql.id}',0)" class="followButton btn btn-dark rounded-pill px-3" >Follow</div>`}
                         </div>
                     </div>
@@ -245,6 +245,40 @@
     }
 
     getFollowUser();
+
+
+    window.onload = async () => {
+
+        //LOAD THE BOTTOM USER INFORMATION
+        let userData = await fetch("/profile/getUserData");
+        let ans = await userData.json();
+
+        document.querySelector("#status img").setAttribute("src", ans.user_img);
+        document.querySelector("#statusMobile").setAttribute("src", ans.user_img);
+        document.querySelector("#tweetUserImg").setAttribute("src", ans.user_img);
+        document.querySelector("#status h6").innerText = ans.name
+        document.querySelector("#status span").innerText = ans.username
+        document.querySelector("#userDataId").innerText = ans.username
+
+
+
+        // RESPONSIVE SEARCH 
+        var searchPageData = document.getElementById("searchPage").innerHTML;
+        resizeSize();
+        function resizeSize() {
+            if (window.innerWidth <= 768) {
+                document.getElementById("searchPageModalContent").innerHTML = searchPageData;
+                document.getElementById("searchPage").innerHTML = "";
+            } else {
+                document.getElementById("searchPage").innerHTML = searchPageData;
+                document.getElementById("searchPageModalContent").innerHTML = "";
+            }
+        }
+        window.addEventListener("resize", () => {
+            resizeSize();
+        })
+    }
+
 
 </script>
 </body>

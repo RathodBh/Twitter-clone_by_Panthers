@@ -228,6 +228,31 @@ form,.user {
 .modal-dialog {
     min-width: 1167px;
 }
+@media screen and (max-width: 1167px) {
+    .modal-dialog {
+        min-width: 90vw !important;
+        max-width: 90vw !important;
+    }
+}
+@media screen and (max-width: 887px) {
+    .modal-dialog {
+        min-width: 650px !important;
+        max-width: 650px !important;
+    }
+}
+@media screen and (max-width: 650px) {
+    .modal{
+        display: grid !important;
+        place-items: center !important;
+    }
+    .modal-dialog {
+        min-width: 95vw !important;
+        max-width: 95vw !important;
+    }
+    #login form,#signup form {
+        padding: 1rem 0.5rem;
+    }
+}
 .mySwiper img{
     height: 50vh;
     width:100%;

@@ -102,9 +102,9 @@ const getpostRetweet = asyncHandler(async (req, res) => {
 
 
             if (like_data.length == 0) {
-                const ins_qrt = `INSERT INTO retweet (user_id,tweet_id,created_at) values (?,?,NOW())`
+                const ins_qrt = `INSERT INTO retweet (user_id,tweet_id,created_at) values(?,?,NOW())`
 
-                const like_entry = await queryExec(ins_qrt[user_id,data.tweet_id]);
+                const like_entry = await queryExec(ins_qrt,[user_id,data.tweet_id]);
 
                 const select_retweet = `select tweet_retweets from tweets where id=?`
                 const tweet_retweet_count = await queryExec(select_retweet,[data.tweet_id]);
