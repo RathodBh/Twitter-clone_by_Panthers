@@ -67,7 +67,7 @@ const resetPassword = asyncHandler(async(req, res) => {
     // var email = req.query.email;
     const salt = await bcrypt.genSalt(15);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
-    const qry = `update users set password = ? where email=?`
+    const qry = `update users set password = ?, login_attempts='0' where email= ?`
     const result = await queryExec(qry,[hashedPassword,emailID]);
     res.json({resetPassword: true})
 })
