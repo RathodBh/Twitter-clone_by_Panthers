@@ -53,8 +53,8 @@ const getMail = asyncHandler(async (req, res)=>{
 
 const getOtp = asyncHandler(async (req, res) => {
     var otp = req.query.otp;
-    var sql = `select otp from  users where email='${emailID}'`;
-    var result = await queryExec(sql);
+    var sql = `select otp from  users where email=?`;
+    var result = await queryExec(sql,[emailID]);
     if (otp == result[0].otp) {
         res.json({ verified: true })
     } else {
@@ -63,14 +63,13 @@ const getOtp = asyncHandler(async (req, res) => {
 })
 
 const resetPassword = asyncHandler(async(req, res) => {
-    console.log("hoi");
     var newPassword = req.query.newPassword;
-    var email = req.query.email;
+    // var email = req.query.email;
     const salt = await bcrypt.genSalt(15);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
-    const qry = `update  users set password = "${hashedPassword}" where email="${email}"`
-    const result = await queryExec(qry);
-    res.render("login", {error1:""})
+    const qry = `update users set password = ? where email=?`
+    const result = await queryExec(qry,[hashedPassword,emailID]);
+    res.json({resetPassword: true})
 })
 
 
