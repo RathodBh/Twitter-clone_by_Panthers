@@ -133,7 +133,6 @@
         document.getElementById("addHere").innerHTML = user_details;
     }
     async function getTargetProfile(e) {
-        // console.log(e.id);
         const save_req = await fetch(`/profile/user/search/?id=${e.id}`);
         const data = await save_req.json();
         location.href = `/profile/user/${e.id}`;
@@ -144,7 +143,6 @@
 
     async function follow(follower_id, flag) {
         if (flag == 0) {
-            // console.log("Unfollow");
             await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
             document.getElementById(`f${follower_id}`).innerHTML = "Unfollow";
             document.getElementById(`f${follower_id}`).setAttribute("onclick", `follow(${follower_id},1)`);
@@ -152,8 +150,6 @@
             document.getElementById(`f${follower_id}`).style.color = "black";
 
         } else {
-            // console.log("Follow");
-
             Swal.fire({
                 title: 'Do you want to Unfollow?',
                 text: "",

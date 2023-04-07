@@ -1,8 +1,8 @@
 <%- include("menu") -%>
-    
-<div class="loader">
-    <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
-</div>
+
+    <div class="loader">
+        <img src="/assets/images/twitter-rise.gif" style="border-radius: 50%;" alt="Loading" />
+    </div>
     <%- include("add_comment") -%>
         <!-- main panel  -->
         <div class="col-6 px-0 border">
@@ -68,8 +68,9 @@
 
             async function likepost(e, t_id) {
                 e.stopPropagation()
-                let tweet_id = t_id.id
-
+                var tweet_id = t_id.id
+                console.log("tweet id " + tweet_id.split(" "));
+                    var tweet_id = tweet_id.split(" ");
                 if (t_id.classList.contains('fa-regular')) {
                     t_id.classList.value = 'fa-solid fa-heart text-danger';
                     let like = true
@@ -152,7 +153,7 @@
                 let fetchDashboard = await fetch(`/dashboard/dashboardData`);
                 let ansData = await fetchDashboard.json();
 
-                let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
+                let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid, userID } = ansData;
 
 
                 let part1 = document.querySelector("#forYouPart");
@@ -277,18 +278,21 @@
                                                     •••
                                                 </a>
                                                 <ul class="dropdown-menu">
-                                                    ${following_data.includes(t.user_id) ? `<li class="d-flex">
+                                                    ${userID != t.user_id ?
+
+                            following_data.includes(t.user_id) ? `<li class="d-flex">
                             <a class="dropdown-item" onclick="followProp(event,'${t.user_id}','1')" ><i
                                 class="fa-solid fa-user-minus me-2" ></i><span id="prop${t.user_id}"> Unfollow</span> <span
                                     class="text-blue">@${t.user_name}</span>
-
+                                    
                             </a>
                         </li>` : `<li class="d-flex">
                             <a class="dropdown-item" onclick="followProp(event,'${t.user_id}','0')"><i
                                 class="fa-solid fa-user-plus me-2" ></i>
                                 <span id="prop${t.user_id}"> Follow</span><span class="text-blue">@${t.user_name}</span>
                             </a>
-                        </li>`}
+                        </li>`
+                            : ""}
                                                     
     
                                                     <li class="d-flex">
@@ -329,7 +333,7 @@
                 let fetchDashboard = await fetch(`/dashboard/dashboardData`);
                 let ansData = await fetchDashboard.json();
 
-                let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
+                let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid,userID } = ansData;
 
                 let part2 = document.querySelector("#followingShowData");
                 let part2Data = '';
@@ -453,18 +457,21 @@
                                                     •••
                                                 </a>
                                                 <ul class="dropdown-menu">
-                                                    ${following_data.includes(t.user_id) ? `<li class="d-flex">
-                            <a class="dropdown-item" onclick="followProp(event,'${t.user_id}','1')" ><i
-                                class="fa-solid fa-user-minus me-2" ></i><span id="prop${t.user_id}"> Unfollow</span> <span
-                                    class="text-blue">@${t.user_name}</span>
+                                                    ${userID != t.user_id ?
 
-                            </a>
-                        </li>` : `<li class="d-flex">
-                            <a class="dropdown-item" onclick="followProp(event,'${t.user_id}','0')"><i
-                                class="fa-solid fa-user-plus me-2" ></i>
-                                <span id="prop${t.user_id}"> Follow</span><span class="text-blue">@${t.user_name}</span>
-                            </a>
-                        </li>`}
+following_data.includes(t.user_id) ? `<li class="d-flex">
+<a class="dropdown-item" onclick="followProp(event,'${t.user_id}','1')" ><i
+    class="fa-solid fa-user-minus me-2" ></i><span id="prop${t.user_id}"> Unfollow</span> <span
+        class="text-blue">@${t.user_name}</span>
+
+</a>
+</li>` : `<li class="d-flex">
+<a class="dropdown-item" onclick="followProp(event,'${t.user_id}','0')"><i
+    class="fa-solid fa-user-plus me-2" ></i>
+    <span id="prop${t.user_id}"> Follow</span><span class="text-blue">@${t.user_name}</span>
+</a>
+</li>`
+: ""}
                                                     
     
                                                     <li class="d-flex">
@@ -613,13 +620,11 @@
             async function followProp(e, follower_id, flag) {
                 e.stopPropagation()
                 if (flag == 0) {
-                    // console.log("Unfollow");
                     await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
                     document.getElementById(`prop${follower_id}`).innerHTML = "Unfollow";
                     document.getElementById(`prop${follower_id}`).setAttribute("onclick", `follow(${follower_id},1)`);
 
                 } else {
-                    // console.log("Follow");
                     Swal.fire({
                         title: 'Do you want to Unfollow?',
                         text: "",

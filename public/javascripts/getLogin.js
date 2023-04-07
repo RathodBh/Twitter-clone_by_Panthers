@@ -126,7 +126,6 @@ function change_month(select) {
 ///BY Jigar
 
 async function checkusername(e) {
-    console.log(e.value);
     const save_req = await fetch(`/user/sign-up/checkusername`, {
       method: "POST",
       headers: {
@@ -139,11 +138,8 @@ async function checkusername(e) {
     });
 
     var resSave = await save_req.json();
-    // console.log(resSave.isNew);
     if (resSave.isNew == true) {
-      // console.log("i ma he");
       let usermsg = document.getElementById('usernameError')
-      // console.log(usermsg);
       let content = `<span style="color: #1c800f; font-size:14px">Username Available</span>`
       usermsg.innerHTML = content
       return true
@@ -174,14 +170,10 @@ async function checkusername(e) {
     });
 
     var resSave = await save_req.json();
-    // console.log(resSave.isNew);
     if (resSave.isNew == true) {
-      // console.log("i ma he");
       let usermsg = document.getElementById('emailError')
-      // console.log(usermsg);
       let content = `<span style="color: #1c800f;"></span>`
       usermsg.innerHTML = content
-      //count += 1
       return true
     }
     else {
@@ -209,22 +201,17 @@ async function checkusername(e) {
     });
 
     var resSave = await save_req.json();
-    // console.log(resSave.isNew);
     if (resSave.isNew == true) {
-      // console.log("i ma he");
       let usermsg = document.getElementById('emailError')
-      // console.log(usermsg);
       let content = `<span style="color: #1c800f;"></span>`
       usermsg.innerHTML = content
-      //count += 1
       return true
     }
     else {
       let usermsg = document.getElementById('emailError')
       let content = `<span style="color: #b9370f;">User Already Exists!</span>`
       usermsg.innerHTML = content;
-      //count -= 1
-    //   submitbtn.style.display = 'none';
+      
       return false
     }
   }

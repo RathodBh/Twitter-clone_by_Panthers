@@ -28,7 +28,6 @@ const previewImage = (event) => {
     limit_img += imageFiles.length;
     document.querySelector("#sub_btn").disabled = "false"
 
-    console.log(limit_img);
     //limit upload files
     if (limit_img > 5) {
         document.querySelector("#errLimit").innerHTML = `<div class="alert alert-danger alert-dismissible fade show my-1" role="alert">
@@ -83,12 +82,9 @@ function twt_clk() {
                 return response.json()
             })
                 .then(function (responseData) {
-                    // console.log(responseData[0].us_email == us_email_l1.value);
-
-                    // console.log("Done");
                 })
         } catch (error) {
-            console.log(error);
+            console.log("TweetIT",error);
         }
     }
     fetch_data();

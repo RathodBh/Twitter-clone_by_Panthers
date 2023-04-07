@@ -1,6 +1,5 @@
-const conn = require("../connection/connectdb");
+const {queryExec} = require("../connection/conn")
 const jwt = require('jsonwebtoken')
-// const queryExecuter = require('../queryExecute/queryExecuter')
 const express = require("express");
 const bcrypt = require("bcrypt");
 const app = express();
@@ -10,16 +9,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const asyncHandler = require("express-async-handler");
-async function queryExecuter(query) {
-    return new Promise((resolve, rejects) => {
-        conn.query(query, (err, result) => {
-            if (err) {
-                rejects(err);
-            }
-            resolve(result);
-        });
-    });
-}
 
 
 const getForgetPasswordPage = asyncHandler(async (req, res) => {
@@ -28,12 +17,11 @@ const getForgetPasswordPage = asyncHandler(async (req, res) => {
 });
 
 const getMail = asyncHandler(async (req, res)=>{
-    console.log("in get mail controller");
     var mail = req.query.val;
     var otp = Math.floor(100000 + Math.random() * 900000);
     var mailExistStatus;
     var dbMailsQry = `select email from  users;`;
-    var resultmail = await queryExecuter(dbMailsQry);
+    var resultmail = await queryExec(dbMailsQry);
     if (resultmail.find(e => e.email == mail)) {
         mailExistStatus = true;
     } else {
@@ -54,10 +42,10 @@ const getMail = asyncHandler(async (req, res)=>{
         subject: "test", // Subject line
         html: `<h2>Your OTP : ${otp}</h2>`, // html body
     }).then(info => {
-        console.log({ info });
+        // console.log({ info });
     }).catch(console.error);
     var sql = `update  users set otp= "${otp}" where id="39";`;
-    var result = await queryExecuter(sql);
+    var result = await queryExec(sql);
     res.json({ result, mailExistStatus });
 })
 
@@ -65,7 +53,7 @@ const getMail = asyncHandler(async (req, res)=>{
 const getOtp = asyncHandler(async (req, res) => {
     var otp = req.query.otp;
     var sql = `select otp from  users where id="39";`;
-    var result = await queryExecuter(sql);
+    var result = await queryExec(sql);
     if (otp == result[0].otp) {
         res.json({ verified: true })
     } else {
@@ -79,8 +67,7 @@ const resetPassword = asyncHandler(async(req, res) => {
     const salt = await bcrypt.genSalt(15);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
     const qry = `update  users set password = "${hashedPassword}" where email="${email}"`
-    const result = await queryExecuter(qry);
-    console.log("password updated");
+    const result = await queryExec(qry);
     // res.render("dashboard")
 })
 

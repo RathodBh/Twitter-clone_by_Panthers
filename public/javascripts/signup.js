@@ -4,7 +4,6 @@ let year1 = document.querySelector("#year");
 let month1 = document.querySelector("#month");
 let day1 = document.querySelector("#day");
 day1.addEventListener("change", function (e) {
-  console.log("Val", e.currentTarget.value)
   if (e.currentTarget.value == "") {
     alert("Please select")
   }
@@ -165,7 +164,6 @@ function checkStatus(i) {
     next.setAttribute("value", "NEXT")
     next.setAttribute("type", "button")
   }
-  // console.log(allParts.length);
 }
 
 

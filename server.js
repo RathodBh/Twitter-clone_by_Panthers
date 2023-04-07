@@ -2,12 +2,13 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express();
 const PORT = 3008
-const conn = require('./connection/connectdb');
+const {queryExec} = require('./connection/conn');
 const register = require('./Routes/register')
 const login = require('./Routes/login')
 const profile = require('./Routes/profile')
 const commentInfo = require('./Routes/commentInfo')
 const dashboard = require('./Routes/dashboard')
+const home = require('./Routes/home')
 const logout = require('./Routes/logout')
 const follow = require('./Routes/follow')
 const forgetPassword = require('./Routes/forgetPassword');
@@ -34,6 +35,7 @@ app.set('view engine', 'ejs')
 app.use('/user', register)
 app.use('/user-login', login)
 app.use('/user-logout', logout)
+app.use('/', home)
 app.use('/dashboard', dashboard)
 app.use("/profile", profile)
 app.use("/tweet", commentInfo)
@@ -43,18 +45,8 @@ app.use("/follow", follow)
 const multer = require('multer');
 const { protect } = require('./Middlewares/auth');
 
-async function queryExecuter(query) {
-    return new Promise((resolve, rejects) => {
-        conn.query(query, (err, result) => {
-            if (err) {
-                rejects(err);
-            }
-            resolve(result);
-        });
-    })
-}
+
 app.set('view engine', 'ejs')
-// const conn = require('../connection/connectdb');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -81,7 +73,7 @@ app.post("/updateProfile", uploads.fields([{
         try {
             let uid = req.session.user_id
             const file = req.files;
-            var users = await queryExecuter(`select user_image as dp , cover_image as cover from users where id=${uid}`);
+            var users = await queryExec(`select user_image as dp , cover_image as cover from users where id=${uid}`);
 
             var cover_imgsrc = req.files.cover_image;
             var profile_imgsrc = req.files.profile_image;
@@ -99,7 +91,7 @@ app.post("/updateProfile", uploads.fields([{
 
 
 
-            await queryExecuter(`update users set name="${name}" , bio="${user_bio}" ,birth_date="${user_dob}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id=${uid}`);
+            await queryExec(`update users set name="${name}" , bio="${user_bio}" ,birth_date="${user_dob}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id=${uid}`);
 
             res.redirect('/profile/user')
 
@@ -117,7 +109,7 @@ app.post("/updateProfile", uploads.fields([{
 app.get("/srch?", async (req, res) => {
     var srchval = req.query.val;
     var sql = `select user_name from  users`;
-    var names = await queryExecuter(sql);
+    var names = await queryExec(sql);
     var arr = [];
     var newArr = [];
     for (let i = 0; i < names.length; i++) {
@@ -143,7 +135,7 @@ app.get("/srch?", async (req, res) => {
     var matchedResult = [];
     for (let m = 0; m < newArr.length; m++) {
         var sql2 = `SELECT id,name,user_name,user_image FROM  users where user_name="${newArr[m]}"`;;
-        resultantName = await queryExecuter(sql2);
+        resultantName = await queryExec(sql2);
         matchedResult.push(resultantName)
     }
     res.json(matchedResult)
@@ -152,45 +144,43 @@ app.get("/srch?", async (req, res) => {
 
 //vivek (Follow-Unfollow)
 app.get("/addfollow", async (req, res) => {
-    let cnt = 0;
+  
     let userId = req.session.user_id
     let followerId = req.query.followerId
     if (req.query.flag == 0) {
-        cnt++;
-        await queryExecuter(`insert into followers (user_id,follower_id,isdelete) values("${followerId}","${userId}","${0}");`);
-        await queryExecuter(`insert into following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
-        let a = await queryExecuter(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
-        let b=await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
-        
+        // cnt++;
+        var cnt =await queryExec(`SELECT count(id) as follower  FROM twitter_clone.followers where follower_id=${userId};`)
+        console.log("cnt value ",cnt[0].follower);
+        let follower=cnt[0].follower
+
+        var flw=await queryExec(`SELECT count(id) as folowing FROM twitter_clone.following where user_id=${userId};`)
+        console.log("flw value ",flw[0].folowing);
+        let folowing=flw[0].folowing
+
+        await queryExec(`insert into followers (user_id,follower_id,isdelete) values("${followerId}","${userId}","${0}");`);
+        await queryExec(`insert into following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
+        let a = await queryExec(`UPDATE users SET following =  ${folowing} WHERE id = ${userId}`);
+        let b=await queryExec(`UPDATE users SET followers =  ${follower} WHERE id = ${followerId}`);
+        console.log("complete if in server");
     } else {
-        cnt--;
-        await queryExecuter(`delete from  followers  where user_id = ${followerId} AND follower_id = ${userId};`);
-        await queryExecuter(`delete from  following  where user_id = ${userId} AND following_id = ${followerId} ;`);
-        await queryExecuter(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
-        await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
+        // cnt--;
+
+        var cnt =await queryExec(`SELECT count(id) as follower  FROM twitter_clone.followers where follower_id=${userId};`)
+        console.log("cnt value below ",cnt[0].follower);
+        let follower=cnt[0].follower
+
+        var flw=await queryExec(`SELECT count(id) as folowing FROM twitter_clone.following where user_id=${userId};`)
+        console.log("flw value below",flw[0].folowing);
+        let folowing=flw[0].folowing
+        await queryExec(`delete from  followers  where user_id = ${followerId} AND follower_id = ${userId};`);
+        await queryExec(`delete from  following  where user_id = ${userId} AND following_id = ${followerId} ;`);
+        await queryExec(`UPDATE users SET following =  ${folowing} WHERE id = ${userId}`);
+        await queryExec(`UPDATE users SET followers =  ${follower} WHERE id = ${followerId}`);
+        console.log("complete else in server");
     }
 
     return res.send({ message: "update" });
 })
-
-// try
-// app.get("/prof",async(req,res)=>{
-
-    
-//     let uid = req.query.uid || 3;
-//     var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(3)`);
-//     var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
-//     var followers =[];
-//     getfollowerId.forEach(id => {
-//         followers.push(id.follower_id);
-//     });
-
-//     res.render('profile',{fuser:getuser,followers})
-// })
-
-
-
-
 
 
 
@@ -215,6 +205,9 @@ function calcTime(city, offset) {
 // for time zone end
 
 // try end
+app.get('/home', function(req, res){
+    res.render("home")
+})
 app.get("*", (req, res) => {
     res.render("404")
 })
