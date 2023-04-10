@@ -182,7 +182,7 @@ const getDashboard = asyncHandler(async (req, res) => {
         return
     }
     res.render('dashboard')
-    
+
 });
 
 const tweetit = asyncHandler(async function (req, res) {
@@ -236,21 +236,21 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
             return
         }
 
-        let  limit=req.query.limit
+        let limit = req.query.limit
         let pageCount = req.query.page
-        console.log(limit);
+        var pichlaoffset = 0
         var offset
-        if(limit == 1){
-             offset = 0
+        if (limit == 1) {
+            offset = 0
         }
-        else{
-            offset=limit-2
+        else {
+            offset = limit - 2 + pichlaoffset
         }
-        console.log(offset);
+
         let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM tweets as t INNER JOIN users u ON t.user_id = u.id ORDER BY t.id DESC limit ${limit} offset ${offset}`;
         let follow_sel = `SELECT following.following_id FROM following WHERE following.user_id = ${user_id}`;
         const followingId = await queryExecuter(follow_sel);
-
+        pichlaoffset = offset
         let allFollowingIds = [];
         for (let x of followingId) {
             allFollowingIds.push(x.following_id);
