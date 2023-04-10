@@ -34,7 +34,7 @@ const getpostLike1 = asyncHandler(async (req, res) => {
 
             const like_data = await queryExecuter(qrt);
             
-            
+            // console.log(like_data);
             if (like_data.length == 0) {
                 // console.log("if");
                 const ins_qrt = `INSERT INTO likes (user_id,tweet_id,created_at) values (${user_id},${data.tweet_id},NOW())`
@@ -60,7 +60,7 @@ const getpostLike1 = asyncHandler(async (req, res) => {
                 alllikecount = tweet_like_count[0].tweet_likes
                 alllikecount = alllikecount + 1
 
-                const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount}  where id=${data.tweet_id}`
+                const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount} where id=${data.tweet_id}`
                 const Update_entry_tweet = await queryExecuter(up_tweets_tweetlike);
 
 
