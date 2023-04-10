@@ -45,8 +45,8 @@ const getMail = asyncHandler(async (req, res)=>{
     }).then(info => {
         // console.log({ info });
     }).catch(console.error);
-    var sql = `update users set otp= "${otp}" where email='${emailID}'`;
-    var result = await queryExec(sql);
+    var sql = `update users set otp= ? where email=?`;
+    var result = await queryExec(sql,[otp,emailID]);
     res.json({ result, mailExistStatus });
 })
 

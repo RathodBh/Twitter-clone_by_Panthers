@@ -176,8 +176,8 @@ const loginGet = asyncHandler(async (req, res) => {
 const getEmailCheckLogin = asyncHandler(async (req, res) => {
     //i need to show the post request for checkEmail fetch request
     const { data } = req.body
-    const qry1 = `select * from users where email=?`
-    const oldUser = await queryExec(qry1,[data])
+    const qry1 = `select * from users where email=? or user_name=?`
+    const oldUser = await queryExec(qry1,[data,data])
     if (oldUser.length == 0) {
         let isNew = true
         res.json({ isNew });

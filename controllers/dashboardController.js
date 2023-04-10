@@ -28,7 +28,7 @@ const getpostLike1 = asyncHandler(async (req, res) => {
             if (like_data.length == 0) {
                 const ins_qrt = `INSERT INTO likes (user_id,tweet_id,created_at) values (?,?,NOW())`
 
-                const like_entry = await queryExec(ins_qrt[user_id,data.tweet_id]);
+                const like_entry = await queryExec(ins_qrt,[user_id,data.tweet_id]);
 
                 const select_tweet_like = `select tweet_likes from tweets where id=?`
                 const tweet_like_count = await queryExec(select_tweet_like,[data.tweet_id]);
