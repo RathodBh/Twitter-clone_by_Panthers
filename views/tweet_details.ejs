@@ -2,7 +2,7 @@
     <%- include("add_comment") -%>
 
         <!-- main panel  -->
-        <div class="col-6 px-0 border">
+        <div class="col-lg-6 col-md-6 col-sm-8 col-12 px-0 border">
             <div class="inner-main commentInfo ">
                 <div class="blur-ui p-3">
                     <div class="d-flex align-items-center my-2">
@@ -21,9 +21,10 @@
                                 </div>
                                 <div class="col-10 px-4 position-relative">
                                     <div class="d-flex align-items-center user-info">
-                                        <span class="text-black fs-16 me-1 fw-600 ">
+                                        <a href="/profile/user/<%= tweet_data.user_id%>"
+                                            class="text-black fs-16 me-1 fw-600 ">
                                             <%= tweet_data.name %>
-                                        </span>
+                                        </a>
                                     </div>
                                     <span class="fs-16 text-gray me-1 ">
                                         @<%= tweet_data.user_name %>
@@ -31,32 +32,7 @@
 
                                 </div>
                                 <div class="col-1 ">
-                                    <a href="" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false"> •••
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li class="d-flex">
-                                            <a class="dropdown-item" href="#"><i class="fa-solid fa-user-plus me-2"></i>
-                                                Follow <span class="text-blue">@<%= tweet_data.user_name %></span>
 
-                                            </a>
-                                        </li>
-
-
-                                        <li class="d-flex">
-                                            <a class="dropdown-item" href="#"><i
-                                                    class="fa-solid fa-user-minus me-2"></i>
-                                                Unfollow <span class="text-blue">@<%= tweet_data.user_name %></span>
-
-                                            </a>
-                                        </li>
-
-                                        <li class="d-flex">
-                                            <a class="dropdown-item" href="#"><i class="fa-regular fa-eye me-2"></i>
-                                                Visit
-                                                profile <span class="text-blue">@<%= tweet_data.user_name %></span>
-                                            </a>
-                                        </li>
-                                    </ul>
                                 </div>
 
                                 <div class="col-12 py-3 p-0">
@@ -151,14 +127,14 @@
                                                             yet.</span>
                                                         <% }else{ %>
                                                             <% comments.forEach((c,i)=>{ %>
-                                                                <div class="comment row border py-2">
-                                                                    <div class="col-1 position-relative">
+                                                                <div class="comment row border py-2 justify-content-start align-items-start">
+                                                                    <div class="col-auto px-1">
                                                                         <img src="<%= c.user_image %>" alt=""
-                                                                            class="profile-size me-2 border ">
+                                                                            class="profile-size  border ">
                                                                     </div>
-                                                                    <div class="col-10">
+                                                                    <div class="col">
                                                                         <div
-                                                                            class="d-flex align-items-center user-info position-relative">
+                                                                            class="d-flex align-items-center user-info ">
                                                                             <a href="/profile/user/<%= c.user_id %>"
                                                                                 class="text-black fs-16 me-1 fw-600 ">
                                                                                 <%= c.name %>
@@ -183,43 +159,6 @@
                                                                                 <%= c.comment %>
                                                                             </p>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="col-1">
-                                                                        <a href="" class="text-dark"
-                                                                            data-bs-toggle="dropdown"
-                                                                            aria-expanded="false"> ••• </a>
-                                                                        <ul class="dropdown-menu">
-                                                                            <li class="d-flex">
-                                                                                <a class="dropdown-item" href="#"><i
-                                                                                        class="fa-solid fa-user-plus me-2"></i>
-                                                                                    Follow
-                                                                                    <span class="text-blue">@<%=
-                                                                                            c.user_name %>
-                                                                                    </span>
-
-                                                                                </a>
-                                                                            </li>
-
-
-                                                                            <li class="d-flex">
-                                                                                <a class="dropdown-item" href="#"><i
-                                                                                        class="fa-solid fa-user-minus me-2"></i>
-                                                                                    Unfollow <span class="text-blue">@
-                                                                                        <%= c.user_name %>
-                                                                                    </span>
-
-                                                                                </a>
-                                                                            </li>
-
-                                                                            <li class="d-flex">
-                                                                                <a class="dropdown-item" href="#"><i
-                                                                                        class="fa-regular fa-eye me-2"></i>
-                                                                                    Visit
-                                                                                    profile <span class="text-blue">@<%=
-                                                                                            c.user_name %></span>
-                                                                                </a>
-                                                                            </li>
-                                                                        </ul>
                                                                     </div>
                                                                 </div>
                                                                 <% }) } %>
@@ -280,32 +219,39 @@
             let form = document.querySelector('#addCommentForm')
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                let data = await fetch(`/tweet/tweet_comment`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        tweetId: document.querySelector("#tweetId").value,
-                        comment_text: document.querySelector("#comment_area").value
+                if (document.querySelector("#comment_area").value == "") {
+                    ToastBlank.fire({
+                        icon: 'warning',
+                        title: 'Please enter a comment',
+
                     })
-                })
-                let ans = await data.json();
+                } else {
 
-                allComments = ans.all_comments;
-                allCommentsLen = ans.len;
-                allCommentAt = ans.comment_at;
-                console.log(allCommentAt);
-                var comment_section = document.querySelector("#commentSection");
+                    let data = await fetch(`/tweet/tweet_comment`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            tweetId: document.querySelector("#tweetId").value,
+                            comment_text: document.querySelector("#comment_area").value
+                        })
+                    })
+                    let ans = await data.json();
 
-                if (allComments.length <= 0) {
-                    comment_section.innerHTML = `<span class="d-inline-block mt-2 text-secondary">No Comments yet.</span>`;
-                }
-                else {
-                    let comment_data = ""
-                    for (let i = 0; i < allComments.length; i++) {
-                        comment_data +=
-                            `<div class="comment row border py-2">
+                    allComments = ans.all_comments;
+                    allCommentsLen = ans.len;
+                    allCommentAt = ans.comment_at;
+                    var comment_section = document.querySelector("#commentSection");
+
+                    if (allComments.length <= 0) {
+                        comment_section.innerHTML = `<span class="d-inline-block mt-2 text-secondary">No Comments yet.</span>`;
+                    }
+                    else {
+                        let comment_data = ""
+                        for (let i = 0; i < allComments.length; i++) {
+                            comment_data +=
+                                `<div class="comment row border py-2">
                                                                     <div class="col-1">
                                                                         <img src="${allComments[i].user_image}" alt=""
                                                                             class="profile-size me-2 border">
@@ -372,9 +318,10 @@
                                                                         </ul>
                                                                     </div>
                                                                 </div>`;
-                    }
+                        }
 
-                    comment_section.innerHTML = comment_data;
+                        comment_section.innerHTML = comment_data;
+                    }
                 }
 
             })

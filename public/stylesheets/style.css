@@ -398,3 +398,63 @@ a {
 } 
 
 .pointer {cursor: pointer;}
+
+@media screen and (max-width: 1208px){
+    /* #searchPage{
+        display: none;
+    } */
+    .searchFollow{
+        display: none;
+    }
+}
+@media screen and (max-width:768px) {
+   
+    
+}
+#topBarMobile{
+    position: fixed;
+    height: 50px;
+    width: 100%;
+    top:0;
+    left: 0;
+    right: 0;
+    background: var(--bg-blue) !important;
+    z-index: 1000;
+
+}
+#topBarMobile i{
+    font-size: 26px;
+}
+#topBarMobile .profileMobile{
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    aspect-ratio: 1/1;
+}
+#topBarMobile .profileMobile #statusMobile{
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+#bottomBar{
+    position: fixed !important;
+    bottom: 0;
+    background: var(--bg-blue) !important;
+    height: 50px;
+    width: 100%;
+    z-index: 1000;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#addTweetButtonMobile{
+    position: fixed !important;
+    bottom: 75px;
+    right: 15px;
+    height:50px ;
+    width: 50px;
+    aspect-ratio: 1/1;
+}
