@@ -192,12 +192,6 @@
 
                                                                 </a>
                                                             </li>
-                                                            <li class=" col">
-                                                                <a href="" class="chart">
-                                                                    <i class="fa-solid fa-chart-simple"></i>
-
-                                                                </a>
-                                                            </li>
                                                             <li class="col">
                                                                 <a href="" class="share">
                                                                     <i class="fa-solid fa-arrow-up-from-bracket"></i>
@@ -309,12 +303,6 @@
                                                                             <%= t.tweet_likes %>
                                                                         </span>
 
-
-                                                                    </a>
-                                                                </li>
-                                                                <li class=" col">
-                                                                    <a href="" class="chart">
-                                                                        <i class="fa-solid fa-chart-simple"></i>
 
                                                                     </a>
                                                                 </li>
@@ -437,8 +425,8 @@
                         </div>
                     </div>
                     <div class="col">
-                        <div class="mt-2 ms-5 follow">
-                            <p>      <a href="" class="menu-link rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#settingsModal"
+                        <div class="mt-2 follow ">
+                            <p>      <a href="" class="menu-link rounded-pill px-3 float-end me-4" data-bs-toggle="modal" data-bs-target="#settingsModal"
                                >
                                 Edit Profile
                             </a>
@@ -455,7 +443,7 @@
                         <p class="text-secondary">@<%= users[0].user_name%></p>
                     </div>
                     <p class="card-text text-dark "><%= users[0].bio%> <i class="fa-regular fa-face-laugh-beam"></i></p>
-                    <div class="info d-flex ">
+                    <div class="info d-flex flex-wrap">
                         <p class="text-secondary ms-1"><i class="fa-solid fa-location-dot"></i> everywhere</p>
                         <p class="text-secondary ms-2"><i class="fa-solid fa-link"></i>
                         <p class="text-info">username.com</p>

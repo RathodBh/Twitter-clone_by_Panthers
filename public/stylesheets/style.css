@@ -407,7 +407,12 @@ a {
 .pointer {
     cursor: pointer;
 }
-
+.d-none{
+    display: none;
+}
+.d-block{
+    display: block;
+}
 @media screen and (max-width: 1208px) {
 
     /* #searchPage{

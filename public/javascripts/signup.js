@@ -17,7 +17,8 @@ async function checkValidationForm1() {
   const year = document.querySelector("#year").value;
   const month = document.querySelector("#month").value;
   const day = document.querySelector("#day").value;
-  const next = document.querySelector("#next");
+  const nextBtn1 = document.querySelector("#nextBtn1");
+
 
 
   const currYear = new Date().getFullYear();
@@ -39,10 +40,10 @@ async function checkValidationForm1() {
   }
 
   if (!is_valid) {
-    next.setAttribute("disabled", "true");
+    nextBtn1.setAttribute("disabled", "true");
   }
   else {
-    next.removeAttribute("disabled");
+    nextBtn1.removeAttribute("disabled");
   }
 
 }
@@ -57,7 +58,7 @@ async function checkValidationForm2() {
   const pwd = document.querySelector("#password").value;
   const cpwd = document.querySelector("#cpassword").value;
   const username = document.querySelector("#username").value;
-  let submit = document.querySelector("#submit,#next");
+  let next2 = document.querySelector("#nextBtn2");
 
 
   let checkCpass = checkConfirmPass();
@@ -68,10 +69,10 @@ async function checkValidationForm2() {
   }
 
   if (!is_valid) {
-    submit.setAttribute("disabled", "true");
+    next2.setAttribute("disabled", "true");
   }
   else {
-    submit.removeAttribute("disabled");
+    next2.removeAttribute("disabled");
   }
 }
 
@@ -105,67 +106,6 @@ const allParts = document.querySelectorAll(".user > div");
 const allPrevBtns = document.querySelectorAll(".prev");
 let prev = document.querySelector("#prev")
 let next = document.querySelector("#next")
-
-//set width
-const updateLength = () => {
-  let allParts = document.querySelectorAll(".user > div");
-  document.querySelector(".user").style.width = `${allParts.length * 100}%`;
-}
-updateLength();
-
-const updateTransition = (i) => {
-    let allParts = document.querySelectorAll(".user > div");
-    allParts.forEach((cur) => {
-      cur.style.transform = `translateX(-${i * 100}%)`;
-    });
-}
-
-let i = 0;
-checkStatus(i)
-next.addEventListener("click", (e) => {
-  checkValidationForm2()
-  ++i;
-  updateTransition(i);
-  checkStatus(i)
-})
-prev.addEventListener("click", (e) => {
-  --i;
-  updateTransition(i);
-  checkStatus(i)
-  checkValidationForm1()
-})
-
-function checkStatus(i) {
-
-  let allParts = document.querySelectorAll(".user > div");
-
-  next.classList.toggle("w-50");
-  next.classList.toggle("w-100");
-  if (i == 0) {
-    prev.style.display = "none";
-    next.setAttribute("id", "next")
-    next.setAttribute("type", "button")
-    next.setAttribute("value", "NEXT")
-
-  }
-  else if (i == allParts.length - 1 || i == allParts.length) {
-    prev.style.display = "block";
-    next.setAttribute("value", "SIGN UP")
-    setTimeout(() => {
-      // debugger
-      next.setAttribute("type", "submit")
-      next.setAttribute("id", "submit")
-    }, 1)
-  }
-  else {
-    prev.style.display = "block";
-    prev.style.width = "100%";
-    next.setAttribute("id", "next")
-    next.setAttribute("value", "NEXT")
-    next.setAttribute("type", "button")
-  }
-}
-
 
 //swipper carousel
 var swiper = new Swiper(".mySwiper", {
@@ -331,30 +271,23 @@ function checkPwd() {
   let pwd = document.querySelector("#password").value;
   let passErr = document.querySelector("#passError");
   if (pwd.length < 8 || pwd.length > 16) {
-    // document.querySelector("#btnSubmit").disabled = true
     passErr.innerText = "Password must be 8 to 16 characters long";
   }
   else if (!(/[a-z]/.test(pwd))) {
-    // document.querySelector("#btnSubmit").disabled = true
     passErr.innerText = "Password must contain atleast 1 lowercase character";
   }
   else if (!(/[A-Z]/.test(pwd))) {
-    // document.querySelector("#btnSubmit").disabled = true
     passErr.innerText = "Password must contain atleast 1 uppercase character";
   }
   else if (!(/\d/.test(pwd))) {
-    // document.querySelector("#btnSubmit").disabled = true
     passErr.innerText = "Password must contain atleast 1 digit";
   }
   else if (!(/[^a-zA-Z0-9]/.test(pwd))) {
-    // document.querySelector("#btnSubmit").disabled = true
     passErr.innerText = "Password must contain atleast 1 Special character like, @,#,$,*";
   }
   else {
     passErr.innerText = "";
     return true;
-    pwdCHK = true;
-    // document.querySelector(".inner").style.display = "none";
   }
   return false;
 }
@@ -384,6 +317,7 @@ async function checkuserEmail(e) {
     var resSave = await save_req.json();
 
     if (resSave.isNew == true) {
+      document.querySelector("#emailOTP").value = email;
       let usermsg = document.getElementById('emailError')
       let content = `<span  class="text-success"></span>`
       usermsg.innerHTML = content
@@ -415,3 +349,205 @@ async function checkemailforlogin(e) {
 
 
 }
+
+
+//JS
+//for stopping the hide modal
+var myModal = new bootstrap.Modal(document.getElementById('signup'), {
+  keyboard: false,
+  backdrop: false
+})
+
+//auto show the modal
+myModal.show();
+const togglePassword = document.querySelector('#togglePassword');
+const password = document.querySelector('#password');
+
+togglePassword.addEventListener('click', function (e) {
+  // toggle the type attribute
+  const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+  password.setAttribute('type', type);
+
+  // toggle the eye slash icon
+  if (this.classList.contains('fa-eye-slash')) {
+    this.classList.remove('fa-eye-slash');
+    this.classList.add('fa-eye');
+  } else {
+    this.classList.remove('fa-eye');
+    this.classList.add('fa-eye-slash');
+  }
+});
+window.addEventListener("load", function () {
+  const loader = document.querySelector(".loader");
+  loader.className += " hidden"; // class "loader hidden"
+});
+
+
+//new Wizard for hideshow part content
+
+let part1 = document.querySelector("#part1");
+let part2 = document.querySelector("#part2");
+let part3 = document.querySelector("#part3");
+part2.classList.add('d-none');
+
+let nextBtn1 = document.querySelector("#nextBtn1");
+nextBtn1.addEventListener("click", () => {
+
+  // let username = document.querySelector("#username").autofocus()
+  part1.style.translate = "-100%";
+  part2.style.translate = "0%";
+  part3.style.translate = "100%";
+  setTimeout(() => {
+    part1.classList.add('d-none');
+    part2.classList.remove('d-none');
+    part3.classList.add('d-none');
+  }, 270);
+})
+
+let prevBtn2 = document.querySelector("#prevBtn2");
+prevBtn2.addEventListener("click", () => {
+  part1.style.translate = "0%";
+  part2.style.translate = "100%";
+  part3.style.translate = "200%";
+  setTimeout(() => {
+    part1.classList.remove('d-none');
+    part2.classList.add('d-none');
+    part3.classList.add('d-none');
+  }, 270);
+})
+let prevBtn3 = document.querySelector("#prevBtn3");
+prevBtn3.addEventListener("click", () => {
+  part1.style.translate = "-100%";
+  part2.style.translate = "0%";
+  part3.style.translate = "100%";
+  setTimeout(() => {
+    part1.classList.add('d-none');
+    part2.classList.remove('d-none');
+    part3.classList.add('d-none');
+  }, 270);
+})
+
+let nextBtn2 = document.querySelector("#nextBtn2");
+nextBtn2.addEventListener("click", () => {
+
+  // let username = document.querySelector("#username").autofocus()
+  part1.style.translate = "-200%";
+  part2.style.translate = "-100%";
+  part3.style.translate = "0%";
+  setTimeout(() => {
+    part1.classList.add('d-none');
+    part2.classList.add('d-none');
+    part3.classList.remove('d-none');
+  }, 400);
+})
+
+//send OTP
+let sendOtpBtn = document.querySelector("#sendOTP");
+sendOtpBtn.addEventListener("click", async () => {
+
+  let curEmail = document.querySelector("#emailOTP").value;
+
+  let sendEmail = await fetch(`/forget/sendMail?email=${curEmail}`);
+  let isSend = await sendEmail.json();
+
+  if (isSend.ans == true) {
+    ToastErr.fire({
+      icon: 'success',
+      title: `OTP send successfully, Please check your mail`
+    })
+    document.querySelector("#otpSection").classList.remove('d-none');
+    sendOtpBtn.setAttribute("disabled", "true");
+    let timer = 61;
+    let timerOtp = document.querySelector(".timerOtp");
+    timerOtp.classList.remove("d-none");
+
+    let timerOtpInfo = document.querySelector("#infoTag");
+    let timerOfOtp = setInterval(() => {
+      if (timer > 0) {
+        --timer;
+        timerOtpInfo.innerHTML = timer;
+        console.log(timer);
+      } else {
+        clearInterval(timerOfOtp);
+        timerOtp.classList.add("d-none");
+        sendOtpBtn.innerHTML = "Resend OTP";
+        sendOtpBtn.removeAttribute("disabled");
+      }
+    }, 1000)
+  } else {
+    ToastErr.fire({
+      icon: 'error',
+      title: `Something went wrong`
+    })
+  }
+});
+
+let otp = document.querySelector("#otp");
+otp.addEventListener("input", async () => {
+  if (otp.value.length == 6) {
+    document.querySelector("#nextBtn3").removeAttribute("disabled");
+  } else {
+    document.querySelector("#nextBtn3").setAttribute("disabled", "true");
+  }
+});
+
+const ToastErr = Swal.mixin({
+  toast: true,
+  position: 'top',
+  showConfirmButton: false,
+  timer: 7000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.addEventListener('mouseenter', Swal.stopTimer)
+    toast.addEventListener('mouseleave', Swal.resumeTimer)
+  }
+})
+
+let subtmitBtn = document.querySelector("#nextBtn3");
+subtmitBtn.addEventListener("click", async () => {
+  let nm = document.querySelector("#name");
+  let email = document.querySelector("#email");
+  let year = document.querySelector("#year");
+  let month = document.querySelector("#month");
+  let day = document.querySelector("#day");
+  let username = document.querySelector("#username");
+  let password = document.querySelector("#password");
+  let otp = document.querySelector("#otp");
+
+
+  let submitReq = await fetch(`/user/sign-up`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: nm.value,
+      email: email.value,
+      year: year.value,
+      month: month.value,
+      day: day.value,
+      uname: username.value,
+      password: password.value,
+      otp: otp.value
+    })
+  })
+
+  let isError = await submitReq.json();
+
+  if (isError.register == false) {
+    ToastErr.fire({
+      icon: 'error',
+      title: `You entered incorrect OTP`
+    })
+  } else {
+    ToastErr.fire({
+      icon: 'success',
+      title: `Signup successfully`
+    })
+    setTimeout(() => {
+      location.href = "/user-login"
+    }, 1000);
+  }
+
+})
+// /user/sign-up submit form url

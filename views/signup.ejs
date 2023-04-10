@@ -53,7 +53,7 @@
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-12 col-12">
-                            <form action="/user/sign-up" class="w-100" method="post">
+                            <form action="" class="w-100" method="post">
                                 <div class="data">
                                     <div class="user">
                                         <div id="part1">
@@ -65,7 +65,8 @@
                                                 <div class="mb-3 w100">
                                                     <label for="name" class="form-label text-dark">Name</label>
                                                     <input type="text" class="form-control rounded" name="name"
-                                                        id="name" placeholder="Enter name" tabindex="1">
+                                                        id="name" placeholder="Enter name" tabindex="1"
+                                                        autofocus="true">
                                                 </div>
                                                 <div class="mb-3 w100">
                                                     <label for="email" class="form-label text-dark">Email
@@ -99,7 +100,12 @@
                                                 </div>
 
                                                 <span class="w-100 text-danger fs-14" id="yearError"></span>
-
+                                                <div class="w100 control d-flex bottom">
+                                                    <input type="button" value="PREVIOUS" class="w-0 d-none" id="prev0">
+                                                    <input type="button" value="NEXT" class="w-100 bg-blue text-light"
+                                                        id="nextBtn1" tabindex="6">
+                                                    <!-- <input type="button" value="SIGNUP" class="w-50 bg-blue text-light" id="signup"> -->
+                                                </div>
                                             </div>
                                         </div>
                                         <div id="part2">
@@ -116,7 +122,7 @@
                                                     <input type="text" class="form-control rounded" name="uname"
                                                         onkeyup="checkusername(this)" id="username"
                                                         placeholder="Enter username" autocomplete="new-password"
-                                                        tabindex="-1">
+                                                        tabindex="1">
                                                     <span class="w-100 text-danger fs-14" id="usernameError"></span>
                                                 </div>
                                                 <div class="mb-3 w100 position-relative">
@@ -124,7 +130,7 @@
                                                     <div class="position-relative">
                                                         <input type="password" class="form-control rounded"
                                                             id="password" placeholder="Enter password" name="password"
-                                                            autocomplete="new-password" tabindex="-1">
+                                                            autocomplete="new-password" tabindex="2">
                                                         <i class="far fa-eye text-secondary" id="togglePassword"></i>
                                                     </div>
                                                     <span class="w-100 text-danger fs-14" id="passError"></span>
@@ -136,20 +142,65 @@
                                                     <div class="position-relative">
                                                         <input type="password" class="form-control rounded"
                                                             id="cpassword" placeholder="retype password"
-                                                            name="cpassword" tabindex="-1" autocomplete="new-password">
+                                                            name="cpassword" autocomplete="new-password" tabindex="3">
                                                     </div>
                                                     <span class="w-100 text-danger fs-14" id="cpassErr"></span>
 
+
+                                                </div>
+                                                <div class="w100 control d-flex bottom">
+                                                    <input type="button" value="PREVIOUS" class="w-50" id="prevBtn2"
+                                                        tabindex="4">
+                                                    <input type="button" value="NEXT" class="w-50 bg-blue text-light"
+                                                        id="nextBtn2" tabindex="5" disabled="true"> 
                                                 </div>
                                             </div>
                                         </div>
+                                        <div id="part3" class="d-none">
+                                            <h3 class="text-blue">OTP Verification</h3>
+                                            <div class="d-flex jcc alc p-10 flex-column">
+                                                <div class="mb-3 w100">
+                                                    <div class="mb-3 w100">
+                                                        <label for="email" class="form-label text-dark">Email
+                                                            address</label>
 
+                                                        <div class="input-group">
+                                                            <input type="email" class="form-control mb-0"
+                                                                id="emailOTP" name="email" readonly aria-describedby="sendOTP">
+                                                            <button class="btn btn-outline-secondary" type="button"
+                                                                id="sendOTP">Send OTP</button>
+                                                        </div>
+                                                        <span class="w-100 text-secondary"></span>
 
-                                    </div>
-                                    <div class="w100 control d-flex bottom">
-                                        <input type="button" value="PREVIOUS" class="w-50 " id="prev">
-                                        <input type="button" value="NEXT" class="w-50 bg-blue text-light" id="next"
-                                            tabindex="6">
+                                                        <span class="timerOtp d-none text-secondary fs-14">You can
+                                                            resend OTP after <span id="infoTag"
+                                                                class="text-success"></span> seconds</span>
+                                                    </div>
+                                                    <div class="d-flex jcsb flex-column d-none" id="otpSection">
+                                                        <label for="username"
+                                                            class="form-label w-100 text-dark">OTP</label>
+                                                        <span class="w-100 text-secondary fs-14 mb-2">Check your email
+                                                            to get your confirmation code. If you need to request a new
+                                                            code, go back and reselect a confirmation.</span>
+                                                        <span class="text-dark" id="">
+                                                        </span>
+
+                                                        <input type="text" class="form-control rounded" name="uname"
+                                                            id="otp" placeholder="Enter OTP from your email"
+                                                            autocomplete="new-password" tabindex="1">
+                                                    </div>
+                                                </div>
+                                                <div class="w100 control d-flex bottom">
+                                                    <input type="button" value="PREVIOUS" class="w-50" id="prevBtn3"
+                                                        tabindex="4">
+                                                    <input type="button" value="SIGNUP"
+                                                        class="w-50 bg-blue text-light cp" id="nextBtn3" tabindex="5"
+                                                        disabled="true">
+                                                </div>
+                                            </div>
+
+                                        </div>
+
                                     </div>
                                 </div>
                             </form>
@@ -174,42 +225,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 
-    <!-- Initialize Swiper -->
+    <!-- sweet alert  -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.all.min.js"></script>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
 
     <script src="/javascripts/signup.js"></script>
-    <script>
-
-        //for stopping the hide modal
-        var myModal = new bootstrap.Modal(document.getElementById('signup'), {
-            keyboard: false,
-            backdrop: false
-        })
-
-        //auto show the modal
-        myModal.show();
-        const togglePassword = document.querySelector('#togglePassword');
-        const password = document.querySelector('#password');
-
-        togglePassword.addEventListener('click', function (e) {
-            // toggle the type attribute
-            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-            password.setAttribute('type', type);
-
-            // toggle the eye slash icon
-            if (this.classList.contains('fa-eye-slash')) {
-                this.classList.remove('fa-eye-slash');
-                this.classList.add('fa-eye');
-            } else {
-                this.classList.remove('fa-eye');
-                this.classList.add('fa-eye-slash');
-            }
-        });
-        window.addEventListener("load", function () {
-            const loader = document.querySelector(".loader");
-            loader.className += " hidden"; // class "loader hidden"
-        });
-
-    </script>
 </body>
 
 </html>
