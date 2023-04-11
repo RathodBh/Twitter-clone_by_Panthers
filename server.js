@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express();
 const PORT = 3008
-const {queryExec} = require('./connection/conn');
+const { queryExec } = require('./connection/conn');
 const register = require('./Routes/register')
 const login = require('./Routes/login')
 const profile = require('./Routes/profile')
@@ -144,35 +144,36 @@ app.get("/srch?", async (req, res) => {
 
 //vivek (Follow-Unfollow)
 app.get("/addfollow", async (req, res) => {
-  
+
     let userId = req.session.user_id
     let followerId = req.query.followerId
     if (req.query.flag == 0) {
         // cnt++;
-        var cnt =await queryExec(`SELECT count(id) as follower  FROM twitter_clone.followers where follower_id=${userId};`)
-        console.log("cnt value ",cnt[0].follower);
-        let follower=cnt[0].follower
+        var cnt = await queryExec(`SELECT count(id)  FROM twitter_clone.followers where user_id=${userId} and isdelete='0';`)
+        console.log("cnt value ", cnt[0].follower);
+        let follower = cnt[0].follower
 
-        var flw=await queryExec(`SELECT count(id) as folowing FROM twitter_clone.following where user_id=${userId};`)
-        console.log("flw value ",flw[0].folowing);
-        let folowing=flw[0].folowing
+        var flw = await queryExec(`SELECT count(id) as folowing FROM twitter_clone.following where user_id=${userId};`)
+        console.log("flw value ", flw[0].folowing);
+        let folowing = flw[0].folowing
 
         await queryExec(`insert into followers (user_id,follower_id,isdelete) values("${followerId}","${userId}","${0}");`);
         await queryExec(`insert into following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
-        let a = await queryExec(`UPDATE users SET following =  ${folowing} WHERE id = ${userId}`);
-        let b=await queryExec(`UPDATE users SET followers =  ${follower} WHERE id = ${followerId}`);
-        console.log("complete if in server");
+        let a = await queryExec(`UPDATE users SET following = ${folowing} WHERE id = ${userId}`);
+        let b = await queryExec(`UPDATE users SET followers =  ${follower} WHERE id = ${followerId}`);
+        console.log("complete if in server a==" + a + "b=" + b);
     } else {
         // cnt--;
 
-        var cnt =await queryExec(`SELECT count(id) as follower  FROM twitter_clone.followers where follower_id=${userId};`)
-        console.log("cnt value below ",cnt[0].follower);
-        let follower=cnt[0].follower
 
-        var flw=await queryExec(`SELECT count(id) as folowing FROM twitter_clone.following where user_id=${userId};`)
-        console.log("flw value below",flw[0].folowing);
-        let folowing=flw[0].folowing
-        await queryExec(`delete from  followers  where user_id = ${followerId} AND follower_id = ${userId};`);
+        var cnt = await queryExec(`SELECT count(id) as follower  FROM twitter_clone.followers where follower_id=${userId} and isdelete='0';`)
+        console.log("cnt value below ", cnt[0].follower);
+        let follower = cnt[0].follower
+
+        var flw = await queryExec(`SELECT count(id) as folowing FROM twitter_clone.following where user_id=${userId};`)
+        console.log("flw value below", flw[0].folowing);
+        let folowing = flw[0].folowing
+        await queryExec(`delete from  followers  where user_id = ${userId} AND follower_id = ${followerId};`);
         await queryExec(`delete from  following  where user_id = ${userId} AND following_id = ${followerId} ;`);
         await queryExec(`UPDATE users SET following =  ${folowing} WHERE id = ${userId}`);
         await queryExec(`UPDATE users SET followers =  ${follower} WHERE id = ${followerId}`);
@@ -194,18 +195,18 @@ function calcTime(city, offset) {
     utc = d.getTime() + (d.getTimezoneOffset() * 60000);
     // create new Date object for different city
     // using supplied offset
-    nd = new Date(utc + (3600000*offset));
+    nd = new Date(utc + (3600000 * offset));
     // return time as a string
     return 'The local time in ' + city + ' is ' + nd.toLocaleString();
-    }
-    // get Bombay time
-    // console.log(calcTime('Bombay', +5.5));
-    
+}
+// get Bombay time
+// console.log(calcTime('Bombay', +5.5));
+
 
 // for time zone end
 
 // try end
-app.get('/home', function(req, res){
+app.get('/home', function (req, res) {
     res.render("home")
 })
 app.get("*", (req, res) => {

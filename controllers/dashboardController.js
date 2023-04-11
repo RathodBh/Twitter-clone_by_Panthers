@@ -25,7 +25,7 @@ const getpostLike1 = asyncHandler(async (req, res) => {
             tweet_ids = data.tweet_id
             if (data.like == true) {
                 console.log("in if condition");
-                const qrt = `SELECT  * FROM  likes where tweet_id=${data.tweet_id} and user_id=${user_id}`
+                const qrt = `SELECT * FROM  likes where tweet_id=${data.tweet_id} and user_id=${user_id}`
 
                 const like_data = await queryExec(qrt);
 
