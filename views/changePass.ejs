@@ -12,7 +12,7 @@
                                 <div class="container light-style flex-grow-1 container-p-y">
 
 
-                                    <form onsubmit="return validateForm()">
+                                    <form onsubmit="validateForm(event)" id="changePwd">
 
                                         <div class="mb-3">
                                             <label for="exampleInputPassword1" class="form-label">Current
@@ -53,8 +53,6 @@
 
 
         async function checkoldpass() {
-
-            
             let oldPassword = document.getElementById('oldPass').value
 
             let reqa = await fetch('/setting/checkpassword', {
@@ -76,18 +74,48 @@
 
         }
 
-         async function validateForm() {
+        async function validateForm(e) {
+            e.preventDefault();
+            let check = await checkoldpass()
+            let comparepass = checkConfirmPass()
+            let reqirements = checkPwd()
+            console.log("herer");
+            console.log("ansssss", check, comparepass, reqirements);
+            if (check && comparepass && reqirements) {
 
-            await checkoldpass()
-            checkConfirmPass()
-            checkPwd()
 
-            return true
+                console.log(document.querySelector('#newPass').value)
+                let fetReq = await fetch(`/setting/updatePwd`, {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: document.querySelector('#newPass').value
+                    })
+                })
+
+                let fetchres = await fetReq.json();
+                console.log(fetchres.msg);
+                if (fetchres.msg == "success") {
+                    document.querySelector("#changePwd").submit()
+                    /////TOST AHIYA MUKJE
+                    location.replace("/setting")
+                }
+                else {
+                    /////TOST AHIYA MUKJE
+                    location.reload()
+
+                }
+
+            }
+
+
         }
         function checkConfirmPass() {
-            let pwd = document.querySelector("#password").value;
-            let cpwd = document.querySelector("#cpassword").value;
-            let passErr = document.querySelector("#cpassErr");
+            let pwd = document.querySelector("#newPass").value;
+            let cpwd = document.querySelector("#cPass").value;
+            let passErr = document.querySelector("#error2");
             if (pwd == "" || cpwd == "") {
                 passErr.innerText = ""
             }
@@ -106,7 +134,7 @@
             let pwd = document.querySelector("#newPass").value;
             let passErr = document.querySelector("#error3");
             if (pwd.length < 8 || pwd.length > 16) {
-                // document.querySelector("#btnSubmit").disabled = true
+
                 passErr.innerText = "Password must be 8 to 16 characters long";
             }
             else if (!(/[a-z]/.test(pwd))) {

@@ -36,7 +36,7 @@ const changePass = asyncHandler(async (req, res) => {
 const checkOldPass = asyncHandler(async (req, res) => {
 
     let { data } = req.body;
-   
+
     let msg = "Enter old Password"
     if (data == "") {
         return res.status(400).json({ msg, ans: false });
@@ -46,13 +46,13 @@ const checkOldPass = asyncHandler(async (req, res) => {
     let user_id = req.session.user_id;
     let qry = `select * from users where id = ${user_id}`
     let exeqry = await queryExecuter(qry);
-   
+
 
     if (exeqry.length == 0) {
         return res.json({ ans: false })
     }
     let password = exeqry[0].password;
-    
+
     const match = await bcrypt.compare(data, password);
     console.log(match);
     if (match) {
@@ -66,4 +66,42 @@ const checkOldPass = asyncHandler(async (req, res) => {
 
 })
 
-module.exports = { getlocation, getSettings, accountInfo, changePass, checkOldPass }
+
+const updatePwd = asyncHandler(async (req, res) => {
+
+    const { data }  =  req.body
+    console.log(data);
+    const salt = await bcrypt.genSalt(15);
+    const hashedPassword = await bcrypt.hash(data, salt);
+    let qryupPwd = `update users set password="${hashedPassword}" where id=${req.session.user_id};`
+    console.log(qryupPwd);
+    let resultqry = await queryExecuter(qryupPwd);
+    if(resultqry){
+       return res.json({msg:"success"})
+    }
+
+    return res.json({
+        msg:"fail"
+    })
+
+
+})
+const updateUserName =asyncHandler(async(req,res)=>{
+res.render('userNameUpt')
+})
+const updateUserNamepost =asyncHandler(async(req,res)=>{
+    const {data} = req.body
+    console.log(data);
+    let qryupPwd = `update users set user_name="${data}" where id=${req.session.user_id};`
+    console.log(qryupPwd);
+    let resultqry = await queryExecuter(qryupPwd);
+    if(resultqry){
+       return res.json({msg:"success"})
+    }
+
+    return res.json({
+        msg:"fail"
+    })
+
+})
+module.exports = { getlocation, getSettings, accountInfo, changePass, checkOldPass, updatePwd ,updateUserName,updateUserNamepost}

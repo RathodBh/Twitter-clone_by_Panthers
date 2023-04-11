@@ -20,7 +20,7 @@
 
 
 
-                    <a href="" class="p-2 fs-14 text-blue">Show more</a>
+            <a href="" class="p-2 fs-14 text-blue">Show more</a>
         </div>
         <div class="footer p-2 mt-2">
             <ul class="d-flex flex-wrap list-unstyled footer-link-container mb-0">
@@ -248,6 +248,20 @@
     }
 
     getFollowUser();
+
+
+    window.addEventListener("load", () => {
+        let usercurrName = document.querySelector("#userData span")
+        console.log(usercurrName.innerHTML);
+        let namea = document.querySelector('#showuname')
+        console.log(namea);
+        namea.innerHTML = usercurrName.innerText
+        console.log(namea);
+    })
+
+
+
+
 
 </script>
 </body>
