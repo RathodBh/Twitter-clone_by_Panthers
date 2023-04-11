@@ -1,5 +1,7 @@
 const conn = require("../connection/connectdb");
 const jwt = require('jsonwebtoken')
+const { detect } = require('detect-browser');
+const browser = detect();
 const address = require('address')
 // const queryExecuter = require('../queryExecute/queryExecuter')
 const express = require("express");
@@ -67,26 +69,31 @@ const loginHandler = async (req, res) => {
         req.session.cookie.maxAge = hour
 
         // done by datta
+        let user_id = req.session.user_id;
+        console.log('user id is: ');
+        console.log(user_id);
         var ip1 = [];
-        var ips = `select ip  from twitter_clone.users where email = "${email}"`;
-        var ipres = await queryExecuter(ips)
-        console.log('this is ipres((ip result)ip of user who is trying to login)');
-        console.log(ipres);
+        // var ips = `select ip  from twitter_clone.users where email = "${email}"`;
+        // var ipres = await queryExecuter(ips)
+        // console.log('this is ipres((ip result)ip of user who is trying to login)');
+        // console.log(ipres);
 
-        console.log('ip address is: ');
+        // console.log('ip address is: ');
         var ip = address.ip();
         console.log(ip);
-        if (ipres[0]['ip'] != '' ) {
-            res.redirect('/forget')
-        }
-        else {
-            console.log('ip is pushed in ip1, and value of resulting ip is below');
-            ip1.push(ip)
-            var insip = `update twitter_clone.users set ip = "${ip1}" where email = "${email}"`;
-            await queryExecuter(insip);
-            console.log(ip1);
+        
+        
+        //     console.log('ip is pushed in ip1, and value of resulting ip is below');
+        //     ip1.push(ip)
+        //     var insip = `update twitter_clone.users set ip = "${ip1}" where email = "${email}"`;
+        //     await queryExecuter(insip);
+        //     console.log(ip1);
+
+        let insip2= `insert into twitter_clone.ip(user_id,ip_addr) values (${user_id},'${ip}') `;
+        await queryExecuter(insip2)
+        console.log('insip2 executed');
             res.redirect('/dashboard')
-        }
+        
 
         // ip1.push(ip)
         // console.log('another ip address is: ');

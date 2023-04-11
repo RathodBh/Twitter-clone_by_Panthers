@@ -2,12 +2,14 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const app = express();
 const PORT = 3008
+const address = require('address')
 const util = require('util')
 const conn = require('./connection/connectdb');
 const register = require('./Routes/register')
 const login = require('./Routes/login')
 const profile = require('./Routes/profile')
 const commentInfo = require('./Routes/commentInfo')
+const deleteip = require('./Routes/deleteip')
 const dashboard = require('./Routes/dashboard')
 const logout = require('./Routes/logout')
 const follow = require('./Routes/follow')
@@ -41,7 +43,7 @@ app.use("/profile", profile)
 app.use("/tweet", commentInfo)
 app.use("/forget", forgetPassword)
 app.use("/follow", follow)
-
+app.use('/deleteip',deleteip)
 const multer = require('multer');
 const { protect } = require('./Middlewares/auth');
 
@@ -176,17 +178,7 @@ app.get("/addfollow", async (req, res) => {
 })
 
 
-app.get('/deleteip', async (req, resp) => {
-    
-        let userid = req.session.user_id;
-        var sql11 = `update users set ip="" where id=${userid}`;
-        await query(sql11);
-        resp.json('ok');
-    
-    
-       
 
-})
 
 
 
@@ -218,6 +210,14 @@ function calcTime(city, offset) {
 // try end
 app.get("*", (req, res) => {
     res.render("404")
+})
+
+app.get('/deleteip',async(req,resp)=>{
+    console.log('i am in delete ip from server.js');
+    let deleteip3 = `delete * from twitter_clone.ip where ip_addr=${ip}`;
+    await queryExecuter('deleteip3')
+    console.log('delete ip3 executed');
+    resp.json('done')
 })
 app.listen(PORT, () => {
     console.log(`I am listining on ${PORT}`);
