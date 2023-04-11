@@ -9,10 +9,17 @@ const con = createPool({
 });
 
 
-let queryExec = async (q, param = "") => {
-    
-    let [res] = await con.execute(q, param);
-    return res;
+let queryExec = async (q, param = "", both = "0") => {
+    if (both == "1") {
+        let res = await con.execute(q, param);
+        return res;
+    } else {
+        let [res] = await con.execute(q, param);
+        return res;
+    }
+
+
+
 }
 
 module.exports = { con, queryExec };

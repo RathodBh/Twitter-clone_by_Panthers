@@ -8,13 +8,13 @@ function emoji_clk() {
     if (ff == 0) {
         document.getElementById('emojis_img').style.display = "block";
         document.querySelector('emoji-picker')
-            .addEventListener('emoji-click', event => document.getElementById('twt-area').value += event.detail.unicode);
+            .addEventListener('emoji-click', event => document.getElementById('myTextArea').innerText += event.detail.unicode);
         ff = 1;
     }
     else {
         document.getElementById('emojis_img').style.display = "none";
         document.querySelector('emoji-picker')
-            .addEventListener('emoji-click', event => document.getElementById('twt-area').value += event.detail.unicode);
+            .addEventListener('emoji-click', event => document.getElementById('myTextArea').innerText += event.detail.unicode);
         ff = 0;
     }
     // document.getElementById('emojiSelectorIcon').style.display="none"

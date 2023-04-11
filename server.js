@@ -166,14 +166,13 @@ function calcTime(city, offset) {
 
 // for time zone end
 // try end
-app.get('/home', function(req, res){
-    res.render("home")
-})
+
 app.get("*", (req, res) => {
     res.render("404")
 })
 app.listen(PORT, () => {
     console.log(`I am listining on ${PORT},\n Click here http://localhost:3008/user-login`);
 });
+
 
 

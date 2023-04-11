@@ -18,16 +18,19 @@ function allClicks() {
     })
 }
 
+let is_clickable = true;
+
 async function likepost(e, t_id) {
 
     e.stopPropagation()
 
     let tweet_id = t_id.id
 
-    if (t_id.classList.contains('fa-regular')) {
+    if (t_id.classList.contains('fa-regular') && is_clickable == true) {
         t_id.classList.value = 'fa-solid fa-heart text-danger';
         let like = true
-        if (t_id.classList.contains("fa-solid")) {
+        if (t_id.classList.contains("fa-solid") ) {
+            is_clickable = false;
             const save_req = await fetch(`/dashboard/like`, {
                 method: "POST",
                 headers: {
@@ -39,6 +42,9 @@ async function likepost(e, t_id) {
             });
             var resSave = await save_req.json();
 
+            if(resSave){
+                is_clickable = true;
+            }
             if (resSave.flag == true) {
                 let likeSpan = document.querySelector("#like" + tweet_id)
                 likeSpan.innerHTML = resSave.alllikecount;
@@ -46,10 +52,11 @@ async function likepost(e, t_id) {
         }
 
     }
-    else if (t_id.classList.value == 'fa-solid fa-heart text-danger') {
+    else if (t_id.classList.value == 'fa-solid fa-heart text-danger'  && is_clickable == true) {
         t_id.classList.value = 'fa-regular fa-heart'
         let like = false;
         if (t_id.classList.contains("fa-regular")) {
+            is_clickable = false;
             const save_req = await fetch(`/dashboard/like`, {
                 method: "POST",
                 headers: {
@@ -60,6 +67,9 @@ async function likepost(e, t_id) {
                 })
             });
             var resSave = await save_req.json();
+            if(resSave){
+                is_clickable = true;
+            }
             if (resSave.flag == false) {
                 let likeSpan = document.querySelector("#like" + tweet_id)
                 likeSpan.innerHTML = resSave.alllikecount
@@ -118,6 +128,16 @@ async function forYouDataLoad() {
     let part1Data = '';
 
     tweet_data.forEach((t, index) => {
+        let tweetWithHash = t.tweet
+        let hashTag = tweetWithHash.match(/#[a-z0-9_]+/g) 
+
+        if(hashTag != null)
+            for (let curHashtag of hashTag) {
+                tweetWithHash = tweetWithHash.replace(curHashtag, `<a href="" class="text-primary">${curHashtag}</a>`)
+
+                // textArea.blur();
+                // textArea.click();
+            }
         part1Data +=
             `
         <div onclick="test(${t.id})"
@@ -145,7 +165,7 @@ async function forYouDataLoad() {
                                     <div class="tweet-content">
 
                                         <p class="text-black fs-16 fw-300 word-wrap">
-                                            ${t.tweet} 
+                                            ${tweetWithHash} 
                                         </p>
 
                                     </div>
@@ -291,6 +311,17 @@ async function followingTab() {
     let part2Data = '';
     tweet_data.forEach((t, index) => {
         if (following_data.includes(t.user_id)) {
+            let tweetWithHash = t.tweet
+        let hashTag = tweetWithHash.match(/#[a-z0-9_]+/g) 
+
+        if(hashTag != null)
+            for (let curHashtag of hashTag) {
+                tweetWithHash = tweetWithHash.replace(curHashtag, `<a href="" class="text-primary">${curHashtag}</a>`)
+
+                // textArea.blur();
+                // textArea.click();
+            }
+           
             part2Data +=
                 `
                 <div onclick="test(${t.id})"
@@ -318,7 +349,7 @@ async function followingTab() {
                                     <div class="tweet-content">
 
                                         <p class="text-black fs-16 fw-300 word-wrap">
-                                            ${t.tweet} 
+                                            ${tweetWithHash} 
                                         </p>
 
                                     </div>
