@@ -13,6 +13,7 @@ const dashboard = require('./Routes/dashboard')
 const home = require('./Routes/home')
 const logout = require('./Routes/logout')
 const follow = require('./Routes/follow')
+const setting = require('./Routes/setting')
 const forgetPassword = require('./Routes/forgetPassword');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
@@ -35,6 +36,7 @@ const crypto = require('crypto');
 // my all end points
 app.set('view engine', 'ejs')
 app.use('/user', register)
+app.use('/setting', setting)
 app.use('/user-login', login)
 app.use('/user-logout', logout)
 app.use('/', home)

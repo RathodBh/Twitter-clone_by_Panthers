@@ -193,7 +193,7 @@
                                 </a>
                             </li>
                             <li class="link-hover">
-                                <a href="" class="menu-link" id="settingsLink">
+                                <a href="/setting" class="menu-link" id="settingsLink">
                                     <i class="fa-solid fa-gear link-icon"></i>
                                     <span>Settings</span>
                                 </a>
@@ -222,7 +222,7 @@
                                         <img src="" alt="" class="bottom-pic me-2 border">
                                         <div class="info" id="userData">
                                             <h6></h6>
-                                            <span class="text-gray"></span>
+                                            <span id="useraa" class="text-gray"></span>
                                         </div>
                                     </div>
                                     <span class="all-center flex-row">
@@ -283,7 +283,7 @@
                                     </a>
                                 </li>
                                 <li class="link-hover">
-                                    <a href="" class="menu-link" id="settingsLink">
+                                    <a href="/setting" class="menu-link" id="settingsLink">
                                         <i class="fa-solid fa-gear link-icon"></i>
                                         <span>Settings</span>
                                     </a>
@@ -347,9 +347,17 @@
                             document.querySelector("#profileLink").classList.add("active")
                         }
 
+                    window.onload = async () => {
+                        let userData = await fetch("/profile/getUserData");
+                        let ans = await userData.json();
 
-
-                    </script>
+                        document.querySelector("#status img").setAttribute("src", ans.user_img);
+                        document.querySelector("#status h6").innerText = ans.name
+                        document.querySelector("#status span").innerText = ans.username
+                        document.querySelector("#userDataId").innerText = ans.username
+                        document.querySelector("#showuname").innerText = ans.username
+                    }
+                </script>
 
                     <div class="modal fade " id="settingsModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                         aria-hidden="true">

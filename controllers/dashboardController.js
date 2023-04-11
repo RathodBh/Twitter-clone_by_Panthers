@@ -20,11 +20,14 @@ const getpostLike1 = asyncHandler(async (req, res) => {
         var tweet_id = data.tweet_id
         tweet_ids = data.tweet_id
         if (data.like == true) {
+
+            
+            
             const qrt = `SELECT  * FROM  likes where tweet_id=? and user_id=?`
 
             const like_data = await queryExec(qrt,[data.tweet_id,user_id]);
             
-            
+            // console.log(like_data);
             if (like_data.length == 0) {
                 const ins_qrt = `INSERT INTO likes (user_id,tweet_id,created_at) values (?,?,NOW())`
 
@@ -48,8 +51,8 @@ const getpostLike1 = asyncHandler(async (req, res) => {
                 alllikecount = tweet_like_count[0].tweet_likes
                 alllikecount = alllikecount + 1
 
-                const up_tweets_tweetlike = `Update tweets Set tweet_likes=?  where id=?`
-                const Update_entry_tweet = await queryExec(up_tweets_tweetlike,[alllikecount,data.tweet_id]);
+                const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount} where id=${data.tweet_id}`
+                const Update_entry_tweet = await queryExecuter(up_tweets_tweetlike);
 
 
                 const Update_unlike = `Update likes Set updated_at= Now(),is_deleted=0  where tweet_id=?`

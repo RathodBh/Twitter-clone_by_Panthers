@@ -247,37 +247,17 @@
     getFollowUser();
 
 
-    window.onload = async () => {
-
-        //LOAD THE BOTTOM USER INFORMATION
-        let userData = await fetch("/profile/getUserData");
-        let ans = await userData.json();
-
-        document.querySelector("#status img").setAttribute("src", ans.user_img);
-        document.querySelector("#statusMobile").setAttribute("src", ans.user_img);
-        document.querySelector("#tweetUserImg").setAttribute("src", ans.user_img);
-        document.querySelector("#status h6").innerText = ans.name
-        document.querySelector("#status span").innerText = ans.username
-        document.querySelector("#userDataId").innerText = ans.username
+    window.addEventListener("load", () => {
+        let usercurrName = document.querySelector("#userData span")
+        console.log(usercurrName.innerHTML);
+        let namea = document.querySelector('#showuname')
+        console.log(namea);
+        namea.innerHTML = usercurrName.innerText
+        console.log(namea);
+    })
 
 
 
-        // RESPONSIVE SEARCH 
-        var searchPageData = document.getElementById("searchPage").innerHTML;
-        resizeSize();
-        function resizeSize() {
-            if (window.innerWidth <= 768) {
-                document.getElementById("searchPageModalContent").innerHTML = searchPageData;
-                document.getElementById("searchPage").innerHTML = "";
-            } else {
-                document.getElementById("searchPage").innerHTML = searchPageData;
-                document.getElementById("searchPageModalContent").innerHTML = "";
-            }
-        }
-        window.addEventListener("resize", () => {
-            resizeSize();
-        })
-    }
 
 
 </script>
