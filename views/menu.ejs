@@ -47,17 +47,21 @@
 
                             </div>
 
-                            <div class="d-flex pt-2">
+                            <div class="d-flex pt-2 position-relative">
                                 <img src="/assets/images/cover.jpg" alt="" class="profile-size me-2 border "
                                     id="tweetUserImg">
-                                <div contenteditable="true" class="w-100" style="height: 150px;overflow-x:auto" id="myTextArea" ></div>
-                                <!-- <textarea placeholder="What's happening?" name="tweet_text"
-                                    class="text-dark tweet-comment-box" id="twt-area" cols="30" rows="5" maxlength="300"
-                                    >
+                                <div class="position-relative w-100" style="height: 150px;">
+                                    <div class="w-100 tweet-comment-box word-wrap" id="myTextArea" spellcheck="false">
+                                    </div>
+                                    <textarea placeholder="What's happening?" name="tweet_text"
+                                        class=" tweet-comment-box word-wrap" id="twt-area" cols="30" rows="5"
+                                        maxlength="300" spellcheck="false"></textarea>
+                                </div>
+                                <!-- <div id="searchResHash"
+                                    style="position: absolute; width:100%; top:0;left:0;right:0;min-height:40vh;overflow-x:auto;">
 
+                                </div> -->
 
-                                </textarea> -->
-                                <input type="hidden" id="hash">
                             </div>
                             <div id="iimg" class=" all-center flex-column">
                             </div>
@@ -96,20 +100,22 @@
             // let output = document.getElementById('myTextArea');
 
 
-            let textArea = document.getElementById("myTextArea");
-            textArea.focus()
+            let textArea = document.getElementById("twt-area");
+
 
             textArea.addEventListener("input", (e) => {
-
-                // console.log(textArea.value[textArea.value.length - 2]);
-                let hashTag = textArea.innerHTML.match(/#[a-z0-9_]+/g)
-
+                // let hashTag = textArea.innerText.match(/#[a-z0-9_]+(?!#)/g)
+                let hashTag = textArea.value.split(" ")
+                let tweetHTML = textArea.value;
+                let newHTML = ""
                 for (let curHashtag of hashTag) {
-                    textArea.innerHTML = textArea.innerHTML.replace(curHashtag, `<span class="text-primary">${curHashtag}</span>`)
-
-                    // textArea.blur();
-                    // textArea.click();
+                    if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
+                        tweetHTML = tweetHTML.replace(curHashtag, `<span class="text-primary">${curHashtag}</span>`)
                 }
+
+                document.querySelector("#myTextArea").innerHTML = tweetHTML;
+
+
             })
             document.querySelector('#sub_btn').addEventListener('click', async function (e) {
                 e.preventDefault();
@@ -120,7 +126,13 @@
                     })
                 } else {
                     let tweet = document.querySelector("#myTextArea").innerText;
-                    let hashTags = tweet.match(/#[a-z0-9_]+/g)
+                    let hashTags = []
+                    let hashTag = textArea.value.split(" ")
+                    let tweetHTML = textArea.value;
+                    for (let curHashtag of hashTag) {
+                        if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
+                            hashTags.push(curHashtag)
+                    }
                     // document.querySelector("#hash").value = hashTags
                     let tweetReq = await fetch(`/dashboard/tweet`, {
                         method: "POST",
@@ -135,7 +147,12 @@
 
                     let ansReq = await tweetReq.json();
                     if (ansReq.ans == true) {
-                        forYouDataLoad()
+                        getTrendingHashtags()
+                        try {
+                            forYouDataLoad()
+                        } catch (e) {
+
+                        }
                     }
                     // document.querySelector("#tweetSubmit").submit()
                 }

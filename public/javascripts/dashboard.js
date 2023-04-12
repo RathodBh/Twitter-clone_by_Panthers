@@ -2,7 +2,14 @@ window.addEventListener("load", function () {
     const loader = document.querySelector(".loader");
     loader.className += " hidden"; // class "loader hidden"
     allClicks()
-
+    //trending search results
+    try {
+        if (sel != "") {
+            document.querySelector("#searchTweetHash").value = "#" + sel
+        }
+    } catch (e) {
+        // console.log("🚀 ~ file: dashboard.js:8 ~ e:", e)
+    }
 });
 
 function allClicks() {
@@ -29,7 +36,7 @@ async function likepost(e, t_id) {
     if (t_id.classList.contains('fa-regular') && is_clickable == true) {
         t_id.classList.value = 'fa-solid fa-heart text-danger';
         let like = true
-        if (t_id.classList.contains("fa-solid") ) {
+        if (t_id.classList.contains("fa-solid")) {
             is_clickable = false;
             const save_req = await fetch(`/dashboard/like`, {
                 method: "POST",
@@ -42,7 +49,7 @@ async function likepost(e, t_id) {
             });
             var resSave = await save_req.json();
 
-            if(resSave){
+            if (resSave) {
                 is_clickable = true;
             }
             if (resSave.flag == true) {
@@ -52,7 +59,7 @@ async function likepost(e, t_id) {
         }
 
     }
-    else if (t_id.classList.value == 'fa-solid fa-heart text-danger'  && is_clickable == true) {
+    else if (t_id.classList.value == 'fa-solid fa-heart text-danger' && is_clickable == true) {
         t_id.classList.value = 'fa-regular fa-heart'
         let like = false;
         if (t_id.classList.contains("fa-regular")) {
@@ -67,7 +74,7 @@ async function likepost(e, t_id) {
                 })
             });
             var resSave = await save_req.json();
-            if(resSave){
+            if (resSave) {
                 is_clickable = true;
             }
             if (resSave.flag == false) {
@@ -116,9 +123,26 @@ async function copyContent(e, text) {
 const test = (id) => {
     window.location.href = (`/tweet/tweet_details/${id}`)
 }
+try {
+    if (sel != "") {
+        forYouDataLoad("", "#" + sel)
+    }
+} catch (e) {
+    forYouDataLoad()
+}
 
-async function forYouDataLoad() {
-    let fetchDashboard = await fetch(`/dashboard/dashboardData`);
+async function forYouDataLoad(srch = "", hash = "") {
+    let fetchDashboard;
+    console.log("src", srch);
+    console.log("hash", hash);
+    if (srch != "") {
+        fetchDashboard = await fetch(`/dashboard/dashboardData?srch=${srch}`);
+    } else if (hash != "") {
+        fetchDashboard = await fetch(`/dashboard/dashboardData?hash=${hash}`);
+    } else {
+        fetchDashboard = await fetch(`/dashboard/dashboardData`);
+    }
+
     let ansData = await fetchDashboard.json();
 
     let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid, userID } = ansData;
@@ -128,16 +152,21 @@ async function forYouDataLoad() {
     let part1Data = '';
 
     tweet_data.forEach((t, index) => {
-        let tweetWithHash = t.tweet
-        let hashTag = tweetWithHash.match(/#[a-z0-9_]+/g) 
 
-        if(hashTag != null)
-            for (let curHashtag of hashTag) {
-                tweetWithHash = tweetWithHash.replace(curHashtag, `<a href="" class="text-primary">${curHashtag}</a>`)
+        let hashTag = t.tweet.split(" ")
+        let tweetTemp = t.tweet
+        for (let curHashtag of hashTag) {
+            if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
+                tweetTemp = tweetTemp.replace(curHashtag, `<span class="text-primary">${curHashtag}</span>`)
+        }
+        // let tweetWithHash = t.tweet
+        // let hashTag = tweetWithHash.match(/#[a-z0-9_]+/g)
 
-                // textArea.blur();
-                // textArea.click();
-            }
+        // if (hashTag != null)
+        //     for (let curHashtag of hashTag) {
+        //         if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
+        //             tweetWithHash = tweetWithHash.replace(curHashtag, `<a href="" class="text-primary">${curHashtag}</a>`)
+        //     }
         part1Data +=
             `
         <div onclick="test(${t.id})"
@@ -165,7 +194,7 @@ async function forYouDataLoad() {
                                     <div class="tweet-content">
 
                                         <p class="text-black fs-16 fw-300 word-wrap">
-                                            ${tweetWithHash} 
+                                            ${tweetTemp} 
                                         </p>
 
                                     </div>
@@ -293,11 +322,21 @@ async function forYouDataLoad() {
     });
 
 
-    load()
+    // load()
+    var userretweet = [];
+    for (let i = 0; i < arrretweetid.length; i++) {
+        userretweet.push(arrretweetid[i]);
+    }
+    userretweet.forEach(element => {
+        try {
+            document.getElementById("k" + element).classList = "fa-solid fa-retweet text-success";
+        } catch (e) {
+            //console.log("Error: " + e)
+        }
+    });
     allClicks()
 }
 
-forYouDataLoad()
 
 
 
@@ -311,17 +350,14 @@ async function followingTab() {
     let part2Data = '';
     tweet_data.forEach((t, index) => {
         if (following_data.includes(t.user_id)) {
-            let tweetWithHash = t.tweet
-        let hashTag = tweetWithHash.match(/#[a-z0-9_]+/g) 
 
-        if(hashTag != null)
+            let hashTag = t.tweet.split(" ")
+            let tweetTemp = t.tweet
             for (let curHashtag of hashTag) {
-                tweetWithHash = tweetWithHash.replace(curHashtag, `<a href="" class="text-primary">${curHashtag}</a>`)
-
-                // textArea.blur();
-                // textArea.click();
+                if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
+                    tweetTemp = tweetTemp.replace(curHashtag, `<span class="text-primary">${curHashtag}</span>`)
             }
-           
+
             part2Data +=
                 `
                 <div onclick="test(${t.id})"
@@ -349,7 +385,7 @@ async function followingTab() {
                                     <div class="tweet-content">
 
                                         <p class="text-black fs-16 fw-300 word-wrap">
-                                            ${tweetWithHash} 
+                                            ${tweetTemp} 
                                         </p>
 
                                     </div>
@@ -482,18 +518,6 @@ class="fa-solid fa-user-plus me-2" ></i>
     });
 
 
-
-
-    load()
-    allClicks()
-}
-async function load() {
-    let fetchDashboard = await fetch(`/dashboard/dashboardData`);
-    let ansData = await fetchDashboard.json();
-
-    let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
-
-
     var userretweet = [];
     for (let i = 0; i < arrretweetid.length; i++) {
         userretweet.push(arrretweetid[i]);
@@ -506,8 +530,30 @@ async function load() {
         }
     });
 
+    // load()
+    allClicks()
 }
-load()
+// async function load() {
+//     let fetchDashboard = await fetch(`/dashboard/dashboardData`);
+//     let ansData = await fetchDashboard.json();
+
+//     let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid } = ansData;
+
+
+//     // var userretweet = [];
+//     // for (let i = 0; i < arrretweetid.length; i++) {
+//     //     userretweet.push(arrretweetid[i]);
+//     // }
+//     // userretweet.forEach(element => {
+//     //     try {
+//     //         document.getElementById("k" + element).classList = "fa-solid fa-retweet text-success";
+//     //     } catch (e) {
+//     //         //console.log("Error: " + e)
+//     //     }
+//     // });
+
+// }
+// load()
 async function retweetpost(e, t_id) {
     e.stopPropagation();
 
@@ -565,7 +611,18 @@ async function retweetpost(e, t_id) {
         }
     }
 
-    load()
+    // load()
+    var userretweet = [];
+    for (let i = 0; i < arrretweetid.length; i++) {
+        userretweet.push(arrretweetid[i]);
+    }
+    userretweet.forEach(element => {
+        try {
+            document.getElementById("k" + element).classList = "fa-solid fa-retweet text-success";
+        } catch (e) {
+            //console.log("Error: " + e)
+        }
+    });
 }
 
 // document.querySelector("#comment_area").addEventListener("input",(e)=>{
@@ -652,5 +709,72 @@ async function followProp(e, follower_id, flag) {
         })
     }
     await getFollowUser()
+
+}
+
+// search tweet has or anything TRENDING.EJS
+let trendingSearch1 = document.querySelector("#searchTweetHash")
+trendingSearch1.addEventListener('click', clearRes)
+trendingSearch1.addEventListener('blur', clearRes)
+function clearRes() {
+    if (trendingSearch1.value == "" || trendingSearch1.value == "#") {
+        searchSuggestions.classList.remove("d-none")
+
+    }
+}
+
+let searchSuggestions = document.querySelector("#searchSuggestion");
+
+async function searchSuggestionsTrend() {
+    let trendingSearch = document.querySelector("#searchTweetHash")
+
+    if (trendingSearch.value.startsWith("#")) {
+        let data = await fetch(`/dashboard/getTrending?search=${trendingSearch.value.substring(1)}`);
+        let searchRes = await data.json();
+        let allData = searchRes.searchHashtag;
+
+        if (trendingSearch.value == "#") {
+            searchSuggestions.classList.add("d-none")
+        } else {
+            searchSuggestions.classList.remove("d-none")
+        }
+        document.querySelector("#searchSuggestion").innerHTML = ""
+        if (allData != undefined) {
+            if (allData.length > 0) {
+                for (const x of allData) {
+                    searchSuggestions.innerHTML += `
+                <a onclick="sendData('${x.hashtag}')" class="my-4 d-flex align-items-center w-100 text-blue" id="" >
+                    
+                    <div class="col-3 all-center">
+                        <i class="fa-solid fa-magnifying-glass fa-2x"></i>
+                   </div>
+                    <div class="info col-7 d-flex align-items-center " > 
+                        <span class="fs-18">${x.hashtag}</span>
+                    </div>
+        </a>
+                `
+                }
+            } else {
+                searchSuggestions.classList.add("d-none")
+
+            }
+        }
+
+        console.log("Hello world");
+        //search API for tweet Data
+        forYouDataLoad("", trendingSearch.value.substring(1))
+
+    } else if (trendingSearch.value == "") {
+        searchSuggestions.classList.add("d-none")
+
+    } else {
+        forYouDataLoad(trendingSearch.value)
+
+    }
+}
+
+function sendData(hashtag) {
+    document.getElementById("searchTweetHash").value = "#" + hashtag;
+    searchSuggestions.classList.add("d-none")
 
 }
