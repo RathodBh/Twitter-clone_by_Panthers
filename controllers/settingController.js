@@ -104,4 +104,8 @@ const updateUserNamepost =asyncHandler(async(req,res)=>{
     })
 
 })
-module.exports = { getlocation, getSettings, accountInfo, changePass, checkOldPass, updatePwd ,updateUserName,updateUserNamepost}
+
+const getCountry =asyncHandler(async(req,res)=>{
+
+})
+module.exports = { getCountry,getlocation, getSettings, accountInfo, changePass, checkOldPass, updatePwd ,updateUserName,updateUserNamepost}

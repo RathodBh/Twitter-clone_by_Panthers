@@ -4,9 +4,6 @@ const express = require('express')
 const app = express();
 const asyncHandler = require("express-async-handler");
 
-
-
-
 var tweet_ids
 const getpostLike1 = asyncHandler(async (req, res) => {
     try {
