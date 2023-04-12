@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const {queryExec} = require('../connection/conn');
+const {queryExec} = require('../connection/connectdb');
 
 
 const followData = asyncHandler(async (req, res) => {

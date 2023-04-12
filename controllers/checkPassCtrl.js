@@ -1,6 +1,6 @@
 
 
-const {queryExec} = require('../connection/conn');
+const {queryExec} = require('../connection/connectdb');
 
 
 const getCheckPass = async (req, res) => {

@@ -1,5 +1,5 @@
 
-const {queryExec} = require('../connection/conn');
+const {queryExec} = require('../connection/connectdb');
 const express = require('express')
 const app = express();
 const asyncHandler = require("express-async-handler");

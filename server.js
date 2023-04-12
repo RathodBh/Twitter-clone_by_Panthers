@@ -1,23 +1,26 @@
 const express = require('express')
+const {queryExec} = require('./connection/connectdb')
 const bodyParser = require('body-parser')
-require('dotenv').config("./.env")
 const app = express();
-const PORT = process.env.PORT
-const {queryExec} = require('./connection/conn');
+const PORT = 3008
+const address = require('address')
+const util = require('util')
+const conn = require('./connection/connectdb');
 const register = require('./Routes/register')
 const login = require('./Routes/login')
 const profile = require('./Routes/profile')
 const commentInfo = require('./Routes/commentInfo')
+const deleteip = require('./Routes/deleteip')
 const dashboard = require('./Routes/dashboard')
-const home = require('./Routes/home')
 const logout = require('./Routes/logout')
 const follow = require('./Routes/follow')
 const forgetPassword = require('./Routes/forgetPassword');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+
 app.use(cookieParser());
 app.use(session({
-    secret: process.env.SECRET_KEY,
+    secret: "secret key",
     resave: false,
     saveUninitialized: true,
 }));
@@ -36,18 +39,18 @@ app.set('view engine', 'ejs')
 app.use('/user', register)
 app.use('/user-login', login)
 app.use('/user-logout', logout)
-app.use('/', home)
 app.use('/dashboard', dashboard)
 app.use("/profile", profile)
 app.use("/tweet", commentInfo)
 app.use("/forget", forgetPassword)
 app.use("/follow", follow)
-
+app.use('/deleteip',deleteip)
 const multer = require('multer');
 const { protect } = require('./Middlewares/auth');
 
 
 app.set('view engine', 'ejs')
+// const conn = require('../connection/connectdb');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -74,7 +77,7 @@ app.post("/updateProfile", uploads.fields([{
         try {
             let uid = req.session.user_id
             const file = req.files;
-            var users = await queryExec(`select user_image as dp , cover_image as cover from users where id=?`,[uid]);
+            var users = await queryExec(`select user_image as dp , cover_image as cover from users where id=${uid}`);
 
             var cover_imgsrc = req.files.cover_image;
             var profile_imgsrc = req.files.profile_image;
@@ -92,7 +95,7 @@ app.post("/updateProfile", uploads.fields([{
 
 
 
-            await queryExec(`update users set name=? , bio=? ,birth_date=? ,cover_image=?, user_image=? WHERE id=?`,[name,user_bio,user_dob,cover_imgsrc,profile_imgsrc,uid]);
+            await queryExec(`update users set name="${name}" , bio="${user_bio}" ,birth_date="${user_dob}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id=${uid}`);
 
             res.redirect('/profile/user')
 
@@ -109,8 +112,36 @@ app.post("/updateProfile", uploads.fields([{
 
 app.get("/srch?", async (req, res) => {
     var srchval = req.query.val;
-    var sql = `SELECT id,name,user_name,user_image FROM twitter_clone.users where user_name like ? or name like ? `;
-    var matchedResult = await queryExec(sql,["%"+srchval+"%","%"+srchval+"%"]);
+    var sql = `select user_name from  users`;
+    var names = await queryExec(sql);
+    var arr = [];
+    var newArr = [];
+    for (let i = 0; i < names.length; i++) {
+        arr.push(names[i].user_name)
+    }
+    var counter = 0;
+    var arrVal;
+    for (let j = 0; j < arr.length; j++) {
+        var arrValLength = arr[j].length;
+        arrVal = arr[j];
+        for (let k = 0; k < srchval.length; k++) {
+            if (arrVal.includes(srchval[k])) {
+                var firstIndex = arrVal.indexOf(srchval[k]);
+                arrVal = arrVal.substr(firstIndex + 1, arrValLength + 1)
+                counter++;
+            }
+        }
+        if (counter == srchval.length) {
+            newArr.push(arr[j])
+        }
+        counter = 0;
+    }
+    var matchedResult = [];
+    for (let m = 0; m < newArr.length; m++) {
+        var sql2 = `SELECT id,name,user_name,user_image FROM  users where user_name="${newArr[m]}"`;;
+        resultantName = await queryExec(sql2);
+        matchedResult.push(resultantName)
+    }
     res.json(matchedResult)
 
 })
@@ -122,21 +153,24 @@ app.get("/addfollow", async (req, res) => {
     let followerId = req.query.followerId
     if (req.query.flag == 0) {
         cnt++;
-        await queryExec(`insert into followers (user_id,follower_id,isdelete) values(?,?,"${0}");`,[followerId,userId]);
-        await queryExec(`insert into following (user_id,following_id,isdelete) values(?,?,"${0}")`,[userId,followerId]);
-        let a = await queryExec(`UPDATE users SET following = following + ${cnt} WHERE id = ?`,[userId]);
-        let b=await queryExec(`UPDATE users SET followers = followers + ${cnt} WHERE id = ?`,[followerId]);
-        
+        await queryExec(`insert into followers (user_id,follower_id,isdelete) values("${followerId}","${userId}","${0}");`);
+        await queryExec(`insert into following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
+        let a = await queryExec(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
+        let b = await queryExec(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
+
     } else {
         cnt--;
-        await queryExec(`delete from  followers  where user_id = ? AND follower_id = ?`,[followerId,userId]);
-        await queryExec(`delete from  following  where user_id = ? AND following_id = ? `,[userId,followerId]);
-        await queryExec(`UPDATE users SET following = following + ${cnt} WHERE id = ?`,[userId]);
-        await queryExec(`UPDATE users SET followers = followers + ${cnt} WHERE id = ?`,[followerId]);
+        await queryExec(`delete from  followers  where user_id = ${followerId} AND follower_id = ${userId};`);
+        await queryExec(`delete from  following  where user_id = ${userId} AND following_id = ${followerId} ;`);
+        await queryExec(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
+        await queryExec(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
     }
 
     return res.send({ message: "update" });
 })
+
+
+
 
 
 
@@ -145,35 +179,39 @@ function calcTime(city, offset) {
 
     // create Date object for current location
     d = new Date();
-    
+
     // convert to msec
     // add local time zone offset
     // get UTC time in msec
     utc = d.getTime() + (d.getTimezoneOffset() * 60000);
-    
+
     // create new Date object for different city
     // using supplied offset
-    nd = new Date(utc + (3600000*offset));
-    
+    nd = new Date(utc + (3600000 * offset));
+
     // return time as a string
     return 'The local time in ' + city + ' is ' + nd.toLocaleString();
-    
-    }
-    
-    // get Bombay time
-    // console.log(calcTime('Bombay', +5.5));
-    
+
+}
+
+// get Bombay time
+// console.log(calcTime('Bombay', +5.5));
+
 
 // for time zone end
 // try end
-app.get('/home', function(req, res){
-    res.render("home")
-})
 app.get("*", (req, res) => {
     res.render("404")
 })
+
+app.get('/deleteip',async(req,resp)=>{
+    console.log('i am in delete ip from server.js');
+    let deleteip3 = `delete * from twitter_clone.ip where ip_addr=${ip}`;
+    await queryExec('deleteip3')
+    console.log('delete ip3 executed');
+    resp.json('done')
+})
 app.listen(PORT, () => {
-    console.log(`I am listining on ${PORT},\n Click here http://localhost:3008/user-login`);
-});
-
-
+    console.log(`I am listining on ${PORT}`);
+    console.log(`CLick here http://localhost:3008/user-login`);
+})

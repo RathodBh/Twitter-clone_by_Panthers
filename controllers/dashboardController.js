@@ -1,4 +1,4 @@
-const {queryExec} = require('../connection/conn');
+const {queryExec} = require('../connection/connectdb');
 // const queryExec = require('../queryExecute/queryExec')
 const express = require('express')
 const app = express();

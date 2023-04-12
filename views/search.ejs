@@ -63,7 +63,7 @@
     crossorigin="anonymous"></script>
 <script>
 
-    function logout() {
+  function logout() {
         Swal.fire({
             title: 'Do you want to Logout?',
             text: "",
@@ -75,6 +75,11 @@
             confirmButtonText: 'Yes, Logout!'
         }).then((result) => {
             if (result.isConfirmed) {
+             fetch('/deleteip').then((response)=>{
+                return response.json();
+             }).then((result)=>{
+                console.log(result);
+             })
                 const Toast = Swal.mixin({
                     toast: true,
                     position: 'top',
