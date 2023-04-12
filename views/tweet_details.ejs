@@ -2,7 +2,7 @@
     <%- include("add_comment") -%>
 
         <!-- main panel  -->
-        <div class="col-6 px-0 border">
+        <div class="col-lg-6 col-md-6 col-sm-8 col-12 px-0 border">
             <div class="inner-main commentInfo ">
                 <div class="blur-ui p-3">
                     <div class="d-flex align-items-center my-2">
@@ -95,11 +95,6 @@
                                                             </a>
                                                         </li>
                                                         <li class="col">
-                                                            <a href="" class="chart">
-                                                                <i class="fa-solid fa-chart-simple"></i>
-                                                            </a>
-                                                        </li>
-                                                        <li class="col">
                                                             <a href="" class="share p-2" data-bs-toggle="dropdown"
                                                                 aria-expanded="false" onclick="stopProp(event)">
                                                                 <i class="fa-solid fa-arrow-up-from-bracket"></i>
@@ -127,14 +122,14 @@
                                                             yet.</span>
                                                         <% }else{ %>
                                                             <% comments.forEach((c,i)=>{ %>
-                                                                <div class="comment row border py-2">
-                                                                    <div class="col-1 position-relative">
+                                                                <div class="comment row border py-2 justify-content-start align-items-start">
+                                                                    <div class="col-auto px-1">
                                                                         <img src="<%= c.user_image %>" alt=""
-                                                                            class="profile-size me-2 border ">
+                                                                            class="profile-size  border ">
                                                                     </div>
-                                                                    <div class="col-10">
+                                                                    <div class="col">
                                                                         <div
-                                                                            class="d-flex align-items-center user-info position-relative">
+                                                                            class="d-flex align-items-center user-info ">
                                                                             <a href="/profile/user/<%= c.user_id %>"
                                                                                 class="text-black fs-16 me-1 fw-600 ">
                                                                                 <%= c.name %>
@@ -159,9 +154,6 @@
                                                                                 <%= c.comment %>
                                                                             </p>
                                                                         </div>
-                                                                    </div>
-                                                                    <div class="col-1">
-
                                                                     </div>
                                                                 </div>
                                                                 <% }) } %>
@@ -222,31 +214,39 @@
             let form = document.querySelector('#addCommentForm')
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                let data = await fetch(`/tweet/tweet_comment`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        tweetId: document.querySelector("#tweetId").value,
-                        comment_text: document.querySelector("#comment_area").value
+                if (document.querySelector("#comment_area").value == "") {
+                    ToastBlank.fire({
+                        icon: 'warning',
+                        title: 'Please enter a comment',
+
                     })
-                })
-                let ans = await data.json();
+                } else {
 
-                allComments = ans.all_comments;
-                allCommentsLen = ans.len;
-                allCommentAt = ans.comment_at;
-                var comment_section = document.querySelector("#commentSection");
+                    let data = await fetch(`/tweet/tweet_comment`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            tweetId: document.querySelector("#tweetId").value,
+                            comment_text: document.querySelector("#comment_area").value
+                        })
+                    })
+                    let ans = await data.json();
 
-                if (allComments.length <= 0) {
-                    comment_section.innerHTML = `<span class="d-inline-block mt-2 text-secondary">No Comments yet.</span>`;
-                }
-                else {
-                    let comment_data = ""
-                    for (let i = 0; i < allComments.length; i++) {
-                        comment_data +=
-                            `<div class="comment row border py-2">
+                    allComments = ans.all_comments;
+                    allCommentsLen = ans.len;
+                    allCommentAt = ans.comment_at;
+                    var comment_section = document.querySelector("#commentSection");
+
+                    if (allComments.length <= 0) {
+                        comment_section.innerHTML = `<span class="d-inline-block mt-2 text-secondary">No Comments yet.</span>`;
+                    }
+                    else {
+                        let comment_data = ""
+                        for (let i = 0; i < allComments.length; i++) {
+                            comment_data +=
+                                `<div class="comment row border py-2">
                                                                     <div class="col-1">
                                                                         <img src="${allComments[i].user_image}" alt=""
                                                                             class="profile-size me-2 border">
@@ -313,9 +313,10 @@
                                                                         </ul>
                                                                     </div>
                                                                 </div>`;
-                    }
+                        }
 
-                    comment_section.innerHTML = comment_data;
+                        comment_section.innerHTML = comment_data;
+                    }
                 }
 
             })

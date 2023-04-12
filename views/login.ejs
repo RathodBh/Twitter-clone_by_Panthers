@@ -26,7 +26,7 @@
 
     <!-- Modal  -->
     <div class="modal fade" id="signup">
-        <div class="modal-dialog">
+        <div class="modal-dialog container">
             <div class="modal-content rounded mt-6rem">
 
                 <div class="modal-header bg-blue top-radius  d-flex flex-column jcc">
@@ -34,9 +34,9 @@
                     <h3 class="modal-title text-light">Sign-In your account</h3>
                 </div>
 
-                <div class="modal-body bg-light container">
+                <div class="modal-body bg-light">
                     <div class="row">
-                        <div class="col-lg-6 col-12">
+                        <div class="col-lg-6 col-md-12 col-12">
                             <form action="" class="w-100" method="POST">
                                 <div class="data">
                                     <div class="">
@@ -63,7 +63,7 @@
                                                 </div>
                                                 <a href="/forget">Forget password?</a>
                                             </div>
-                                            <input type="submit" value="SUBMIT"
+                                            <input type="submit" value="Login"
                                                 class="w100 bg-blue text-light border-0 py-2 rounded login-now" id="login-now" disabled="true">
                                         </div>
                                     </div>
@@ -71,7 +71,7 @@
                             </form>
 
                         </div>
-                        <div class="col-lg-6 col-12">
+                        <div class="col-lg-6 col-md-12 d-lg-block d-md-none d-sm-none d-none" >
                             <div class="swiper mySwiper w-100 h-100">
                                 <div class="swiper-wrapper w-100">
                                     <div class="swiper-slide">
@@ -111,9 +111,7 @@
     <!-- sweet alert  -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.all.min.js"></script>
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
-    <!-- Initialize Swiper -->
 
-    <!-- <script src="/javascripts/signup.js"></script> -->
     <script>
         window.addEventListener("load", function () {
             const loader = document.querySelector(".loader");
@@ -122,13 +120,13 @@
 
         let err = `<%= error1 %>`;
 
-        if (err == "true") {
+        if (err!="") {
 
             const Toast2 = Swal.mixin({
                 toast: true,
                 position: 'top',
                 showConfirmButton: false,
-                timer: 5000,
+                timer: 7000,
                 timerProgressBar: true,
                 didOpen: (toast) => {
                     toast.addEventListener('mouseenter', Swal.stopTimer)
@@ -138,7 +136,7 @@
 
             Toast2.fire({
                 icon: 'error',
-                title: 'Invalid credentials'
+                title: `${err}`
             })
             document.querySelector('#password').value = ""
             document.querySelector('#email').value = ""
@@ -187,20 +185,6 @@
                 disableOnInteraction: false,
             },
         });
-        // async function checkemailforlogin(e) {
-        //     let email = e.value
-
-        //     const save_req = await fetch(`/user-login/checkemail`, {
-        //         method: "POST",
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         body: JSON.stringify({
-        //             data: e.value
-
-        //         })
-        //     });
-        // }
 
     //disable submit button
     let checkValidation = () =>{

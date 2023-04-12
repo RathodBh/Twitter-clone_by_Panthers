@@ -16,184 +16,185 @@
     <link rel="icon" sizes="32x32" type="image/png" href="/assets/images/favicon_32.png" />
     <link rel="icon" sizes="any" type="image/svg+xml" href="/assets/images/favicon.svg" />
     <title>Twitter Clone | Panthers</title>
-   
+
 
 </head>
 
 <body>
     <div>
-        <nav class="navbar navbar-expand-sm bg-info navbar-dark fixed-top">
-            <div class="container">
-                
-                    <a class="navbar-brand " href="#">
-                      <i class="fa-brands fa-2x fa-twitter"></i>
-                        
-                      
-                      <span class="brand-text">Twitter</span>
-                    </a>
-                    
-                   
-                    <div class="login-btn btn btn-light rounded-pill px-5">
-                        <a href="/user-login">Login</a>
-                    </div>
+        <nav class="navbar navbar-expand-sm bg-info navbar-dark fixed-top" id="navbar">
+            <div class="container-lg ">
+                <a class="navbar-brand " href="#">
+                    <i class="fa-brands fa-2x fa-twitter"></i>
+                    <span class="brand-text">Twitter</span>
+                </a>
+                <a href="/user-login" class="login-btn btn btn-light rounded-pill px-5">
+                    <span>Login</span>
+                </a>
             </div>
-            
-          </nav>
-     </div>
-     <div class="container home mt-5">
-            <div class="row">
-                <div class="col-4">
-                    <div class="left-data">
-                        <h1 class="w-100 mt-5 ">Twitter is redesigning its platform to make space for new updates</h1>
+        </nav>
+    </div>
+    <div class="container-lg home" id="allData">
+        <div class="row">
+            <div class="col-lg-6 col-md-7 col-sm-12 col-12 ">
+                <div class="left-data">
+                    <h1 class="w-100 mt-5 ">Twitter is redesigning its platform to make space for new updates</h1>
 
-                        <div class=" mt-5 ">
-                            <a href="/user/sign-up" class=" btn  rounded-pill px-5 sign-btn" >Sign Up  <i class="fa-solid fa-arrow-right-long"></i></a>
-                        </div>
+                    <div class=" mt-5 ">
+                        <a href="/user/sign-up" class=" btn  rounded-pill px-5 sign-btn">Sign Up <i
+                                class="fa-solid fa-arrow-right-long"></i></a>
                     </div>
                 </div>
-                <div class="col-6">
-                    <div class="right-data ">
+            </div>
+            <div class="col-lg-6 col-md-5 d-md-flex d-sm-none d-none">
+                <div class="right-data ">
                     <img src="/assets/images/twitter-desk.png" alt="" srcset="">
-                    </div>
                 </div>
             </div>
-            <!-- features -->
-                            
-                <div class="row mt-5 bg-secondary blue-tweet">
-                    <div class="col-4">
-                        <div class="first-img">
-                            <img src="/assets/images/My project.png" alt="" srcset="">
-                        </div>
-                    </div>
-                    
-                    <div class="col-6">
-                        <div class="twitter-blue mt-5 text-light">
-                            <h1 class="w-75 tb">Twitter Blue: Twitter’s payment platform </h1>
+        </div>
+        <!-- features -->
 
-                            <p class="w-100">Is a monthly Twitter subscription that gives premium access to the new features of the social network. 
-
-                                That is, you have exclusive access to certain improvements or features that the social network adds. 
-                                
-                                At the moment, it is only available in the United States, Canada, Australia and New Zealand. 
-                                
-                                If you want to continue to know more about this Twitter subscription plan because you’re a freak of gadgets and new technologies</p>
-                        </div>
-                    </div>
+        <div class="row mt-5 bg-secondary blue-tweet">
+            <div class="col-lg-6 col-md-7 d-md-flex d-sm-none d-none">
+                <div class="first-img">
+                    <img src="/assets/images/My project.png" alt="" srcset="">
                 </div>
-                
-                <div class="row mt-5">
-                    <div class="col-6">
-                        <div class="globe-info">
-                        <h1 class="w-50 ms-5">
-                            Twiiter Across Global
-                        </h1>
-                        <p class=" mt-5"><i class="fa-brands fa-twitter fa-bounce fa-8x"></i></p>
-                        </div>
-                       
-                    </div>
-                    <div class="col-6">
-                        <div class="twitter-global">
-                          <table>
-                            <tr>
-                                <td>
-                                    
-                                        <h4>
-                                        235+
-                                        Countries
+            </div>
+
+            <div class="col-lg-6 col-md-5 col-sm-12 ">
+                <div class="twitter-blue mt-5 text-light">
+                    <h1 class=" tb">Twitter Blue: Twitter’s payment platform </h1>
+
+                    <p class="w-100">Is a monthly Twitter subscription that gives premium access to the new features of
+                        the social network.
+
+                        That is, you have exclusive access to certain improvements or features that the social network
+                        adds.
+
+                        At the moment, it is only available in the United States, Canada, Australia and New Zealand.
+
+                        If you want to continue to know more about this Twitter subscription plan because you’re a freak
+                        of gadgets and new technologies</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                <div class="globe-info">
+                    <h1 class="w-75">
+                        Twitter Across Global
+                    </h1>
+                    <p class="mt-5"><i class="fa-brands fa-twitter fa-bounce fa-8x"></i></p>
+                </div>
+
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                <div class="twitter-global">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td>
+
+                                <h4>
+                                    235+
+                                    Countries
+                                </h4>
+
+                            </td>
+                            <td>
+
+                                <h4>
+                                    1 Billion
+                                    Downloads
+                                </h4>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+
+                                <h4 class="mt-4">
+                                    450 Million
+                                    Users
+                                </h4>
+
+                            </td>
+                            <td>
+
+                                <h4 class="mt-4">
+                                    1000 + Topics
+                                    Explore
+                                </h4>
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                        <div class="down-twitter p-2">
+                            <h1>Get Twitter <i class="fa-solid fa-download text-tweet"></i></h1>
+
+                            <p>Download The Twiiter App For Better Experience And Latest Features</p>
+
+                            <table>
+                                <tr>
+                                    <td>
+                                        <h4 class="download bg-secondary d-flex text-light">
+                                            <a href="" class="text-light"><i class="fa-brands fa-google-play"></i>
+                                                PlayStore</a>
+
+
                                         </h4>
-                                   
-                                </td>
-                                <td>
-                                    
-                                    <h4>
-                                        1 Billion
-                                        Downloads
-                                    </h4>
-                                
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                  
-                                    <h4 class="mt-4">
-                                        450 Million
-                                        Users
-                                    </h4>
-                                    
-                                </td>
-                                <td>
-                                   
-                                    <h4 class="mt-4">
-                                        1000 + Topics
-                                        Explore
-                                    </h4>
-                                    
-                                </td>
-                            </tr>
-                          </table>  
-                    </div>
-                </div>
+                                    </td>
+                                    <td>
+                                        <h4 class="down  bg-secondary d-flex text-light   ">
+                                            <a href="" class="text-light"><i class="fa-brands fa-apple"></i>
+                                                AppStore</a>
 
-                <div class="mt-5">
-                        <div class="row">
-                            <div class="col-6">
-                                 <div class="down-twitter ms-5">
-                                    <h1>Get Twitter <i class="fa-solid fa-download text-tweet"></i></h1>
+                                        </h4>
+                                    </td>
+                                </tr>
 
-                                    <p>Download The Twiiter App For Better Experience And Latest Features</p>
 
-                                    <table>
-                                        <tr >
-                                            <td>
-                                                <h4 class="download bg-secondary d-flex text-light">
-                                                    <a href="" class="text-light"><i class="fa-brands fa-google-play"></i> PlayStore</a>
-
-                                                    
-                                                    </h4>
-                                            </td>
-                                            <td>
-                                                <h4 class="down  bg-secondary d-flex text-light   ">
-                                                    <a href="" class="text-light"><i class="fa-brands fa-apple"></i>  AppStore</a>
-                                                    
-                                                    </h4>
-                                            </td>
-                                        </tr>
-                                        
-                                           
-                                    </table>
-                                 </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="mobile-tweet">
-                                 <img src="/assets/images/mobile-tweet.png" alt="" srcset="">
-                                </div>
-                                </div>
-
+                            </table>
                         </div>
-                </div>
-
-
-                </div>
-     </div>
-        
-        <footer class="twiiter-footer bg-secondary">
-            <div class="container">
-                
-                    <div class="text-light">
-                        <i class="fa-brands fa-2x fa-twitter"></i>
-                        
-                      
-                        <span class="brand-text">Twitter</span>
-
-                        
                     </div>
-                        
-                   <p class="text-light">©2023 Copyright EsparkBiz Technologies Pvt. Ltd.</p> 
-                   <span class="text-light">Created By @Panthers</span>
-                
-                  
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-12">
+                        <div class="mobile-tweet">
+                            <img src="/assets/images/mobile-tweet.png" alt="" srcset="">
+                        </div>
+                    </div>
+
+                </div>
             </div>
-            
-        </footer>
+
+
+        </div>
+    </div>
+
+    <footer class="twitter-footer bg-secondary">
+        <div class="container">
+
+            <div class="text-light">
+                <i class="fa-brands fa-2x fa-twitter"></i>
+
+
+                <span class="brand-text">Twitter</span>
+
+
+            </div>
+
+            <p class="text-light">©2023 Copyright EsparkBiz Technologies Pvt. Ltd.</p>
+            <span class="text-light">Created By @Panthers</span>
+
+
+        </div>
+
+    </footer>
 </body>
+
 </html>

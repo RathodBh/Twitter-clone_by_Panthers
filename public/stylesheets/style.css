@@ -6,6 +6,7 @@
     --text-gray: #909ba4;
     --text-black: #0f1419;
 }
+
 /* body{
     overflow: hidden;
 } */
@@ -33,6 +34,7 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
+    word-break: break-all;
 }
 
 .border-radius-12 {
@@ -161,7 +163,8 @@ a {
     object-fit: cover;
     aspect-ratio: 1/1;
 }
-.profile-size2{
+
+.profile-size2 {
     height: 66px;
     width: 66px;
 }
@@ -339,9 +342,11 @@ a {
     font-weight: 600;
     border-bottom: 4px solid var(--bg-blue);
 }
-.word-wrap{
+
+.word-wrap {
     word-wrap: anywhere;
 }
+
 /* loader  */
 .loader {
     position: fixed;
@@ -378,23 +383,112 @@ a {
     margin: 10px;
 }
 
-#searchRes{
+#searchRes {
     max-height: 40vh;
     overflow: auto;
 }
 
-.cp{
+.cp {
     cursor: pointer;
 }
 
-.mt-6rem{
+.mt-6rem {
     margin-top: 5rem !important
 }
-.login-now:disabled{
-    opacity: 0.5
-}.flw{
-    height:500px;
-    overflow-y:scroll;
-} 
 
-.pointer {cursor: pointer;}
+.login-now:disabled {
+    opacity: 0.5
+}
+
+.flw {
+    height: 500px;
+    overflow-y: scroll;
+}
+
+.pointer {
+    cursor: pointer;
+}
+.d-none{
+    display: none;
+}
+.d-block{
+    display: block;
+}
+@media screen and (max-width: 1208px) {
+
+    /* #searchPage{
+        display: none;
+    } */
+    .searchFollow {
+        display: none;
+    }
+}
+
+/* @media screen and (max-width:768px) {} */
+
+#topBarMobile {
+    position: fixed;
+    height: 50px;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    background:white !important;
+    z-index: 1000;
+
+}
+
+#topBarMobile i {
+    font-size: 26px;
+    color: var(--bg-blue)
+}
+
+#topBarMobile .profileMobile {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    aspect-ratio: 1/1;
+}
+
+#topBarMobile .profileMobile #statusMobile {
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#bottomBar {
+    position: fixed !important;
+    bottom: 0;
+    background: var(--bg-blue) !important;
+    height: 50px;
+    width: 100%;
+    z-index: 1000;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#addTweetButtonMobile {
+    position: fixed !important;
+    bottom: 75px;
+    right: 15px;
+    height: 50px;
+    width: 50px;
+    aspect-ratio: 1/1;
+}
+
+@media screen and (max-width: 576px) {
+
+    .home .blur-ui,
+    .commentInfo .blur-ui {
+        top: 50px
+    }
+
+    .tweet-container {
+        padding-top: 50px !important;
+        padding-bottom: 50px !important;
+    }
+}

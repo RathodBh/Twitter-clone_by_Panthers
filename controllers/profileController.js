@@ -54,7 +54,7 @@ const getProfile = asyncHandler(async (req, res) => {
         console.log("flw value ", flw[0].folowing);
         let folowing = flw[0].folowing
 
-console.log("following="+folowing+" followers="+follower);
+        console.log("following=" + folowing + " followers=" + follower);
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
         let post_at = []
@@ -173,7 +173,7 @@ console.log("following="+folowing+" followers="+follower);
         let retwt_like = await queryExec(`select likes.tweet_id from retweet inner join likes on retweet.tweet_id=likes.tweet_id where likes.is_deleted='0' and retweet.is_deleted='0' and retweet.user_id='${user_id}' and likes.user_id='${user_id}'; `)
         //i need to show the get request for register page
         let changepass = false
-        res.render('profile', { retwt_like: retwt_like, twt_user: twt_user, all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, arrretweetid, users, changepass, fuser: followuser, followers: getfollowerId });
+        res.render('profile', { folowing, follower, retwt_like: retwt_like, twt_user: twt_user, all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, arrretweetid, users, changepass, fuser: followuser, followers: getfollowerId });
 
     } catch (err) {
         console.log("Error ProfileController:", err);
@@ -190,7 +190,7 @@ const updateProfilepoint = asyncHandler(async (req, res) => {
         try {
             let uid = req.query.uid || 3;
             const file = req.files;
-            var users = await queryExec(`select user_image as dp , cover_image as cover from users where id=${uid}`);
+            var users = await queryExec(`select user_image as dp , cover_image as cover from users where id=?`, [uid]);
 
             var cover_imgsrc = req.files.cover_image;
             var profile_imgsrc = req.files.profile_image;
@@ -210,7 +210,7 @@ const updateProfilepoint = asyncHandler(async (req, res) => {
 
 
 
-            await queryExec(`update users set  bio="${user_bio}" ,birth_date="${user_dob}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id=${uid}`);
+            await queryExec(`update users set  bio=? ,birth_date=? ,cover_image=?, user_image=? WHERE id=?`, [user_bio, user_dob, cover_imgsrc, profile_imgsrc, uid]);
             res.redirect("prof")
 
 
@@ -227,7 +227,6 @@ const updateProfilepoint = asyncHandler(async (req, res) => {
 
 const getUserInfo = asyncHandler(async (req, res) => {
     let userId = req.session.user_id;
-
     let user = await queryExec(`SELECT name,user_name,user_image from users WHERE id = ${userId}`)
     res.json({ name: user[0].name, username: user[0].user_name, user_img: user[0].user_image })
 })
@@ -266,9 +265,8 @@ const getTargetProfile = asyncHandler(async (req, res) => {
             return res.redirect('/profile/user');
 
         }
-        console.log("hello here");
-        let sel_tweets = `select * from tweets where user_id=${user_id} order by id DESC`;
-        const all_tweet_data = await queryExec(sel_tweets);
+        let sel_tweets = `select * from tweets where user_id=? order by id DESC`;
+        const all_tweet_data = await queryExec(sel_tweets, [user_id]);
 
 
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -387,25 +385,25 @@ const getTargetProfile = asyncHandler(async (req, res) => {
         //for retweet
         let sel_retweets = `SELECT * FROM  retweet inner join  tweets on retweet.tweet_id = tweets.id where retweet.user_id = '${uid}'AND retweet.is_deleted = '0' order by retweet.id DESC`;
         const all_retweet_data = await queryExec(sel_retweets);
-// followers count
-var cnt = await queryExec(`SELECT count(id) as follower  FROM twitter_clone.followers where user_id=${user_id} and isdelete='0';`)
-console.log("cnt value ", cnt[0].follower);
-let follower = cnt[0].follower
+        // followers count
+        var cnt = await queryExec(`SELECT count(id) as follower  FROM twitter_clone.followers where user_id=${user_id} and isdelete='0';`)
+        console.log("cnt value gt prof ", cnt[0].follower);
+        let follower = cnt[0].follower
 
-var flw = await queryExec(`SELECT count(id) as folowing FROM twitter_clone.following where user_id=${user_id};`)
-console.log("flw value ", flw[0].folowing);
-let folowing = flw[0].folowing
+        var flw = await queryExec(`SELECT count(id) as folowing FROM twitter_clone.following where user_id=${user_id};`)
+        console.log("flw value  gt prof", flw[0].folowing);
+        let folowing = flw[0].folowing
 
-console.log("following target="+folowing+"target followers="+follower);
-// end
+        console.log("following target=" + folowing + "target followers=" + follower);
+        // end
 
         for (let b = 0; b < all_retweet_data.length; b++) {
             var twt_user = await queryExec(`SELECT * FROM  retweet inner join  tweets on retweet.tweet_id=tweets.id inner join  users on tweets.user_id=users.id where retweet.user_id='${uid}' AND retweet.is_deleted='0' order by retweet.id DESC `);
         }
         let retwt_like = await queryExec(`select likes.tweet_id from retweet inner join likes on retweet.tweet_id=likes.tweet_id where likes.is_deleted='0' and retweet.is_deleted='0' and retweet.user_id='${uid}' and likes.user_id='${uid}'; `)
-        res.render('targetProfile', {folowing,follower ,retwt_like: retwt_like, twt_user: twt_user, all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, users, arrretweetid, fuser: followuser, followers: getfollowerId })
+        res.render('targetProfile', { folowing, follower, retwt_like: retwt_like, twt_user: twt_user, all_retweet: all_retweet_data, tweet_data: all_tweet_data, post_date: post_at, arrlikeid, users, arrretweetid, fuser: followuser, followers: getfollowerId })
 
-       
+
 
     }
     catch (err) {
@@ -419,7 +417,8 @@ console.log("following target="+folowing+"target followers="+follower);
 // app.get("/user-dash",async(req,res)=>{
 const fflist = asyncHandler(async (req, res) => {
 
-    let uid = req.session.user_id;
+    let us = req.session.user_id;
+    uid = req.query.id;
 
     if (req.query.id) {
         uid = req.query.id;
@@ -431,58 +430,65 @@ const fflist = asyncHandler(async (req, res) => {
             followers.push(id.follower_id);
         });
         var following = await queryExec(`select users.id,users.name,users.user_name,users.user_image from users INNER join following on users.id = following.following_id where following.user_id = '${uid}'`)
-    
-        var follower = await queryExec(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.follower_id where followers.user_id = ${uid}`)
-        var user_following =await queryExec(`SELECT id  FROM twitter_clone.following where user_id=${uid};`)
 
-        let idx1=0;
-        let idx2=0;
-        const common=[];
-        const uncommon=[];
-        for(let i=0;i<following.length;i++){
-            let flag =false;
-            for(let j=0;j<user_following.length;j++){
-                if(following[i].id==user_following[j].id){
-                    common[idx1++]=following[j];
-                    flag =true;
+        var follower = await queryExec(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.follower_id where followers.user_id = ${uid}`)
+
+        var user_following = await queryExec(`SELECT following_id as id  FROM twitter_clone.following where user_id=${us};`)
+
+        let idx1 = 0;
+        let idx2 = 0;
+        const common = [];
+        const uncommon = [];
+        for (let i = 0; i < following.length; i++) {
+            let flag = false;
+            for (let j = 0; j < user_following.length; j++) {
+                console.log(user_following[j].id + "==" + following[i].id);
+                if (user_following[j].id == following[i].id) {
+                    // console.log("same"+following[i].id);
+                    // console.log("same user"+user_following[j].id);
+                    common[idx1++] = following[i];
+                    flag = true;
+                    // console.log("following same=" + following[i].name + "," + following[i].id );
                     break;
                 }
-            }
-            if(flag == false){
-                uncommon[idx2++]=following[i];     
-               }
-        }
 
-        res.render('follow_following_target', {common:common,uncommon:uncommon, fuser: getuser, followers, following, follower, userInfo: curuser[0] })
-    
-    }else{
-           console.log("elseeee");
-        var getuser = await queryExec(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${uid})`);
-        var curuser = await queryExec(`select id,name,user_name,user_image from users where id = '${uid}'`);
-        var getfollowerId = await queryExec(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.follower_id where followers.user_id = ${uid} and followers.isdelete='0'`);
+            }
+            if (flag == false) {
+                uncommon[idx2++] = following[i];
+            }
+        }
+        // console.log("length=", common.length);
+
+        res.render('follow_following_target', { common: common, uncommon: uncommon, fuser: getuser, followers, following, follower, userInfo: curuser[0] })
+
+    } else {
+        console.log("elseeee");
+        var getuser = await queryExec(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${us})`);
+        var curuser = await queryExec(`select id,name,user_name,user_image from users where id = '${us}'`);
+        var getfollowerId = await queryExec(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.follower_id where followers.user_id = ${us} and followers.isdelete='0'`);
         var followerss = [];
         getfollowerId.forEach(id => {
             followerss.push(id.follower_id);
         });
-       
-        var following = await queryExec(`select users.id,users.name,users.user_name,users.user_image from users INNER join following on users.id = following.following_id where following.user_id = '${uid}'`)
-    // console.log("user_following",user_following);
-    // console.log("following",following);
-    res.render('follow_following', { fuser: getuser, followers:getfollowerId, following, follower, userInfo: curuser[0] })
 
-   
-   
-  
-    // console.log(common);
-    // console.log(uncommon);
+        var following = await queryExec(`select users.id,users.name,users.user_name,users.user_image from users INNER join following on users.id = following.following_id where following.user_id = '${us}'`)
+        // console.log("user_following",user_following);
+        // console.log("following",following);
+        res.render('follow_following', { fuser: getuser, followers: getfollowerId, following, follower, userInfo: curuser[0] })
+
+
+
+
+        // console.log(common);
+        // console.log(uncommon);
 
         // var follower = await queryExec(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.follower_id where followers.user_id = ${uid}`)
-    
+
         // res.render('follow_following', { fuser: getuser, followers, following, follower, userInfo: curuser[0] })
-    
+
     }
-    
-   
+
+
 })
 
 

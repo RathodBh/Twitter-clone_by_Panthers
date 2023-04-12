@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="/stylesheets/style.css">
         <script type="text/javascript" src="/javascripts/tweetit.js"></script>
 
-        <div class="col-6 p-2 home ">
+        <div class="col-lg-6 col-md-6 col-sm-8 col-12 px-0 home ">
             <div class="inner-main ">
 
                 <div class="card border-bottom-0" id="card">
@@ -425,8 +425,8 @@
                         </div>
                     </div>
                     <div class="col">
-                        <div class="mt-2 ms-5 follow">
-                            <p>      <a href="" class="menu-link rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#settingsModal"
+                        <div class="mt-2 follow ">
+                            <p>      <a href="" class="menu-link rounded-pill px-3 float-end me-4" data-bs-toggle="modal" data-bs-target="#settingsModal"
                                >
                                 Edit Profile
                             </a>
@@ -438,12 +438,11 @@
                     <div class="user-data">
                         
                         <label for="" class="bold"><%= users[0].name%></label>
-                        <img src="./uploads/red_verified.png" alt="" height="20px" width="20px">
                         
                         <p class="text-secondary">@<%= users[0].user_name%></p>
                     </div>
                     <p class="card-text text-dark "><%= users[0].bio%> <i class="fa-regular fa-face-laugh-beam"></i></p>
-                    <div class="info d-flex ">
+                    <div class="info d-flex flex-wrap">
                         <p class="text-secondary ms-1"><i class="fa-solid fa-location-dot"></i> everywhere</p>
                         <p class="text-secondary ms-2"><i class="fa-solid fa-link"></i>
                         <p class="text-info">username.com</p>
@@ -457,13 +456,13 @@
                     <div class="d-flex" >
                         <a href="user-dash" class="d-flex text-dark" id="following">
                         <p>
-                            <%= users[0].following%> 
+                            <%= folowing%> 
                         <p class="ms-2">Following</p>
                         </p>
                     </a>
                     <a href="user-dash" class="d-flex text-dark" id="follower">
                         <p class="ms-3">
-                            <%= users[0].followers%> 
+                            <%= follower%> 
                         <p class="ms-2">Followers</p>
                         </p>
                     </a>

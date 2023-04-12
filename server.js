@@ -1,8 +1,9 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+require('dotenv').config("./.env")
 const app = express();
-const PORT = 3008
-const { queryExec } = require('./connection/conn');
+const PORT = 3008;
+const {queryExec} = require('./connection/conn');
 const register = require('./Routes/register')
 const login = require('./Routes/login')
 const profile = require('./Routes/profile')
@@ -73,7 +74,7 @@ app.post("/updateProfile", uploads.fields([{
         try {
             let uid = req.session.user_id
             const file = req.files;
-            var users = await queryExec(`select user_image as dp , cover_image as cover from users where id=${uid}`);
+            var users = await queryExec(`select user_image as dp , cover_image as cover from users where id=?`,[uid]);
 
             var cover_imgsrc = req.files.cover_image;
             var profile_imgsrc = req.files.profile_image;
@@ -91,7 +92,7 @@ app.post("/updateProfile", uploads.fields([{
 
 
 
-            await queryExec(`update users set name="${name}" , bio="${user_bio}" ,birth_date="${user_dob}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id=${uid}`);
+            await queryExec(`update users set name=? , bio=? ,birth_date=? ,cover_image=?, user_image=? WHERE id=?`,[name,user_bio,user_dob,cover_imgsrc,profile_imgsrc,uid]);
 
             res.redirect('/profile/user')
 
@@ -108,36 +109,8 @@ app.post("/updateProfile", uploads.fields([{
 
 app.get("/srch?", async (req, res) => {
     var srchval = req.query.val;
-    var sql = `select user_name from  users`;
-    var names = await queryExec(sql);
-    var arr = [];
-    var newArr = [];
-    for (let i = 0; i < names.length; i++) {
-        arr.push(names[i].user_name)
-    }
-    var counter = 0;
-    var arrVal;
-    for (let j = 0; j < arr.length; j++) {
-        var arrValLength = arr[j].length;
-        arrVal = arr[j];
-        for (let k = 0; k < srchval.length; k++) {
-            if (arrVal.includes(srchval[k])) {
-                var firstIndex = arrVal.indexOf(srchval[k]);
-                arrVal = arrVal.substr(firstIndex + 1, arrValLength + 1)
-                counter++;
-            }
-        }
-        if (counter == srchval.length) {
-            newArr.push(arr[j])
-        }
-        counter = 0;
-    }
-    var matchedResult = [];
-    for (let m = 0; m < newArr.length; m++) {
-        var sql2 = `SELECT id,name,user_name,user_image FROM  users where user_name="${newArr[m]}"`;;
-        resultantName = await queryExec(sql2);
-        matchedResult.push(resultantName)
-    }
+    var sql = `SELECT id,name,user_name,user_image FROM twitter_clone.users where user_name like ? or name like ? `;
+    var matchedResult = await queryExec(sql,["%"+srchval+"%","%"+srchval+"%"]);
     res.json(matchedResult)
 
 })
@@ -149,9 +122,9 @@ app.get("/addfollow", async (req, res) => {
     let followerId = req.query.followerId
     if (req.query.flag == 0) {
         // cnt++;
-        var cnt = await queryExec(`SELECT count(id)  FROM twitter_clone.followers where user_id=${userId} and isdelete='0';`)
+        var cnt = await queryExec(`SELECT count(id) as follower FROM twitter_clone.followers where user_id=${userId} and isdelete='0';`)
         console.log("cnt value ", cnt[0].follower);
-        let follower = cnt[0].follower
+        let followers = cnt[0].follower
 
         var flw = await queryExec(`SELECT count(id) as folowing FROM twitter_clone.following where user_id=${userId};`)
         console.log("flw value ", flw[0].folowing);
@@ -160,23 +133,36 @@ app.get("/addfollow", async (req, res) => {
         await queryExec(`insert into followers (user_id,follower_id,isdelete) values("${followerId}","${userId}","${0}");`);
         await queryExec(`insert into following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
         let a = await queryExec(`UPDATE users SET following = ${folowing} WHERE id = ${userId}`);
-        let b = await queryExec(`UPDATE users SET followers =  ${follower} WHERE id = ${followerId}`);
+        let b = await queryExec(`UPDATE users SET followers =  ${followers} WHERE id = ${followerId}`);
         console.log("complete if in server a==" + a + "b=" + b);
-    } else {
-        // cnt--;
-
-
-        var cnt = await queryExec(`SELECT count(id) as follower  FROM twitter_clone.followers where follower_id=${userId} and isdelete='0';`)
-        console.log("cnt value below ", cnt[0].follower);
-        let follower = cnt[0].follower
+    }
+    else if(req.query.flag == 2){
+        var cnt = await queryExec(`SELECT count(id) as follower  FROM twitter_clone.followers where user_id=${userId} and isdelete='0';`)
+        console.log("cnt value else if ", cnt[0].follower);
+        let followers = cnt[0].follower
 
         var flw = await queryExec(`SELECT count(id) as folowing FROM twitter_clone.following where user_id=${userId};`)
-        console.log("flw value below", flw[0].folowing);
+        console.log("flw value else if", flw[0].folowing);
         let folowing = flw[0].folowing
-        await queryExec(`delete from  followers  where user_id = ${userId} AND follower_id = ${followerId};`);
+        await queryExec(`delete from  followers  where user_id = ${followerId} AND follower_id = ${userId};`);
         await queryExec(`delete from  following  where user_id = ${userId} AND following_id = ${followerId} ;`);
         await queryExec(`UPDATE users SET following =  ${folowing} WHERE id = ${userId}`);
-        await queryExec(`UPDATE users SET followers =  ${follower} WHERE id = ${followerId}`);
+        await queryExec(`UPDATE users SET followers =  ${followers} WHERE id = ${followerId}`);
+        console.log("complete else in server");
+    }
+    else {
+        // cnt--;
+        var cnt = await queryExec(`SELECT count(id) as follower  FROM twitter_clone.followers where user_id=${userId} and isdelete='0';`)
+        console.log("cnt value below ", userId+"and "+followerId);
+        let followers = cnt[0].follower
+
+        var flw = await queryExec(`SELECT count(id) as folowing FROM twitter_clone.following where user_id=${userId};`)
+        console.log("flw value below", userId +"and "+followerId);
+        let folowing = flw[0].folowing
+        await queryExec(`delete from  followers  where user_id = '${userId}' AND follower_id = '${followerId}';`);
+        await queryExec(`delete from  following  where user_id = '${userId}' AND following_id = '${followerId}' ;`);
+        await queryExec(`UPDATE users SET following =  ${folowing} WHERE id = ${userId}`);
+        await queryExec(`UPDATE users SET followers =  ${followers} WHERE id = ${followerId}`);
         console.log("complete else in server");
     }
 
@@ -213,8 +199,7 @@ app.get("*", (req, res) => {
     res.render("404")
 })
 app.listen(PORT, () => {
-    console.log(`I am listining on ${PORT}`);
-    console.log(`CLick here http://localhost:3008/user-login`);
-})
+    console.log(`I am listining on ${PORT},\n Click here http://localhost:3008/user-login`);
+});
 
 

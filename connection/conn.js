@@ -1,4 +1,5 @@
 const { createPool } = require('mysql2/promise');
+require('dotenv').config("../.env")
 
 const con = createPool({
     host: "localhost",
@@ -7,8 +8,8 @@ const con = createPool({
     database: "twitter_clone",
 });
 
-
 let queryExec = async (q, param = "") => {
+    
     let [res] = await con.execute(q, param);
     return res;
 }

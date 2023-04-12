@@ -1,6 +1,6 @@
-<!-- right panel  -->
-<div class="col-3 right">
-    <div class="inner-right h-100 ">
+<!-- right panel  offset-lg-0 offset-md-0 offset-sm-4-->
+<div class="col-lg-3 col-md-3 col-sm-8 col-12 d-md-block d-sm-none d-none right" id="searchPage">
+    <div class="inner-right h-100 w-100 ">
         <div class="search-box position-relative">
             <input type="search" class="rounded-pill w-100" placeholder="Search Twitter" oninput=search()
                 id="searchInput">
@@ -12,7 +12,7 @@
 
             </div>
         </div>
-        <div class="mt-3 follow-right bg-gray p-2 border-radius-12" id="whotofolow" onload="whoToFollow()">
+        <div class="mt-3 follow-right bg-gray p-2 border-radius-12" onload="whoToFollow()">
             <h5 class="mt-2 mb-3">Who to follow</h5>
             <div id="whotofollow">
 
@@ -20,7 +20,7 @@
 
 
 
-                    <a href="" class="p-2 fs-14 text-blue">Show more</a>
+            <a href="" class="p-2 fs-14 text-blue">Show more</a>
         </div>
         <div class="footer p-2 mt-2">
             <ul class="d-flex flex-wrap list-unstyled footer-link-container mb-0">
@@ -101,27 +101,28 @@
     }
     //for print latest year
     document.querySelector("#footer-year").innerText = new Date().getFullYear();
+
     async function search() {
 
         var val = document.getElementById("searchInput").value;
-
-        if (val == "") {
-            document.querySelector("#searchRes").classList.add("d-none");
-        } else {
+        if (val) {
             document.querySelector("#searchRes").classList.remove("d-none");
         }
-
+        else {
+            document.querySelector("#searchRes").classList.add("d-none");
+        }
         let data1 = await fetch(`/srch?val=${val}`)
         let data = await data1.json();
         let user_details = ``;
+        console.log(data);
         for (let i = 0; i < data.length; i++) {
             user_details += `
-<div class="my-4 d-flex justify-content-between align-items-center w-100" id="${data[i][0].id}" onclick="getTargetProfile(this)" style="cursor: pointer;">
+    <div class="my-4 d-flex justify-content-between align-items-center w-100" id="${data[i].id}" onclick="getTargetProfile(this)" style="cursor: pointer;">
         <div class="d-flex">
-            <img src="${data[i][0].user_image}" alt="" class="profile-size me-2 border">
+            <img src="${data[i].user_image}" alt="" class="profile-size me-2 border">
             <div class="info" > 
-                <h6>${data[i][0].name}</h6>
-                <span class="text-gray">@${data[i][0].user_name}</span>
+                <h6>${data[i].name}</h6>
+                <span class="text-gray">@${data[i].user_name}</span>
             </div>
         </div>
 </div>
@@ -231,7 +232,7 @@
                             <h6>${sql.name}</h6>
                             <span class="text-gray">@${sql.user_name}</span>
                         </a>
-                        <div class="mt-1">
+                        <div class="mt-1 searchFollow">
                             ${(!unfollowersIds.includes(sql.id)) ? `<div id="f${sql.id}" onclick="follow('${sql.id}',1)" class="followButton btn btn-light rounded-pill px-3 border-dark" >Unfollow</div>` : `<div id="f${sql.id}" onclick="follow('${sql.id}',0)" class="followButton btn btn-dark rounded-pill px-3" >Follow</div>`}
                         </div>
                     </div>
@@ -244,6 +245,40 @@
     }
 
     getFollowUser();
+
+
+    window.onload = async () => {
+
+        //LOAD THE BOTTOM USER INFORMATION
+        let userData = await fetch("/profile/getUserData");
+        let ans = await userData.json();
+
+        document.querySelector("#status img").setAttribute("src", ans.user_img);
+        document.querySelector("#statusMobile").setAttribute("src", ans.user_img);
+        document.querySelector("#tweetUserImg").setAttribute("src", ans.user_img);
+        document.querySelector("#status h6").innerText = ans.name
+        document.querySelector("#status span").innerText = ans.username
+        document.querySelector("#userDataId").innerText = ans.username
+
+
+
+        // RESPONSIVE SEARCH 
+        var searchPageData = document.getElementById("searchPage").innerHTML;
+        resizeSize();
+        function resizeSize() {
+            if (window.innerWidth <= 768) {
+                document.getElementById("searchPageModalContent").innerHTML = searchPageData;
+                document.getElementById("searchPage").innerHTML = "";
+            } else {
+                document.getElementById("searchPage").innerHTML = searchPageData;
+                document.getElementById("searchPageModalContent").innerHTML = "";
+            }
+        }
+        window.addEventListener("resize", () => {
+            resizeSize();
+        })
+    }
+
 
 </script>
 </body>

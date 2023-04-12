@@ -1,5 +1,5 @@
 const { queryExec } = require('../connection/conn');
-// const queryExecuter = require('../queryExecute/queryExecuter')
+// const queryExec = require('../queryExecute/queryExec')
 const express = require('express')
 const app = express();
 const asyncHandler = require("express-async-handler");
@@ -17,135 +17,83 @@ const getpostLike1 = asyncHandler(async (req, res) => {
             return
         }
         const { data } = req.body;
-        var tweet_id = data.tweet_id;
-        console.log("tweet_id in dashboard", data.tweet_id);
+        var tweet_id = data.tweet_id
+        tweet_ids = data.tweet_id
+        if (data.like == true) {
+            const qrt = `SELECT  * FROM  likes where tweet_id=? and user_id=?`
+
+            const like_data = await queryExec(qrt, [data.tweet_id, user_id]);
 
 
-        if (data.tweet_id.length == 1) {
-            tweet_ids = data.tweet_id
-            if (data.like == true) {
-                console.log("in if condition");
-                const qrt = `SELECT * FROM  likes where tweet_id=${data.tweet_id} and user_id=${user_id}`
+            if (like_data.length == 0) {
+                const ins_qrt = `INSERT INTO likes (user_id,tweet_id,created_at) values (?,?,NOW())`
 
-                const like_data = await queryExec(qrt);
+                const like_entry = await queryExec(ins_qrt, [user_id, data.tweet_id]);
 
+                const select_tweet_like = `select tweet_likes from tweets where id=?`
+                const tweet_like_count = await queryExec(select_tweet_like, [data.tweet_id]);
 
-                if (like_data.length == 0) {
-                    console.log("in if condition if");
-                    const ins_qrt = `INSERT INTO likes (user_id,tweet_id,created_at) values (${user_id},${data.tweet_id},NOW())`
+                var alllikecount = tweet_like_count[0].tweet_likes
+                alllikecount = alllikecount + 1
 
-                    const like_entry = await queryExec(ins_qrt);
-
-                    const select_tweet_like = `select tweet_likes from tweets where id=${data.tweet_id}`
-                    const tweet_like_count = await queryExec(select_tweet_like);
-
-                    var alllikecount = tweet_like_count[0].tweet_likes
-                    alllikecount = alllikecount + 1
-
-                    const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount} where id=${data.tweet_id}`
-                    const Update_entry_tweet = await queryExec(up_tweets_tweetlike);
-                    let flag = true
-                    res.json({ flag, alllikecount })
-                }
-                else if (like_data.length == 1) {
-                    console.log("in if condition else if");
-                    const select_tweet_like = `select tweet_likes from tweets where id=${data.tweet_id}`
-                    const tweet_like_count = await queryExec(select_tweet_like);
-                    alllikecount = tweet_like_count[0].tweet_likes
-                    alllikecount = alllikecount + 1
-
-                    const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount}  where id=${data.tweet_id}`
-                    const Update_entry_tweet = await queryExec(up_tweets_tweetlike);
-
-
-                    const Update_unlike = `Update likes Set updated_at= Now(),is_deleted=0  where tweet_id=${data.tweet_id}`
-                    const Update_unlike_entry = await queryExec(Update_unlike);
-                    let flag = true
-                    res.json({ flag, alllikecount })
-                }
-
+                const up_tweets_tweetlike = `Update tweets Set tweet_likes=? where id=?`
+                const Update_entry_tweet = await queryExec(up_tweets_tweetlike, [alllikecount, data.tweet_id]);
+                let flag = true
+                res.json({ flag, alllikecount })
             }
-
-            else {
-                console.log("in if condition else");
+            else if (like_data.length == 1) {
+                console.log("in if condition else if");
                 const select_tweet_like = `select tweet_likes from tweets where id=${data.tweet_id}`
                 const tweet_like_count = await queryExec(select_tweet_like);
                 alllikecount = tweet_like_count[0].tweet_likes
-                alllikecount = alllikecount - 1
+                alllikecount = alllikecount + 1
 
                 const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount}  where id=${data.tweet_id}`
                 const Update_entry_tweet = await queryExec(up_tweets_tweetlike);
 
 
-                const Update_unlike = `Update likes Set  updated_at= Now(),is_deleted=1  where tweet_id=${data.tweet_id}`
+                const Update_unlike = `Update likes Set updated_at= Now(),is_deleted=0  where tweet_id=${data.tweet_id}`
                 const Update_unlike_entry = await queryExec(Update_unlike);
-                let flag = false
+                let flag = true
                 res.json({ flag, alllikecount })
             }
+
+        // }
+
+        const select_tweet_like = `select tweet_likes from tweets where id=?`
+        const tweet_like_count = await queryExec(select_tweet_like, [data.tweet_id]);
+        alllikecount = tweet_like_count[0].tweet_likes
+        alllikecount = alllikecount - 1
+
+        const up_tweets_tweetlike = `Update tweets Set tweet_likes=?  where id=?`
+        const Update_entry_tweet = await queryExec(up_tweets_tweetlike, [alllikecount, data.tweet_id]);
+
+
+        const Update_unlike = `Update likes Set updated_at= Now(),is_deleted=0  where tweet_id=?`
+        const Update_unlike_entry = await queryExec(Update_unlike, [data.tweet_id]);
+        let flag = true
+        res.json({ flag, alllikecount })
+    // }
         }
         else {
-            console.log("in else condition");
-            if (data.like == true) {
-                const qrt = `SELECT  * FROM  likes where tweet_id=${data.tweet_id[0]} and user_id=${user_id}`
+    const select_tweet_like = `select tweet_likes from tweets where id=?`
+    const tweet_like_count = await queryExec(select_tweet_like, [data.tweet_id]);
+    alllikecount = tweet_like_count[0].tweet_likes
+    alllikecount = alllikecount - 1
 
-                const like_data = await queryExec(qrt);
-
-
-                if (like_data.length == 0) {
-                    const ins_qrt = `INSERT INTO likes (user_id,tweet_id,created_at) values (${user_id},${data.tweet_id[0]},NOW())`
-
-                    const like_entry = await queryExec(ins_qrt);
-
-                    const select_tweet_like = `select tweet_likes from tweets where id=${data.tweet_id[0]}`
-                    const tweet_like_count = await queryExec(select_tweet_like);
-
-                    var alllikecount = tweet_like_count[0].tweet_likes
-                    alllikecount = alllikecount + 1
-
-                    const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount} where id=${data.tweet_id[0]}`
-                    const Update_entry_tweet = await queryExec(up_tweets_tweetlike);
-                    let flag = true
-                    res.json({ flag, alllikecount })
-                }
-                else if (like_data.length == 1) {
-
-                    const select_tweet_like = `select tweet_likes from tweets where id=${data.tweet_id[0]}`
-                    const tweet_like_count = await queryExec(select_tweet_like);
-                    alllikecount = tweet_like_count[0].tweet_likes
-                    alllikecount = alllikecount + 1
-
-                    const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount}  where id=${data.tweet_id[0]}`
-                    const Update_entry_tweet = await queryExec(up_tweets_tweetlike);
+    const up_tweets_tweetlike = `Update tweets Set tweet_likes=?  where id=?`
+    const Update_entry_tweet = await queryExec(up_tweets_tweetlike, [alllikecount, data.tweet_id]);
 
 
-                    const Update_unlike = `Update likes Set updated_at= Now(),is_deleted=0  where tweet_id=${data.tweet_id[0]}`
-                    const Update_unlike_entry = await queryExec(Update_unlike);
-                    let flag = true
-                    res.json({ flag, alllikecount })
-                }
-
-            }
-
-            else {
-                const select_tweet_like = `select tweet_likes from tweets where id=${data.tweet_id[0]}`
-                const tweet_like_count = await queryExec(select_tweet_like);
-                alllikecount = tweet_like_count[0].tweet_likes
-                alllikecount = alllikecount - 1
-
-                const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount}  where id=${data.tweet_id[0]}`
-                const Update_entry_tweet = await queryExec(up_tweets_tweetlike);
-
-
-                const Update_unlike = `Update likes Set  updated_at= Now(),is_deleted=1  where tweet_id=${data.tweet_id[0]}`
-                const Update_unlike_entry = await queryExec(Update_unlike);
-                let flag = false
-                res.json({ flag, alllikecount })
-            }
-        }
+    const Update_unlike = `Update likes Set  updated_at= Now(),is_deleted=1  where tweet_id=?`
+    const Update_unlike_entry = await queryExec(Update_unlike, [data.tweet_id]);
+    let flag = false
+    res.json({ flag, alllikecount })
+}
 
     } catch (error) {
-        console.log(error);
-    }
+    console.log(error);
+}
 
 })
 
@@ -163,41 +111,41 @@ const getpostRetweet = asyncHandler(async (req, res) => {
         var tweet_id = data.tweet_id
         tweet_ids = data.tweet_id
         if (data.retweet == true) {
-            const qrt = `SELECT  * FROM retweet where tweet_id=${data.tweet_id} and user_id=${user_id}`
+            const qrt = `SELECT  * FROM retweet where tweet_id=? and user_id=?`
 
-            const like_data = await queryExec(qrt);
+            const like_data = await queryExec(qrt, [data.tweet_id, user_id]);
 
 
             if (like_data.length == 0) {
-                const ins_qrt = `INSERT INTO retweet (user_id,tweet_id,created_at) values (${user_id},${data.tweet_id},NOW())`
+                const ins_qrt = `INSERT INTO retweet (user_id,tweet_id,created_at) values(?,?,NOW())`
 
-                const like_entry = await queryExec(ins_qrt);
+                const like_entry = await queryExec(ins_qrt, [user_id, data.tweet_id]);
 
-                const select_retweet = `select tweet_retweets from tweets where id=${data.tweet_id}`
-                const tweet_retweet_count = await queryExec(select_retweet);
+                const select_retweet = `select tweet_retweets from tweets where id=?`
+                const tweet_retweet_count = await queryExec(select_retweet, [data.tweet_id]);
 
                 var allretweetcount = tweet_retweet_count[0].tweet_retweets
                 allretweetcount = allretweetcount + 1
 
-                const up_tweets_retweet = `Update tweets Set tweet_retweets=${allretweetcount} where id=${data.tweet_id}`
-                const Update_entry_retweet = await queryExec(up_tweets_retweet);
+                const up_tweets_retweet = `Update tweets Set tweet_retweets=? where id=?`
+                const Update_entry_retweet = await queryExec(up_tweets_retweet, [allretweetcount, data.tweet_id]);
                 let flag = true
                 res.json({ flag, allretweetcount })
             }
             else if (like_data.length == 1) {
 
-                const select_tweet_retweet = `select tweet_retweets from tweets where id=${data.tweet_id}`
-                const tweet_retweet_count = await queryExec(select_tweet_retweet);
+                const select_tweet_retweet = `select tweet_retweets from tweets where id=?`
+                const tweet_retweet_count = await queryExec(select_tweet_retweet, [data.tweet_id]);
                 allretweetcount = tweet_retweet_count[0].tweet_retweets
                 allretweetcount = allretweetcount + 1
 
 
-                const up_tweets_retweet = `Update tweets Set tweet_retweets=${allretweetcount}  where id=${data.tweet_id}`
-                const Update_entry_tweet = await queryExec(up_tweets_retweet);
+                const up_tweets_retweet = `Update tweets Set tweet_retweets=?  where id=?`
+                const Update_entry_tweet = await queryExec(up_tweets_retweet, [allretweetcount, data.tweet_id]);
 
 
-                const Update_retweet = `Update retweet Set updated_at=Now(),is_deleted=0  where tweet_id=${data.tweet_id}`
-                const Update_unlike_entry = await queryExec(Update_retweet);
+                const Update_retweet = `Update retweet Set updated_at=Now(),is_deleted=0  where tweet_id=?`
+                const Update_unlike_entry = await queryExec(Update_retweet, [data.tweet_id]);
                 let flag = true
                 res.json({ flag, allretweetcount })
             }
@@ -205,17 +153,17 @@ const getpostRetweet = asyncHandler(async (req, res) => {
         }
 
         else {
-            const select_tweet_retweet = `select tweet_retweets from tweets where id=${data.tweet_id}`
-            const tweet_retweet_count = await queryExec(select_tweet_retweet);
+            const select_tweet_retweet = `select tweet_retweets from tweets where id=?`
+            const tweet_retweet_count = await queryExec(select_tweet_retweet, [data.tweet_id]);
             allretweetcount = tweet_retweet_count[0].tweet_retweets
             allretweetcount = allretweetcount - 1
 
-            const up_tweets_tweetlike = `Update tweets Set tweet_retweets=${allretweetcount}  where id=${data.tweet_id}`
-            const Update_entry_tweet = await queryExec(up_tweets_tweetlike);
+            const up_tweets_tweetlike = `Update tweets Set tweet_retweets=? where id=?`
+            const Update_entry_tweet = await queryExec(up_tweets_tweetlike, [allretweetcount, data.tweet_id]);
 
 
-            const Update_unlike = `Update retweet Set updated_at=Now(),is_deleted=1  where tweet_id=${data.tweet_id}`
-            const Update_unlike_entry = await queryExec(Update_unlike);
+            const Update_unlike = `Update retweet Set updated_at=Now(),is_deleted=1  where tweet_id=?`
+            const Update_unlike_entry = await queryExec(Update_unlike, [data.tweet_id]);
             let flag = false
             res.json({ flag, allretweetcount })
         }
@@ -273,7 +221,6 @@ const postTweet = asyncHandler(async (req, res) => {
             var imgsrc = '/assets/images/' + filename1;
             const sql = 'INSERT INTO  tweets (user_id,tweet, media_url,media_type,created_at) VALUES (?,?, ?, ?,NOW())';
 
-
             const data = [user_id, tweet, imgsrc, filetype];
             await queryExec(sql, data);
         }
@@ -291,8 +238,8 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
             return
         }
         let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM tweets as t INNER JOIN users u ON t.user_id = u.id ORDER BY t.id DESC `;
-        let follow_sel = `SELECT following.following_id FROM following WHERE following.user_id = ${user_id}`;
-        const followingId = await queryExec(follow_sel);
+        let follow_sel = `SELECT following.following_id FROM following WHERE following.user_id = ?`;
+        const followingId = await queryExec(follow_sel, [user_id]);
 
         let allFollowingIds = [];
         for (let x of followingId) {
@@ -364,8 +311,8 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
 
         for (let x of all_tweet_data) {
             let tweet_id = x.id;
-            let [sel_comments] = await queryExec(`SELECT count(*) as tot FROM   comments WHERE tweet_id = '${tweet_id}'`);
-            let [sel_likes] = await queryExec(`SELECT count(*) as tot FROM   likes WHERE tweet_id = '${tweet_id}'`);
+            let [sel_comments] = await queryExec(`SELECT count(*) as tot FROM  comments WHERE tweet_id = ?`, [tweet_id]);
+            let [sel_likes] = await queryExec(`SELECT count(*) as tot FROM  likes WHERE tweet_id = ?`, [tweet_id]);
 
             all_comments.push(sel_comments.tot);
             all_likes.push(sel_likes.tot);

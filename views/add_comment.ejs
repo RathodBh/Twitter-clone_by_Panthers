@@ -10,7 +10,7 @@
                     <div id="errLimitComment" class="my-1"></div>
 
                     <div class="d-flex pt-2">
-                        <img src="/assets/images/cover.jpg" alt="" class="profile-size me-2 border ">
+                        <img src="/assets/images/cover.jpg" alt="" class="profile-size me-2 border " id="commentImg"> 
                         <input type="hidden" name="tweetId" id="tweetId">
                         <textarea placeholder="Add your comment..." name="comment_text"
                             class="text-dark tweet-comment-box" id="comment_area" cols="30" rows="5"
@@ -39,3 +39,25 @@
         </div>
     </div>
 </div>
+<script>
+    const ToastBlank = Swal.mixin({
+        toast: true,
+        position: 'top',
+        showConfirmButton: false,
+        timer: 2000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    })
+    let addCommentImg = async () => {
+        let userDataForComment = await fetch("/profile/getUserData");
+        let comment_img = await userDataForComment.json();
+
+        document.querySelector("#commentImg").setAttribute("src", comment_img.user_img);
+    }
+    addCommentImg()
+
+
+</script>

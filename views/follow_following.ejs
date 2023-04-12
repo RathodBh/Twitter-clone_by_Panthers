@@ -1,6 +1,6 @@
 <%- include("menu") -%>
 
-    <div class="col-6 px-0 border">
+    <div class="col-lg-6 col-md-6 col-sm-8 col-12 px-0 border">
         <div class="inner-main home">
             <div class="blur-ui p-3 pb-0 border">
                 <div class="d-flex align-items-center my-2">
@@ -57,7 +57,7 @@
                                         </div>
 
                                     </div>
-                                    <div id="f<%=sql.id%>" onclick="follow('<%=sql.id%>','0')"                                  class="followButton btn btn-light rounded-pill px-3 border-dark">Unfollow</div>
+                                    <div id="f<%=sql.id%>" onclick="follow('<%=sql.id%>','2')" class="followButton btn btn-light rounded-pill px-3 border-dark">Unfollow</div>
 
                                 </div>
                                 <%});%>
@@ -82,7 +82,7 @@
                                         </div>
 
                                     </div>
-                                    <div id="f<%=sql.id%>" onclick="follow('<%=sql.id%>','0')" 
+                                    <div id="f<%=sql.id%>" onclick="follow('<%=sql.id%>','2')" 
                                         class="followButton btn btn-light rounded-pill px-3 border-dark">Unfollow</div>
 
                                 </div>
@@ -116,6 +116,7 @@
                     document.getElementById(`f${follower_id}`).style.color = "black";
 
                 } else {
+               
                     Swal.fire({
                         title: 'Do you want to Unfollow?',
                         text: "",
