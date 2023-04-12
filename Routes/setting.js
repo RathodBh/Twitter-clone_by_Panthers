@@ -2,7 +2,7 @@ const express = require("express")
 const app = express();
 const router = express.Router()
 const { protect } = require('../Middlewares/auth')
-const { getlocation,getSettings,accountInfo,changePass,checkOldPass,updatePwd,updateUserName,updateUserNamepost,getCountry} = require('../controllers/settingController')
+const { getlocation,getSettings,accountInfo,changePass,checkOldPass,updatePwd,updateUserName,updateUserNamepost,getCountry,postCountry,getEmailChange} = require('../controllers/settingController')
 
 // add routes
 
@@ -15,6 +15,8 @@ router.route('/updatePwd').post(protect,updatePwd)
 
 router.route('/update-userName').get(protect,updateUserName)
 router.route('/change-country').get(protect,getCountry)
+router.route('/change-email').get(protect,getEmailChange)
+router.route('/country-upt').post(protect,postCountry)
 router.route('/updateUname').post(protect,updateUserNamepost)
 
 

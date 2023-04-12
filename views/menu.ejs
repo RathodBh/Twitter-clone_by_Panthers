@@ -50,9 +50,14 @@
                             <div class="d-flex pt-2">
                                 <img src="/assets/images/cover.jpg" alt="" class="profile-size me-2 border "
                                     id="tweetUserImg">
-                                <textarea placeholder="What's happening?" name="tweet_text"
-                                    class="text-dark tweet-comment-box" id="twt-area" cols="30" rows="5"
-                                    maxlength="300"></textarea>
+                                <div contenteditable="true" class="w-100" style="height: 150px;overflow-x:auto" id="myTextArea" ></div>
+                                <!-- <textarea placeholder="What's happening?" name="tweet_text"
+                                    class="text-dark tweet-comment-box" id="twt-area" cols="30" rows="5" maxlength="300"
+                                    >
+
+
+                                </textarea> -->
+                                <input type="hidden" id="hash">
                             </div>
                             <div id="iimg" class=" all-center flex-column">
                             </div>
@@ -73,9 +78,6 @@
                                 <a href="#emojis">
                                     <i class="fa-regular fa-face-smile  rounded-circle p-2  link-hover me-1 border border-3 border-primary"
                                         onclick="emoji_clk()"></i>
-                                    <!-- <img src="/assets/images/emojis.png" alt=" "
-                                    id="emojiSelectorIcon" onclick="emoji_clk()"
-                                    class="profile-size me-1"> -->
                                     <emoji-picker id="emojis_img" style="display:none;"></emoji-picker>
                                 </a>
                             </div>
@@ -91,16 +93,51 @@
         </div>
         <!-- end modal working -->
         <script>
-            document.querySelector('#sub_btn').addEventListener('click', function (e) {
+            // let output = document.getElementById('myTextArea');
+
+
+            let textArea = document.getElementById("myTextArea");
+            textArea.focus()
+
+            textArea.addEventListener("input", (e) => {
+
+                // console.log(textArea.value[textArea.value.length - 2]);
+                let hashTag = textArea.innerHTML.match(/#[a-z0-9_]+/g)
+
+                for (let curHashtag of hashTag) {
+                    textArea.innerHTML = textArea.innerHTML.replace(curHashtag, `<span class="text-primary">${curHashtag}</span>`)
+
+                    // textArea.blur();
+                    // textArea.click();
+                }
+            })
+            document.querySelector('#sub_btn').addEventListener('click', async function (e) {
                 e.preventDefault();
-                if (document.querySelector("textarea.tweet-comment-box").value == "") {
+                if (document.querySelector("#myTextArea").innerText == "") {
                     ToastBlank.fire({
                         icon: 'warning',
                         title: 'Please enter a Tweet',
-
                     })
                 } else {
-                    document.querySelector("#tweetSubmit").submit()
+                    let tweet = document.querySelector("#myTextArea").innerText;
+                    let hashTags = tweet.match(/#[a-z0-9_]+/g)
+                    // document.querySelector("#hash").value = hashTags
+                    let tweetReq = await fetch(`/dashboard/tweet`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            tweet,
+                            hashTags
+                        })
+                    })
+
+                    let ansReq = await tweetReq.json();
+                    if (ansReq.ans == true) {
+                        forYouDataLoad()
+                    }
+                    // document.querySelector("#tweetSubmit").submit()
                 }
             })
         </script>
@@ -110,9 +147,9 @@
             <div class="container-lg">
 
                 <!-- mobile menu  -->
-                <div id="topBarMobile" class="d-sm-none d-block">
-                    <div class="profileMobile h-100">
-                        <div class="bottom-menu all-center h-100 dropup" type="button" data-bs-toggle="dropdown"
+                <div id="topBarMobile" class="d-sm-none d-block border">
+                    <div class="profileMobile h-100 ">
+                        <div class="bottom-menu all-center  h-100 dropup" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
                             <ul class="list-unstyled h-100 menu-ul">
                                 <li class="link-hover h-100 w-100 all-center">
@@ -167,84 +204,7 @@
 
                         </div>
                     </div>
-                    <!-- <div class="inner-menu h-100">
-                        <ul class="list-unstyled menu-ul">
-                            <li>
-                                <a href="/dashboard" class="menu-link">
-                                    <i class="fa-brands fa-twitter text-blue logo-icon"></i>
-                                </a>
-                            </li>
-                            <li class="link-hover">
-                                <a href="/dashboard" class="menu-link" id="homeLink">
-                                    <i class="fa-solid fa-house link-icon "></i>
-                                    <span>Home</span>
-                                </a>
-                            </li>
-                            <li class="link-hover">
-                                <a href="" class="menu-link" id="notificationLink">
-                                    <i class="fa-regular fa-bell link-icon"></i>
-                                    <span>Notifications</span>
-                                </a>
-                            </li>
-                            <li class="link-hover">
-                                <a href="/profile/user" class="menu-link" id="profileLink">
-                                    <i class="fa-regular fa-user link-icon"></i>
-                                    <span>Profile</span>
-                                </a>
-                            </li>
-                            <li class="link-hover">
-                                <a href="/setting" class="menu-link" id="settingsLink">
-                                    <i class="fa-solid fa-gear link-icon"></i>
-                                    <span>Settings</span>
-                                </a>
-                            </li>
-                            <li class="link-hover d-md-none d-sm-block d-block">
-                                <a href="" class="menu-link" data-bs-toggle="modal" data-bs-target="#searchPageModal">
-                                    <i class="fa-solid fa-magnifying-glass link-icon"></i>
-                                    <span>Search</span>
-                                </a>
-                            </li>
 
-                            
-                            <li class="">
-                                <a href=""
-                                    class="menu-link bg-blue text-light text-center btn rounded-pill w-100 btn-tweet"
-                                    data-bs-toggle="modal" data-bs-target="#tweetModal">
-                                    Tweet
-                                </a>
-                            </li>
-                        </ul>
-
-                        <div class="bottom-menu dropup" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <ul class="list-unstyled menu-ul">
-                                <li class="link-hover w-100 all-center">
-                                    <div class="all-center" id="status">
-                                        <img src="" alt="" class="bottom-pic me-2 border">
-                                        <div class="info" id="userData">
-                                            <h6></h6>
-                                            <span id="useraa" class="text-gray"></span>
-                                        </div>
-                                    </div>
-                                    <span class="all-center flex-row">
-                                        <i class="fa-solid fa-circle bottom-dots"></i>
-                                        <i class="fa-solid fa-circle bottom-dots"></i>
-                                        <i class="fa-solid fa-circle bottom-dots"></i>
-                                    </span>
-                                </li>
-                            </ul>
-
-                        </div>
-                        <ul class="dropdown-menu">
-                            <li class="d-flex">
-                                <a class="dropdown-item" onclick="logout()"><i
-                                        class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout <span
-                                        class="text-blue" id="userDataId"></span>
-
-                                </a>
-                            </li>
-
-                        </ul>
-                    </div> -->
                     <div id="addTweetButtonMobile">
                         <a href="" class="menu-link bg-blue text-light text-center btn rounded-circle w-100 btn-tweet"
                             data-bs-toggle="modal" data-bs-target="#tweetModal">
@@ -340,6 +300,7 @@
                         </div>
                     </div>
                     <script>
+
                         if (location.href.includes("dashboard")) {
                             // document.querySelector("#profileLink").classList.add("active")
                         }
@@ -355,7 +316,13 @@
                         document.querySelector("#status h6").innerText = ans.name
                         document.querySelector("#status span").innerText = ans.username
                         document.querySelector("#userDataId").innerText = ans.username
-                        document.querySelector("#showuname").innerText = ans.username
+                        console.log(document.querySelector("#showcreated_at").innerText = ans.created_at)
+                        try {
+                            document.querySelector("#showuname").innerText = ans.username
+                            
+                        } catch (e) {
+                            
+                        }
                     }
                 </script>
 
@@ -373,8 +340,8 @@
                                     </button>
 
 
-                                    <a onclick="logout()" class="cp"><button style="width: 100%;" type="button"
-                                            class="btn btn-light">Logout</button></a>
+                                    <a onclick="logout()" class="cp"><button type="button"
+                                            class="btn btn-light w-100">Logout</button></a>
                                 </div>
                             </div>
                         </div>

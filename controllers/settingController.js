@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const conn = require('../connection/conn');
+const { queryExec } = require('../connection/conn');
 // const queryExecuter = require('../queryExecute/queryExecuter')
 const express = require('express')
 const app = express();
@@ -69,43 +70,59 @@ const checkOldPass = asyncHandler(async (req, res) => {
 
 const updatePwd = asyncHandler(async (req, res) => {
 
-    const { data }  =  req.body
+    const { data } = req.body
     console.log(data);
     const salt = await bcrypt.genSalt(15);
     const hashedPassword = await bcrypt.hash(data, salt);
     let qryupPwd = `update users set password="${hashedPassword}" where id=${req.session.user_id};`
     console.log(qryupPwd);
     let resultqry = await queryExecuter(qryupPwd);
-    if(resultqry){
-       return res.json({msg:"success"})
+    if (resultqry) {
+        return res.json({ msg: "success" })
     }
 
     return res.json({
-        msg:"fail"
+        msg: "fail"
     })
 
 
 })
-const updateUserName =asyncHandler(async(req,res)=>{
-res.render('userNameUpt')
+const updateUserName = asyncHandler(async (req, res) => {
+    res.render('userNameUpt')
 })
-const updateUserNamepost =asyncHandler(async(req,res)=>{
-    const {data} = req.body
+const updateUserNamepost = asyncHandler(async (req, res) => {
+    const { data } = req.body
     console.log(data);
     let qryupPwd = `update users set user_name="${data}" where id=${req.session.user_id};`
     console.log(qryupPwd);
     let resultqry = await queryExecuter(qryupPwd);
-    if(resultqry){
-       return res.json({msg:"success"})
+    if (resultqry) {
+        return res.json({ msg: "success" })
     }
 
     return res.json({
-        msg:"fail"
+        msg: "fail"
     })
 
 })
 
-const getCountry =asyncHandler(async(req,res)=>{
-
+const getCountry = asyncHandler(async (req, res) => {
+    res.render('country')
 })
-module.exports = { getCountry,getlocation, getSettings, accountInfo, changePass, checkOldPass, updatePwd ,updateUserName,updateUserNamepost}
+const getEmailChange = asyncHandler(async (req, res) => {
+    res.render('updateEmail')
+})
+const postCountry = asyncHandler(async (req, res) => {
+
+   const { data}= req.body;
+   console.log(data);
+
+   if(data=="everywhere"){
+    return res.json({msd:false})
+   }
+   else{
+    let ctrqry = await queryExec(`update users set country=? where id=?`,[data,req.session.user_id])
+    return res.json({msd:true})
+   }
+})
+module.exports = { getCountry, getlocation, getSettings, accountInfo, changePass, checkOldPass, updatePwd, updateUserName, updateUserNamepost, postCountry ,getEmailChange}

@@ -217,8 +217,8 @@ const updateProfilepoint = asyncHandler(async (req, res) => {
 
 const getUserInfo = asyncHandler(async (req, res) => {
     let userId = req.session.user_id;
-    let user = await queryExec(`SELECT name,user_name,user_image from users WHERE id = ${userId}`)
-    res.json({ name: user[0].name, username: user[0].user_name, user_img: user[0].user_image })
+    let user = await queryExec(`SELECT name,user_name,user_image,created_at from users WHERE id = ${userId}`)
+    res.json({ name: user[0].name, username: user[0].user_name, user_img: user[0].user_image,created_at:user[0].created_at })
 })
 
 

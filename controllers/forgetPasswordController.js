@@ -45,9 +45,35 @@ const getMail = asyncHandler(async (req, res)=>{
     }).then(info => {
         // console.log({ info });
     }).catch(console.error);
-    var sql = `update users set otp= "${otp}" where email='${emailID}'`;
-    var result = await queryExec(sql);
+    var sql = `update users set otp= ? where email=?`;
+    var result = await queryExec(sql,[otp,emailID]);
     res.json({ result, mailExistStatus });
+})
+
+const sendMail = asyncHandler(async (req, res)=>{
+    var mail = req.query.email;
+
+    var otp = Math.floor(100000 + Math.random() * 900000);
+    const transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587,
+        secure: false,
+        auth: {
+            user: 'mehtajaini179@gmail.com',
+            pass: 'lpnsowiqbkasqaje',
+        },
+    });
+    transporter.sendMail({
+        from: "mehtajaini179@gmail.com", // sender address
+        to: `${mail}`, // list of receivers
+        subject: "Your otp for registration of your account", // Subject line
+        html: `<h2>Your OTP : ${otp}</h2>`, // html body
+    }).then(info => {
+        // console.log({ info });
+    }).catch(console.error);
+    req.session.otp = otp;
+    console.log("req.session.otp ",req.session.otp);
+    res.json({ans: true})
 })
 
 
@@ -75,6 +101,7 @@ const resetPassword = asyncHandler(async(req, res) => {
 
 module.exports = {
     getForgetPasswordPage,
+    sendMail,
     getMail,
     getOtp,
     resetPassword
