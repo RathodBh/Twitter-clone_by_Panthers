@@ -17,7 +17,7 @@
                                         <div class="mb-3">
                                             <label for="exampleInputPassword1" class="form-label">Enter
                                                 Password</label>
-                                            <input type="password" class="form-control" id="oldEmail"
+                                            <input type="password" class="form-control" id="oldPass"
                                                 onblur="checkoldpass()">
                                             <small id="error1"></small>
                                         </div>
@@ -39,11 +39,10 @@
 
     <script>
 
+        async function checkoldpass() {
+            let oldPassword = document.getElementById('oldPass').value
 
-        async function checkoldemail() {
-            let oldPassword = document.getElementById('oldEmail').value
-
-            let reqa = await fetch('/user-login/checkemail', {
+            let reqa = await fetch('/setting/checkpassword', {
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/json'
@@ -53,7 +52,7 @@
                 })
             })
             let respdata = await reqa.json();
-            if (respdata.isNew == true) {
+            if (respdata.ans == true) {
                 return true
             }
             else {
@@ -61,40 +60,21 @@
             }
 
         }
-
         async function validateForm(e) {
             e.preventDefault();
-            let check = await checkoldemail()
-          
+            let check = await checkoldpass()
+
             console.log("ansssss", check);
-            // if (check ) {
+            if (check ) {
 
+               location.replace("/setting/change-UserEmail")
+          
 
-                // console.log(document.querySelector('#newPass').value)
-                // let fetReq = await fetch(`/setting/updatePwd`, {
-                //     method: 'post',
-                //     headers: {
-                //         'Content-Type': 'application/json'
-                //     },
-                //     body: JSON.stringify({
-                //         data: document.querySelector('#newPass').value
-                //     })
-                // })
+            }
 
-                // let fetchres = await fetReq.json();
-                // console.log(fetchres.msg);
-                // if (fetchres.msg == "success") {
-                //     document.querySelector("#changePwd").submit()
-                //     /////TOST AHIYA MUKJE
-                //     location.replace("/setting")
-                // }
-                // else {
-                //     /////TOST AHIYA MUKJE
-                //     location.reload()
-
-                // }
-
-            // }
+            else{
+                location.reload()
+            }
 
 
         }

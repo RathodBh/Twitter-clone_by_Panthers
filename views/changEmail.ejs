@@ -1,0 +1,122 @@
+<%- include("menu") -%>
+    <div class="col-lg-6 col-md-6 col-sm-8 col-12 px-0 home Setting-main">
+
+        <div class="blur-ui p-3 pb-0">
+            <h4 class="text-black ">Update Email</h4>
+            <div class="all-data">
+                <div class="tab-content">
+                    <div id="for-settings" class="tab-pane active">
+                        <div class="setting-container flex-column">
+                            <div class="blur-ui p-3 pb-0">
+
+                                <div class="container light-style flex-grow-1 container-p-y">
+
+
+                                    <form onsubmit="validateForm(event)" id="changeEml">
+
+                                        <div class="mb-3">
+                                            <label for="exampleInputPassword1" class="form-label">Enter New Email
+                                            </label>
+                                            <input type="text" class="form-control" id="newEmail"
+                                                onblur="checkuserEmail()">
+                                            <small id="emailError"></small>
+                                        </div>
+
+
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+        async function checkuserEmail() {
+            let email = document.querySelector('#newEmail').value
+            console.log(email);
+            const regExEmail = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
+            let test_email = regExEmail.test(email);
+
+            if (!test_email && email != "") {
+                let emailErrMsg = document.getElementById('emailError')
+                emailErrMsg.innerHTML = `<span class="text-danger">Please enter valid email</span>`
+                return false;
+            } else {
+
+                const save_req = await fetch(`/user/sign-up/checkemail`, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: email
+
+                    })
+                });
+
+                var resSave = await save_req.json();
+
+                if (resSave.isNew == true) {
+                    // document.querySelector("#emailOTP").value = email;
+                    let usermsg = document.getElementById('emailError')
+                    let content = `<span  class="text-success"></span>`
+                    usermsg.innerHTML = content
+                    return true
+                }
+                else {
+                    let usermsg = document.getElementById('emailError')
+                    let content = `<span class="text-danger">Email ID Already Exists!</span>`
+                    usermsg.innerHTML = content;
+                    return false
+                }
+            }
+
+        }
+
+        async function validateForm(e) {
+            e.preventDefault();
+            let result = await checkuserEmail()
+            console.log(result);
+
+            if (result) {
+                let email = document.querySelector('#newEmail').value
+                let fetReq = await fetch(`/setting/updateEml`, {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: email
+                    })
+                })
+                let fetchres = await fetReq.json();
+                console.log(fetchres.msg);
+                if (fetchres.msd == true) {
+                    document.querySelector("#changeEml").submit()
+                    /////TOST AHIYA MUKJE
+                    location.replace("/setting")
+                }
+                else {
+                    /////TOST AHIYA MUKJE
+                    location.reload()
+
+                }
+            }
+            else {
+                setTimeout(() => {
+                    location.reload()
+                }, 2700)
+            }
+        }
+
+    </script>
+
+    <%- include("search") -%>

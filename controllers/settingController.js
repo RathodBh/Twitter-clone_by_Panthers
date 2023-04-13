@@ -34,6 +34,10 @@ const changePass = asyncHandler(async (req, res) => {
     res.render('changePass')
 
 })
+const getchangeUserEmail = asyncHandler(async (req, res) => {
+    res.render('changEmail')
+
+})
 const checkOldPass = asyncHandler(async (req, res) => {
 
     let { data } = req.body;
@@ -45,8 +49,8 @@ const checkOldPass = asyncHandler(async (req, res) => {
 
 
     let user_id = req.session.user_id;
-    let qry = `select * from users where id = ${user_id}`
-    let exeqry = await queryExecuter(qry);
+    let qry = `select * from users where id =?`
+    let exeqry = await queryExec(qry,[user_id]);
 
 
     if (exeqry.length == 0) {
@@ -109,7 +113,7 @@ const getCountry = asyncHandler(async (req, res) => {
     res.render('country')
 })
 const getEmailChange = asyncHandler(async (req, res) => {
-    res.render('updateEmail')
+    res.render('checkPass')
 })
 const postCountry = asyncHandler(async (req, res) => {
 
@@ -124,4 +128,14 @@ const postCountry = asyncHandler(async (req, res) => {
     return res.json({msd:true})
    }
 })
-module.exports = { getCountry, getlocation, getSettings, accountInfo, changePass, checkOldPass, updatePwd, updateUserName, updateUserNamepost, postCountry ,getEmailChange}
+const updateEml = asyncHandler(async (req, res) => {
+
+   const { data}= req.body;
+   if(data){
+    let ctrqry = await queryExec(`update users set email=? where id=?`,[data,req.session.user_id])
+    return res.json({msd:true})
+   }
+})
+
+
+module.exports = {updateEml, getchangeUserEmail,getCountry, getlocation, getSettings, accountInfo, changePass, checkOldPass, updatePwd, updateUserName, updateUserNamepost, postCountry ,getEmailChange}
