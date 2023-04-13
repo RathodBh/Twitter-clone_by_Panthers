@@ -183,56 +183,61 @@ const postTweet = asyncHandler(async (req, res) => {
         return;
     }
     const file = req.files;
-    const user_id = req.session.user_id;
-    const tweet = req.body.tweet;
-    const hashTagsArr = req.body.hashTags;
+    console.log(file);
+    // const user_id = req.session.user_id;
+    // const tweet = req.body.tweet;
+    // const hashTagsArr = req.body.hashTags;
+
+    // console.log("this is",req.body);
+
+    // const {file } = req.body
 
 
 
-    let lastTweetInsertedId;
+    // let lastTweetInsertedId;
 
-    let fileLength = (file == undefined) ? 0 : file.length;
-    if (fileLength == 0) {
-        let ins = await queryExec('INSERT INTO  tweets (user_id,tweet,media_type,created_at) VALUES (?,?,?,NOW())', [user_id, tweet, 'text']);
-        lastTweetInsertedId = ins.insertId;
-        console.log("0", user_id, tweet);
-    } else {
-        for (var i = 0; i < file.length; i++) {
-            const filename = file[i].originalname;
-            const filepath = file[i].path;
-            const filetype = file[i].mimetype;
-            const filename1 = file[i].filename
-            var imgsrc = '/assets/images/' + filename1;
-            const sql = 'INSERT INTO  tweets (user_id,tweet, media_url,media_type,created_at) VALUES (?,?, ?, ?,NOW())';
-            const data = [user_id, tweet, imgsrc, filetype];
-            let q = await queryExec(sql, data);
-            lastTweetInsertedId = q.insertId;
-        }
-    }
+    // let fileLength = (file == undefined) ? 0 : file.length;
+    // if (fileLength == 0) {
+    //     let ins = await queryExec('INSERT INTO  tweets (user_id,tweet,media_type,created_at) VALUES (?,?,?,NOW())', [user_id, tweet, 'text']);
+    //     lastTweetInsertedId = ins.insertId;
+    //     console.log("0", user_id, tweet);
+    // } else {
+    //     for (var i = 0; i < file.length; i++) {
+    //         const filename = file[i].originalname;
+    //         const filepath = file[i].path;
+    //         const filetype = file[i].mimetype;
+    //         const filename1 = file[i].filename
+    //         var imgsrc = '/assets/images/' + filename1;
+    //         const sql = 'INSERT INTO  tweets (user_id,tweet, media_url,media_type,created_at) VALUES (?,?, ?, ?,NOW())';
+    //         const data = [user_id, tweet, imgsrc, filetype];
+    //         let q = await queryExec(sql, data);
+    //         lastTweetInsertedId = q.insertId;
+    //     }
+    // }
 
-    let hashLength = (hashTagsArr == undefined) ? 0 : hashTagsArr.length;
-    if (hashLength > 0) {
-        for (const hash of hashTagsArr) {
-            let curHash = hash.substring(1)
-            let curHashId = ""
-            let checkHash = await queryExec(`SELECT hashtag,id from hashtag_master WHERE hashtag = ?`, [curHash]);
-            if (checkHash.length > 0) {
-                //update hashtag counter into the hashtag_master
-                let updateHash = await queryExec(`UPDATE hashtag_master SET hashtag_used = hashtag_used + ${1},updated_at=NOW() WHERE hashtag=?`, [curHash]);
-                curHashId = checkHash[0].id;
-                console.log("🚀 ~ file: dashboardController.js:228 ~ postTweet ~ curHashId:", checkHash[0].id)
-            } else {
-                //insert hashtag into the hashtag_master
-                let insertHash = await queryExec(`INSERT INTO hashtag_master(hashtag,created_at) VALUES(?,NOW())`, [curHash]);
-                curHashId = insertHash.insertId;
-                console.log("🚀 ~ file: dashboardController.js:232 ~ postTweet ~ curHashId:", curHashId)
-            }
-            //insert tweet hash into the tweet_hashtag table
-            await queryExec(`INSERT INTO tweet_hashtag(tweet_id,hash_id,created_at) VALUES(?,?,NOW())`, [lastTweetInsertedId, curHashId]);
-        }
-    }
+    // let hashLength = (hashTagsArr == undefined) ? 0 : hashTagsArr.length;
+    // if (hashLength > 0) {
+    //     for (const hash of hashTagsArr) {
+    //         let curHash = hash.substring(1)
+    //         let curHashId = ""
+    //         let checkHash = await queryExec(`SELECT hashtag,id from hashtag_master WHERE hashtag = ?`, [curHash]);
+    //         if (checkHash.length > 0) {
+    //             //update hashtag counter into the hashtag_master
+    //             let updateHash = await queryExec(`UPDATE hashtag_master SET hashtag_used = hashtag_used + ${1},updated_at=NOW() WHERE hashtag=?`, [curHash]);
+    //             curHashId = checkHash[0].id;
+    //             console.log("🚀 ~ file: dashboardController.js:228 ~ postTweet ~ curHashId:", checkHash[0].id)
+    //         } else {
+    //             //insert hashtag into the hashtag_master
+    //             let insertHash = await queryExec(`INSERT INTO hashtag_master(hashtag,created_at) VALUES(?,NOW())`, [curHash]);
+    //             curHashId = insertHash.insertId;
+    //             console.log("🚀 ~ file: dashboardController.js:232 ~ postTweet ~ curHashId:", curHashId)
+    //         }
+    //         //insert tweet hash into the tweet_hashtag table
+    //         await queryExec(`INSERT INTO tweet_hashtag(tweet_id,hash_id,created_at) VALUES(?,?,NOW())`, [lastTweetInsertedId, curHashId]);
+    //     }
+    // }
 
-    res.json({ ans: true })
+    // res.json({ ans: true })
 
 
 })

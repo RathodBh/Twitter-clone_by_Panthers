@@ -134,15 +134,26 @@
                             hashTags.push(curHashtag)
                     }
                     // document.querySelector("#hash").value = hashTags
+                    // let cover_image=document.getElementById('uploaded_file')
+
+                    let input = document.querySelector('input[type="file"]');
+                    var formItems = new FormData();
+                    // let filearr=[]
+                    for (let i = 0; i < input.files.length; i++) {
+                       
+                        // filearr.push()
+                        formItems.append('file', input.files[i]);
+                    }
+
+                    console.log(input.files.length);
+                    // formItems.append('message', message);
+
+
+
                     let tweetReq = await fetch(`/dashboard/tweet`, {
                         method: "POST",
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            tweet,
-                            hashTags
-                        })
+                       
+                        body:formItems
                     })
 
                     let ansReq = await tweetReq.json();
@@ -325,8 +336,8 @@
                             document.querySelector("#profileLink").classList.add("active")
                         }
 
-                   
-                </script>
+
+                    </script>
 
                     <div class="modal fade " id="settingsModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                         aria-hidden="true">

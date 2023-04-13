@@ -20,6 +20,6 @@ router.route('/getTrending').get(getTrendingHashtags)
 
 router.route('/like').post(getpostLike1)
 router.route('/retweet').post(getpostRetweet)
-router.route('/tweet').post(upload.array('cover_image', 5), postTweet)
+router.route('/tweet').post(upload.array('file', 5), postTweet)
 
 module.exports = router;
