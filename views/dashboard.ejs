@@ -5,7 +5,7 @@
     </div>
     <%- include("add_comment") -%>
         <!-- main panel  -->
-        <div class="col-6 px-0 border">
+        <div class="col-lg-6 col-md-6 col-sm-8 col-12 px-0 border">
             <div class="inner-main home">
                 <div class="blur-ui p-3 pb-0">
                     <h4 class="text-black">Home</h4>
@@ -66,49 +66,71 @@
                 })
             }
 
+            var totTimeLike = []
+            function likeCounter() {
+                totTimeLike.push(new Date().getTime())
+                if (totTimeLike.length > 2) {
+                    if (parseInt(totTimeLike[totTimeLike.length - 1]) - parseInt(totTimeLike[totTimeLike.length - 2]) < 1000) {
+                        totTimeLike = []
+                        return false
+                    }
+                }
+                return true
+            }
+
             async function likepost(e, t_id) {
+
                 e.stopPropagation()
+                let is_true = await likeCounter()
+                if (is_true == false) {
+                    return false
+                }
                 let tweet_id = t_id.id
 
                 if (t_id.classList.contains('fa-regular')) {
                     t_id.classList.value = 'fa-solid fa-heart text-danger';
                     let like = true
-                    const save_req = await fetch(`/dashboard/like`, {
-                        method: "POST",
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            data: { like, tweet_id }
-                        })
-                    });
-                    var resSave = await save_req.json();
+                    if (t_id.classList.contains("fa-solid")) {
+                        const save_req = await fetch(`/dashboard/like`, {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                data: { like, tweet_id }
+                            })
+                        });
+                        var resSave = await save_req.json();
 
-                    if (resSave.flag == true) {
-                        let likeSpan = document.querySelector("#like" + tweet_id)
-                        likeSpan.innerHTML = resSave.alllikecount
+                        if (resSave.flag == true) {
+                            let likeSpan = document.querySelector("#like" + tweet_id)
+                            likeSpan.innerHTML = resSave.alllikecount;
+                        }
                     }
+
                 }
                 else if (t_id.classList.value == 'fa-solid fa-heart text-danger') {
                     t_id.classList.value = 'fa-regular fa-heart'
                     let like = false;
-                    const save_req = await fetch(`/dashboard/like`, {
-                        method: "POST",
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            data: { like, tweet_id }
-                        })
-                    });
-                    var resSave = await save_req.json();
-                    if (resSave.flag == false) {
-                        let likeSpan = document.querySelector("#like" + tweet_id)
-                        likeSpan.innerHTML = resSave.alllikecount
-                    }
-                    if (resSave.flag == true) {
-                        let likeSpan = document.querySelector("#like" + tweet_id)
-                        likeSpan.innerHTML = resSave.alllikecount
+                    if (t_id.classList.contains("fa-regular")) {
+                        const save_req = await fetch(`/dashboard/like`, {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                data: { like, tweet_id }
+                            })
+                        });
+                        var resSave = await save_req.json();
+                        if (resSave.flag == false) {
+                            let likeSpan = document.querySelector("#like" + tweet_id)
+                            likeSpan.innerHTML = resSave.alllikecount
+                        }
+                        if (resSave.flag == true) {
+                            let likeSpan = document.querySelector("#like" + tweet_id)
+                            likeSpan.innerHTML = resSave.alllikecount
+                        }
                     }
                 }
             }
@@ -167,7 +189,7 @@
                                                 <img src="${t.user_image}" alt="" class="profile-size me-2 border">
                                             </div>
                                             <div class="col-10 px-4 " >
-                                                <div class="d-flex align-items-center user-info position-relative">
+                                                <div class="d-flex align-items-center user-info position-relative flex-wrap">
                                                     
                                                     <a href="/profile/user/${t.user_id}"
                                                         class="text-black fs-16 me-1 fw-600 ">
@@ -211,7 +233,7 @@
                                                                 <ul class="list-unstyled row">
                                                                     <li class="col">
                                                                         <a href="" data-bs-toggle="modal"
-                                                                            class="comment clickComment p-2"
+                                                                            class="comment clickComment p-2 all-center"
                                                                             data-bs-target="#commentModal"
                                                                             data-id="${t.id}" id="clickComment" onclick="stopProp(event)">
                                                                             <i class="fa-regular fa-comment"></i>
@@ -222,7 +244,7 @@
                                                                         </a>
                                                                     </li>
                                                                     <li class="col">
-                                                                        <a class="retweet p-2" >
+                                                                        <a class="retweet p-2 all-center" >
                                                                             <i class="fa-solid fa-retweet"
                                                                                 onclick="retweetpost(event,this)"
                                                                                 id="k${t.id}"></i>
@@ -232,7 +254,7 @@
                                                                         </a>
                                                                     </li>
                                                                     <li class="col">
-                                                                        <a class="like p-2">
+                                                                        <a class="like p-2 all-center">
                                                                             <i class="fa-regular fa-heart"
                                                                                 onclick="likepost(event,this)"
                                                                                 id="${t.id}"></i>
@@ -242,14 +264,8 @@
     
                                                                         </a>
                                                                     </li>
-                                                                    <!-- <li class="col">
-                                                                            <a href="" class="chart">
-                                                                                <i class="fa-solid fa-chart-simple"></i>
-    
-                                                                            </a>
-                                                                        </li> -->
                                                                     <li class="col">
-                                                                        <a href="" class="share p-2" data-bs-toggle="dropdown"
+                                                                        <a href="" class="share p-2 all-center" data-bs-toggle="dropdown"
                                                                             aria-expanded="false" onclick="stopProp(event)">
                                                                             <i
                                                                                 class="fa-solid fa-arrow-up-from-bracket"></i>
@@ -280,13 +296,13 @@
                                                     ${userID != t.user_id ?
 
                             following_data.includes(t.user_id) ? `<li class="d-flex">
-                            <a class="dropdown-item" onclick="followProp(event,'${t.user_id}','1')" ><i
+                            <a class="dropdown-item" onclick="followProp(event,'${t.user_id}','1')" id="p${t.user_id}"><i
                                 class="fa-solid fa-user-minus me-2" ></i><span id="prop${t.user_id}"> Unfollow</span> <span
                                     class="text-blue">@${t.user_name}</span>
 
                             </a>
                         </li>` : `<li class="d-flex">
-                            <a class="dropdown-item" onclick="followProp(event,'${t.user_id}','0')"><i
+                            <a class="dropdown-item" onclick="followProp(event,'${t.user_id}','0')" id="p${t.user_id}"><i
                                 class="fa-solid fa-user-plus me-2" ></i>
                                 <span id="prop${t.user_id}"> Follow</span><span class="text-blue">@${t.user_name}</span>
                             </a>
@@ -332,7 +348,7 @@
                 let fetchDashboard = await fetch(`/dashboard/dashboardData`);
                 let ansData = await fetchDashboard.json();
 
-                let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid,userID } = ansData;
+                let { tweet_data, following_data, post_date, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid, userID } = ansData;
 
                 let part2 = document.querySelector("#followingShowData");
                 let part2Data = '';
@@ -346,7 +362,7 @@
                                                 <img src="${t.user_image}" alt="" class="profile-size me-2 border" >
                                             </div>
                                             <div class="col-10 px-4 " >
-                                                <div class="d-flex align-items-center user-info position-relative">
+                                                <div class="d-flex align-items-center user-info position-relative flex-wrap">
                                                     
                                                     <a href="/profile/user/${t.user_id}"
                                                         class="text-black fs-16 me-1 fw-600" >
@@ -390,7 +406,7 @@
                                                                 <ul class="list-unstyled row">
                                                                     <li class="col">
                                                                         <a href="" data-bs-toggle="modal"
-                                                                            class="comment clickComment"
+                                                                            class="comment clickComment all-center"
                                                                             data-bs-target="#commentModal"
                                                                             data-id="${t.id}" id="clickComment" onclick="(e)=>{e.stopPrapogation()}">
                                                                             <i class="fa-regular fa-comment"></i>
@@ -401,7 +417,7 @@
                                                                         </a>
                                                                     </li>
                                                                     <li class="col">
-                                                                        <a class="retweet">
+                                                                        <a class="retweet all-center">
                                                                             <i class="fa-solid fa-retweet"
                                                                                 onclick="retweetpost(event,this)"
                                                                                 id="k${t.id}"></i>
@@ -411,7 +427,7 @@
                                                                         </a>
                                                                     </li>
                                                                     <li class="col">
-                                                                        <a class="like">
+                                                                        <a class="like all-center">
                                                                             <i class="fa-regular fa-heart"
                                                                                 onclick="likepost(event,this)"
                                                                                 id="${t.id}"></i>
@@ -421,14 +437,8 @@
     
                                                                         </a>
                                                                     </li>
-                                                                    <!-- <li class="col">
-                                                                            <a href="" class="chart">
-                                                                                <i class="fa-solid fa-chart-simple"></i>
-    
-                                                                            </a>
-                                                                        </li> -->
                                                                     <li class="col">
-                                                                        <a href="" class="share p-2" data-bs-toggle="dropdown"
+                                                                        <a href="" class="share p-2 all-center" data-bs-toggle="dropdown"
                                                                             aria-expanded="false" onclick="stopProp(event)">
                                                                             <i
                                                                                 class="fa-solid fa-arrow-up-from-bracket"></i>
@@ -458,19 +468,19 @@
                                                 <ul class="dropdown-menu">
                                                     ${userID != t.user_id ?
 
-following_data.includes(t.user_id) ? `<li class="d-flex">
-<a class="dropdown-item" onclick="followProp(event,'${t.user_id}','1')" ><i
+                                following_data.includes(t.user_id) ? `<li class="d-flex">
+<a class="dropdown-item" onclick="followProp(event,'${t.user_id}','1')" id="p${t.user_id}"><i
     class="fa-solid fa-user-minus me-2" ></i><span id="prop${t.user_id}"> Unfollow</span> <span
         class="text-blue">@${t.user_name}</span>
 
 </a>
 </li>` : `<li class="d-flex">
-<a class="dropdown-item" onclick="followProp(event,'${t.user_id}','0')"><i
+<a class="dropdown-item" onclick="followProp(event,'${t.user_id}','0')" id="p${t.user_id}"><i
     class="fa-solid fa-user-plus me-2" ></i>
     <span id="prop${t.user_id}"> Follow</span><span class="text-blue">@${t.user_name}</span>
 </a>
 </li>`
-: ""}
+                                : ""}
                                                     
     
                                                     <li class="d-flex">
@@ -590,24 +600,36 @@ following_data.includes(t.user_id) ? `<li class="d-flex">
                 load()
             }
 
+            // document.querySelector("#comment_area").addEventListener("input",(e)=>{
+
+            // })
 
             let form = document.querySelector('#addCommentForm')
             form.addEventListener('submit', async (e) => {
                 e.preventDefault()
-                let data = await fetch(`/tweet/tweet_comment`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        tweetId: document.querySelector("#tweetId").value,
-                        comment_text: document.querySelector("#comment_area").value
+                if (document.querySelector("#comment_area").value == "") {
+                    ToastBlank.fire({
+                        icon: 'warning',
+                        title: 'Please enter a comment',
+
                     })
-                })
-                let ans = await data.json();
-                allCommentsLen = ans.len;
-                var comment_section = document.querySelector("#allComment" + document.querySelector("#tweetId").value);
-                comment_section.innerHTML = allCommentsLen
+                } else {
+                    let data = await fetch(`/tweet/tweet_comment`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            tweetId: document.querySelector("#tweetId").value,
+                            comment_text: document.querySelector("#comment_area").value
+                        })
+                    })
+                    let ans = await data.json();
+                    allCommentsLen = ans.len;
+                    var comment_section = document.querySelector("#allComment" + document.querySelector("#tweetId").value);
+                    comment_section.innerHTML = allCommentsLen
+                }
+
                 // loadComments()
             })
 
@@ -619,13 +641,11 @@ following_data.includes(t.user_id) ? `<li class="d-flex">
             async function followProp(e, follower_id, flag) {
                 e.stopPropagation()
                 if (flag == 0) {
-                    // console.log("Unfollow");
                     await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
                     document.getElementById(`prop${follower_id}`).innerHTML = "Unfollow";
-                    document.getElementById(`prop${follower_id}`).setAttribute("onclick", `follow(${follower_id},1)`);
-
+                    document.getElementById(`p${follower_id}`).setAttribute("onclick", `followProp(event,${follower_id},1)`);
+                    // await getFollowUser()
                 } else {
-                    // console.log("Follow");
                     Swal.fire({
                         title: 'Do you want to Unfollow?',
                         text: "",
@@ -657,10 +677,17 @@ following_data.includes(t.user_id) ? `<li class="d-flex">
 
                             await fetch(`/addfollow?followerId=${follower_id}&flag=${flag}`);
                             document.getElementById(`prop${follower_id}`).innerHTML = "Follow";
-                            document.getElementById(`prop${follower_id}`).setAttribute("onclick", `follow(${follower_id},0)`);
+                            document.getElementById(`p${follower_id}`).setAttribute("onclick", `followProp(event,${follower_id},0)`);
+
+                            await getFollowUser()
                         }
                     })
                 }
+                await getFollowUser()
+
+                // await getFollowUser()
+
+
             }
         </script>
         <%- include("search") -%>

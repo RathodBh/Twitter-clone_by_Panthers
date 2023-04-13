@@ -1,13 +1,15 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+require('dotenv').config("./.env")
 const app = express();
-const PORT = 3008
-const conn = require('./connection/connectdb');
+const PORT = process.env.PORT
+const {queryExec} = require('./connection/conn');
 const register = require('./Routes/register')
 const login = require('./Routes/login')
 const profile = require('./Routes/profile')
 const commentInfo = require('./Routes/commentInfo')
 const dashboard = require('./Routes/dashboard')
+const home = require('./Routes/home')
 const logout = require('./Routes/logout')
 const follow = require('./Routes/follow')
 const forgetPassword = require('./Routes/forgetPassword');
@@ -17,7 +19,7 @@ var session = require('express-session');
 const util = require('util')
 app.use(cookieParser());
 app.use(session({
-    secret: "secret key",
+    secret: process.env.SECRET_KEY,
     resave: false,
     saveUninitialized: true,
 }));
@@ -33,7 +35,7 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 
 
-var query = util.promisify(conn.query).bind(conn)
+
 app.set('view engine','ejs')
 
 // my all end points
@@ -41,6 +43,7 @@ app.set('view engine', 'ejs')
 app.use('/user', register)
 app.use('/user-login', login)
 app.use('/user-logout', logout)
+app.use('/', home)
 app.use('/dashboard', dashboard)
 app.use("/profile", profile)
 app.use("/tweet", commentInfo)
@@ -50,18 +53,8 @@ app.use("/notification", notification)
 const multer = require('multer');
 const { protect } = require('./Middlewares/auth');
 
-async function queryExecuter(query) {
-    return new Promise((resolve, rejects) => {
-        conn.query(query, (err, result) => {
-            if (err) {
-                rejects(err);
-            }
-            resolve(result);
-        });
-    })
-}
+
 app.set('view engine', 'ejs')
-// const conn = require('../connection/connectdb');
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -88,7 +81,7 @@ app.post("/updateProfile", uploads.fields([{
         try {
             let uid = req.session.user_id
             const file = req.files;
-            var users = await queryExecuter(`select user_image as dp , cover_image as cover from users where id=${uid}`);
+            var users = await queryExec(`select user_image as dp , cover_image as cover from users where id=?`,[uid]);
 
             var cover_imgsrc = req.files.cover_image;
             var profile_imgsrc = req.files.profile_image;
@@ -106,7 +99,7 @@ app.post("/updateProfile", uploads.fields([{
 
 
 
-            await queryExecuter(`update users set name="${name}" , bio="${user_bio}" ,birth_date="${user_dob}" ,cover_image="${cover_imgsrc}", user_image="${profile_imgsrc}" WHERE id=${uid}`);
+            await queryExec(`update users set name=? , bio=? ,birth_date=? ,cover_image=?, user_image=? WHERE id=?`,[name,user_bio,user_dob,cover_imgsrc,profile_imgsrc,uid]);
 
             res.redirect('/profile/user')
 
@@ -123,36 +116,8 @@ app.post("/updateProfile", uploads.fields([{
 
 app.get("/srch?", async (req, res) => {
     var srchval = req.query.val;
-    var sql = `select user_name from  users`;
-    var names = await queryExecuter(sql);
-    var arr = [];
-    var newArr = [];
-    for (let i = 0; i < names.length; i++) {
-        arr.push(names[i].user_name)
-    }
-    var counter = 0;
-    var arrVal;
-    for (let j = 0; j < arr.length; j++) {
-        var arrValLength = arr[j].length;
-        arrVal = arr[j];
-        for (let k = 0; k < srchval.length; k++) {
-            if (arrVal.includes(srchval[k])) {
-                var firstIndex = arrVal.indexOf(srchval[k]);
-                arrVal = arrVal.substr(firstIndex + 1, arrValLength + 1)
-                counter++;
-            }
-        }
-        if (counter == srchval.length) {
-            newArr.push(arr[j])
-        }
-        counter = 0;
-    }
-    var matchedResult = [];
-    for (let m = 0; m < newArr.length; m++) {
-        var sql2 = `SELECT id,name,user_name,user_image FROM  users where user_name="${newArr[m]}"`;;
-        resultantName = await queryExecuter(sql2);
-        matchedResult.push(resultantName)
-    }
+    var sql = `SELECT id,name,user_name,user_image FROM twitter_clone.users where user_name like ? or name like ? `;
+    var matchedResult = await queryExec(sql,["%"+srchval+"%","%"+srchval+"%"]);
     res.json(matchedResult)
 
 })
@@ -165,44 +130,22 @@ app.get("/addfollow", async (req, res) => {
     
     if (req.query.flag == 0) {
         cnt++;
-        await queryExecuter(`insert into followers (user_id,follower_id,isdelete) values("${followerId}","${userId}","${0}");`);
-        await queryExecuter(`insert into following (user_id,following_id,isdelete) values("${userId}","${followerId}","${0}")`);
-        let a = await queryExecuter(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
-        let b=await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
-
+        await queryExec(`insert into followers (user_id,follower_id,isdelete) values(?,?,"${0}");`,[followerId,userId]);
+        await queryExec(`insert into following (user_id,following_id,isdelete) values(?,?,"${0}")`,[userId,followerId]);
+        let a = await queryExec(`UPDATE users SET following = following + ${cnt} WHERE id = ?`,[userId]);
+        let b=await queryExec(`UPDATE users SET followers = followers + ${cnt} WHERE id = ?`,[followerId]);
         let notify_follow =  await queryExecuter(`insert into notify(user_id,target_id,notify_msg) values('${userId}','${followerId}','Started following you !')`);
-        
     } else {
         cnt--;
-        await queryExecuter(`delete from  followers  where user_id = ${followerId} AND follower_id = ${userId};`);
-        await queryExecuter(`delete from  following  where user_id = ${userId} AND following_id = ${followerId} ;`);
-        await queryExecuter(`UPDATE users SET following = following + ${cnt} WHERE id = ${userId}`);
-        await queryExecuter(`UPDATE users SET followers = followers + ${cnt} WHERE id = ${followerId}`);
-
-            let notify_follow =  await queryExecuter(`insert into notify(user_id,target_id,notify_msg) values('${userId}','${followerId}','Unfollowing you !')`);
+        await queryExec(`delete from  followers  where user_id = ? AND follower_id = ?`,[followerId,userId]);
+        await queryExec(`delete from  following  where user_id = ? AND following_id = ? `,[userId,followerId]);
+        await queryExec(`UPDATE users SET following = following + ${cnt} WHERE id = ?`,[userId]);
+        await queryExec(`UPDATE users SET followers = followers + ${cnt} WHERE id = ?`,[followerId]);
+        let notify_follow =  await queryExecuter(`insert into notify(user_id,target_id,notify_msg) values('${userId}','${followerId}','Unfollowing you !')`);
     }
 
     return res.send({ message: "update" });
 })
-
-// try
-// app.get("/prof",async(req,res)=>{
-
-    
-//     let uid = req.query.uid || 3;
-//     var getuser = await queryExecuter(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(3)`);
-//     var getfollowerId = await queryExecuter(`select follower_id from followers where user_id =${uid}`);
-//     var followers =[];
-//     getfollowerId.forEach(id => {
-//         followers.push(id.follower_id);
-//     });
-
-//     res.render('profile',{fuser:getuser,followers})
-// })
-
-
-
-
 
 
 
@@ -232,12 +175,14 @@ function calcTime(city, offset) {
 
 // for time zone end
 // try end
+app.get('/home', function(req, res){
+    res.render("home")
+})
 app.get("*", (req, res) => {
     res.render("404")
 })
 app.listen(PORT, () => {
-    console.log(`I am listining on ${PORT}`);
-    console.log(`CLick here http://localhost:3008/user-login`);
-})
+    console.log(`I am listining on ${PORT},\n Click here http://localhost:3008/user-login`);
+});
 
 

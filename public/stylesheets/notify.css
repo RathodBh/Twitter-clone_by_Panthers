@@ -1,4 +1,5 @@
 .notify{
+    position:sticky;
     margin-top: 1rem;
     font-size: 25px;
     font-family: sans-serif;
