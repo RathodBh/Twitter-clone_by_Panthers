@@ -1,4 +1,5 @@
 const express = require('express')
+// const helmet = require("helmet");
 const bodyParser = require('body-parser')
 require('dotenv').config("./.env")
 const app = express();
@@ -12,12 +13,14 @@ const dashboard = require('./Routes/dashboard')
 const home = require('./Routes/home')
 const logout = require('./Routes/logout')
 const follow = require('./Routes/follow')
+const setting = require('./Routes/setting')
 const forgetPassword = require('./Routes/forgetPassword');
 const notification = require('./Routes/notification')
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 const util = require('util')
 app.use(cookieParser());
+// app.use(helmet({ contentSecurityPolicy: false, }));
 app.use(session({
     secret: process.env.SECRET_KEY,
     resave: false,
@@ -25,7 +28,6 @@ app.use(session({
 }));
 
 const path = require('path');
-app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.urlencoded({ extended: true }))
 app.use(bodyParser.json());
@@ -41,6 +43,7 @@ app.set('view engine','ejs')
 // my all end points
 app.set('view engine', 'ejs')
 app.use('/user', register)
+app.use('/setting', setting)
 app.use('/user-login', login)
 app.use('/user-logout', logout)
 app.use('/', home)
@@ -121,7 +124,20 @@ app.get("/srch?", async (req, res) => {
     res.json(matchedResult)
 
 })
+app.get("/trend",(req, res)=>{
+    const token = req.session.email
 
+    if (!token) {
+        res.redirect('/user-login');
+        return
+    }
+    if(req.query.srchval){
+        return res.render("trending",{sel:req.query.srchval})
+    }
+
+    else
+    return res.render("trending",{sel:""})
+})
 //vivek (Follow-Unfollow)
 app.get("/addfollow", async (req, res) => {
     let cnt = 0;
@@ -134,7 +150,7 @@ app.get("/addfollow", async (req, res) => {
         await queryExec(`insert into following (user_id,following_id,isdelete) values(?,?,"${0}")`,[userId,followerId]);
         let a = await queryExec(`UPDATE users SET following = following + ${cnt} WHERE id = ?`,[userId]);
         let b=await queryExec(`UPDATE users SET followers = followers + ${cnt} WHERE id = ?`,[followerId]);
-        let notify_follow =  await queryExecuter(`insert into notify(user_id,target_id,notify_msg) values('${userId}','${followerId}','Started following you !')`);
+        let notify_follow =  await queryExec(`insert into notify(user_id,target_id,notify_msg) values(?,?,'Started following you !')`,[userId,followerId]);
     } else {
         cnt--;
         await queryExec(`delete from  followers  where user_id = ? AND follower_id = ?`,[followerId,userId]);
@@ -175,14 +191,13 @@ function calcTime(city, offset) {
 
 // for time zone end
 // try end
-app.get('/home', function(req, res){
-    res.render("home")
-})
+
 app.get("*", (req, res) => {
     res.render("404")
 })
 app.listen(PORT, () => {
     console.log(`I am listining on ${PORT},\n Click here http://localhost:3008/user-login`);
 });
+
 
 

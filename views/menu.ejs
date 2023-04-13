@@ -47,12 +47,21 @@
 
                             </div>
 
-                            <div class="d-flex pt-2">
+                            <div class="d-flex pt-2 position-relative">
                                 <img src="/assets/images/cover.jpg" alt="" class="profile-size me-2 border "
                                     id="tweetUserImg">
-                                <textarea placeholder="What's happening?" name="tweet_text"
-                                    class="text-dark tweet-comment-box" id="twt-area" cols="30" rows="5"
-                                    maxlength="300"></textarea>
+                                <div class="position-relative w-100" style="height: 150px;">
+                                    <div class="w-100 tweet-comment-box word-wrap" id="myTextArea" spellcheck="false">
+                                    </div>
+                                    <textarea placeholder="What's happening?" name="tweet_text"
+                                        class=" tweet-comment-box word-wrap" id="twt-area" cols="30" rows="5"
+                                        maxlength="300" spellcheck="false"></textarea>
+                                </div>
+                                <!-- <div id="searchResHash"
+                                    style="position: absolute; width:100%; top:0;left:0;right:0;min-height:40vh;overflow-x:auto;">
+
+                                </div> -->
+
                             </div>
                             <div id="iimg" class=" all-center flex-column">
                             </div>
@@ -73,9 +82,6 @@
                                 <a href="#emojis">
                                     <i class="fa-regular fa-face-smile  rounded-circle p-2  link-hover me-1 border border-3 border-primary"
                                         onclick="emoji_clk()"></i>
-                                    <!-- <img src="/assets/images/emojis.png" alt=" "
-                                    id="emojiSelectorIcon" onclick="emoji_clk()"
-                                    class="profile-size me-1"> -->
                                     <emoji-picker id="emojis_img" style="display:none;"></emoji-picker>
                                 </a>
                             </div>
@@ -91,16 +97,64 @@
         </div>
         <!-- end modal working -->
         <script>
-            document.querySelector('#sub_btn').addEventListener('click', function (e) {
+            // let output = document.getElementById('myTextArea');
+
+
+            let textArea = document.getElementById("twt-area");
+
+
+            textArea.addEventListener("input", (e) => {
+                // let hashTag = textArea.innerText.match(/#[a-z0-9_]+(?!#)/g)
+                let hashTag = textArea.value.split(" ")
+                let tweetHTML = textArea.value;
+                let newHTML = ""
+                for (let curHashtag of hashTag) {
+                    if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
+                        tweetHTML = tweetHTML.replace(curHashtag, `<span class="text-primary">${curHashtag}</span>`)
+                }
+
+                document.querySelector("#myTextArea").innerHTML = tweetHTML;
+
+
+            })
+            document.querySelector('#sub_btn').addEventListener('click', async function (e) {
                 e.preventDefault();
-                if (document.querySelector("textarea.tweet-comment-box").value == "") {
+                if (document.querySelector("#myTextArea").innerText == "") {
                     ToastBlank.fire({
                         icon: 'warning',
                         title: 'Please enter a Tweet',
-
                     })
                 } else {
-                    document.querySelector("#tweetSubmit").submit()
+                    let tweet = document.querySelector("#myTextArea").innerText;
+                    let hashTags = []
+                    let hashTag = textArea.value.split(" ")
+                    let tweetHTML = textArea.value;
+                    for (let curHashtag of hashTag) {
+                        if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
+                            hashTags.push(curHashtag)
+                    }
+                    // document.querySelector("#hash").value = hashTags
+                    let tweetReq = await fetch(`/dashboard/tweet`, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            tweet,
+                            hashTags
+                        })
+                    })
+
+                    let ansReq = await tweetReq.json();
+                    if (ansReq.ans == true) {
+                        getTrendingHashtags()
+                        try {
+                            forYouDataLoad()
+                        } catch (e) {
+
+                        }
+                    }
+                    // document.querySelector("#tweetSubmit").submit()
                 }
             })
         </script>
@@ -167,7 +221,7 @@
 
                         </div>
                     </div>
-                    
+
                     <div id="addTweetButtonMobile">
                         <a href="" class="menu-link bg-blue text-light text-center btn rounded-circle w-100 btn-tweet"
                             data-bs-toggle="modal" data-bs-target="#tweetModal">
@@ -206,7 +260,7 @@
                                     </a>
                                 </li>
                                 <li class="link-hover">
-                                    <a href="" class="menu-link" id="settingsLink">
+                                    <a href="/setting" class="menu-link" id="settingsLink">
                                         <i class="fa-solid fa-gear link-icon"></i>
                                         <span>Settings</span>
                                     </a>
@@ -263,6 +317,7 @@
                         </div>
                     </div>
                     <script>
+
                         if (location.href.includes("dashboard")) {
                             // document.querySelector("#profileLink").classList.add("active")
                         }
@@ -270,9 +325,8 @@
                             document.querySelector("#profileLink").classList.add("active")
                         }
 
-
-
-                    </script>
+                   
+                </script>
 
                     <div class="modal fade " id="settingsModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                         aria-hidden="true">

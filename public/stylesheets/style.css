@@ -389,7 +389,14 @@ a {
 }
 
 #searchRes {
-    max-height: 40vh;
+    position: absolute;
+    z-index: 100000;
+    /* border: 1px solid gray; */
+    box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.2);
+    left: 0;
+    right: 0;
+    background: white;
+    max-height: 60vh;
     overflow: auto;
 }
 
@@ -414,6 +421,14 @@ a {
     cursor: pointer;
 }
 
+.d-none {
+    display: none;
+}
+
+.d-block {
+    display: block;
+}
+
 @media screen and (max-width: 1208px) {
 
     /* #searchPage{
@@ -433,7 +448,7 @@ a {
     top: 0;
     left: 0;
     right: 0;
-    background:white !important;
+    background: white !important;
     z-index: 1000;
 
 }
@@ -478,6 +493,58 @@ a {
     height: 50px;
     width: 50px;
     aspect-ratio: 1/1;
+}
+
+/* Tweet  */
+#myTextArea,
+#twt-area {
+    font-size: 20px;
+    height: 150px;
+    width: 100%;
+    outline: none;
+    border: none;
+    overflow-x: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+#myTextArea {
+    user-select: none;
+    color: black;
+    z-index: 999;
+}
+
+#twt-area {
+    caret-color: black;
+    z-index: 1000;
+    color: transparent;
+    background: transparent;
+}
+
+::selection {
+    background: var(--text-blue);
+    color: white;
+}
+
+#twt-area::selection~#myTextArea {
+    color: var(--text-blue);
+    /* display: none; */
+}
+
+#searchSuggestion {
+    top: 60px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background: white;
+    color: black;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.2);
+    z-index:100;
+
 }
 
 @media screen and (max-width: 576px) {

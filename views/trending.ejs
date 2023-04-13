@@ -7,9 +7,28 @@
         <!-- main panel  -->
         <div class="col-lg-6 col-md-6 col-sm-8 col-12 px-0 border">
             <div class="inner-main home">
-                <div class="blur-ui p-3 pb-0">
-                    <h4 class="text-black">Home</h4>
-                    <ul class="nav nav-tabs">
+                
+                <div class="blur-ui p-3 pt-1">
+                    <div class="row flex-row justify-content-between align-items-center my-2 position-relative">
+                        <div class="col-1">
+                            <a href="/dashboard" class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "></a>
+                        </div>
+                        <div class="col-9">
+                            <div class="search-box position-relative">
+                                <input type="search" class="rounded-pill w-100" placeholder="Search Anything..."  id="searchTweetHash" oninput="searchSuggestionsTrend()">
+                                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+
+                                 <div class="position-absolute d-none" id="searchSuggestion">
+
+                        </div>
+                            </div>
+                        </div>
+                        <div class="col-1">
+                            ...
+                        </div>
+                       
+                    </div>
+                    <!-- <ul class="nav nav-tabs d-none">
                         <li class="nav-item w-50 text-center all-center">
                             <a class="nav-link w-100 fw-600 active" data-bs-toggle="tab" href="#for-you" id="forYou"
                                 onclick="forYouDataLoad()">
@@ -19,15 +38,7 @@
 
                             </a>
                         </li>
-                        <li class="nav-item w-50 text-center all-center">
-                            <a class="nav-link w-100 fw-600 " data-bs-toggle="tab" href="#following-home"
-                                id="yourFollowing" onclick="followingTab(limit)">
-                                <span>
-                                    Following
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
+                    </ul> -->
                 </div>
                 <div class="all-data">
                     <div class="tab-content">
@@ -45,6 +56,9 @@
                 </div>
             </div>
         </div>
-    <script src="/javascripts/dashboard.js"></script>
+        <script>
+            let sel = `<%= sel %>`;
+        </script>
+        <script src="/javascripts/dashboard.js"></script>
 
         <%- include("search") -%>
