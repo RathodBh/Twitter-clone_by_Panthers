@@ -57,11 +57,11 @@ const checkOldPass = asyncHandler(async (req, res) => {
     const match = await bcrypt.compare(data, password);
     console.log(match);
     if (match) {
-        console.log("yesssssssssssssssssssssss");
+       
         res.json({ ans: true })
     }
     else {
-        console.log("nooooooooooooo");
+       
         res.json({ ans: false })
     }
 
@@ -74,9 +74,9 @@ const updatePwd = asyncHandler(async (req, res) => {
     console.log(data);
     const salt = await bcrypt.genSalt(15);
     const hashedPassword = await bcrypt.hash(data, salt);
-    let qryupPwd = `update users set password="${hashedPassword}" where id=${req.session.user_id};`
-    console.log(qryupPwd);
-    let resultqry = await queryExecuter(qryupPwd);
+   
+  
+    let resultqry = await queryExec(`update users set password=? where id=?;`,[hashedPassword,req.session.user_id]);
     if (resultqry) {
         return res.json({ msg: "success" })
     }
@@ -92,10 +92,9 @@ const updateUserName = asyncHandler(async (req, res) => {
 })
 const updateUserNamepost = asyncHandler(async (req, res) => {
     const { data } = req.body
-    console.log(data);
-    let qryupPwd = `update users set user_name="${data}" where id=${req.session.user_id};`
-    console.log(qryupPwd);
-    let resultqry = await queryExecuter(qryupPwd);
+
+
+    let resultqry = await queryExec(`update users set user_name=? where id=?;`,[data,req.session.user_id]);
     if (resultqry) {
         return res.json({ msg: "success" })
     }
@@ -115,7 +114,7 @@ const getEmailChange = asyncHandler(async (req, res) => {
 const postCountry = asyncHandler(async (req, res) => {
 
    const { data}= req.body;
-   console.log(data);
+
 
    if(data=="everywhere"){
     return res.json({msd:false})

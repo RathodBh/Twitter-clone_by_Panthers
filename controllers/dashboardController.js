@@ -183,11 +183,9 @@ const postTweet = asyncHandler(async (req, res) => {
         return;
     }
     const file = req.files;
-    console.log("🚀 ~ file: dashboardController.js:188 ~ postTweet ~ file:", file)
     const user_id = req.session.user_id;
     const tweet = req.body.tweet;
     const hashTagsArr = req.body.hashTags;
-    console.log("🚀 ~ file: dashboardController.js:192 ~ postTweet ~ hashTagsArr:", hashTagsArr)
 
 
 
@@ -234,9 +232,9 @@ const postTweet = asyncHandler(async (req, res) => {
         }
     }
 
-    res.json({ans: true})
+    res.json({ ans: true })
 
-    // res.redirect('/dashboard');
+
 })
 
 const getDashboardFetchRequest = asyncHandler(async (req, res) => {
@@ -248,8 +246,18 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
             res.redirect('/user-login');
             return
         }
-        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM tweets as t INNER JOIN users u ON t.user_id = u.id ORDER BY t.id DESC `;
+        
+        let srchQuery = "";
+        if(req.query.srch){
+            srchQuery += `WHERE t.tweet LIKE '${req.query.srch}%'`
+        }
+        else if(req.query.hash){
+             srchQuery += `WHERE t.id in (SELECT th.tweet_id FROM tweet_hashtag as th JOIN hashtag_master as h ON th.hash_id=h.id WHERE h.hashtag = '${req.query.hash}')`;
+        }
+        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM tweets as t INNER JOIN users u ON t.user_id = u.id ${srchQuery} ORDER BY t.id DESC  `;
+
         let follow_sel = `SELECT following.following_id FROM following WHERE following.user_id = ?`;
+       
         const followingId = await queryExec(follow_sel, [user_id]);
 
         let allFollowingIds = [];
@@ -258,9 +266,10 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
         }
         //get comments of every tweet
         let comments = 0;
+        let all_tweet_data;
+        
+            all_tweet_data = await queryExec(sel_tweets);
 
-
-        const all_tweet_data = await queryExec(sel_tweets);
 
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -395,7 +404,6 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
         }
 
         let flag = false;
-
         return res.json({ tweet_data: all_tweet_data, following_data: allFollowingIds, post_date: post_at, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid, userID: req.session.user_id });
     }
 
@@ -405,8 +413,20 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
     }
 })
 
+const getTrendingHashtags = asyncHandler(async (req, res) => {
+
+    if (req.query.search) {
+        let searchHashtag = await queryExec(`SELECT hashtag from hashtag_master WHERE hashtag like ? LIMIT 5`, [req.query.search + "%"]);
+        return res.json({ searchHashtag })
+    } else {
+        let getTrending = await queryExec(`SELECT hashtag,hashtag_used from hashtag_master ORDER BY hashtag_used DESC LIMIT 3`);
+        return res.json({ getTrending })
+    }
+
+})
 
 const getHome = asyncHandler(async (req, res) => {
     res.render("home");
 })
-module.exports = { getDashboard, getHome, getDashboardFetchRequest, postTweet, getpostLike1, getpostRetweet }
+
+module.exports = { getDashboard, getTrendingHashtags, getHome, getDashboardFetchRequest, postTweet, getpostLike1, getpostRetweet }

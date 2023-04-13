@@ -117,7 +117,20 @@ app.get("/srch?", async (req, res) => {
     res.json(matchedResult)
 
 })
+app.get("/trend",(req, res)=>{
+    const token = req.session.email
 
+    if (!token) {
+        res.redirect('/user-login');
+        return
+    }
+    if(req.query.srchval){
+        return res.render("trending",{sel:req.query.srchval})
+    }
+
+    else
+    return res.render("trending",{sel:""})
+})
 //vivek (Follow-Unfollow)
 app.get("/addfollow", async (req, res) => {
     let cnt = 0;
