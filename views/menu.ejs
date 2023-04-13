@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
     <link rel="stylesheet" href="/stylesheets/tweet.css" />
 
-
+    <!-- favicon icon -->
+    <link rel="shortcut icon" href="//abs.twimg.com/favicons/twitter.2.ico">
     <!-- jquery -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <!-- <script src="/javascripts/tweetit.js"></script> -->
@@ -22,12 +23,12 @@
 
     <link rel="stylesheet" href="/stylesheets/style.css">
     <script type="text/javascript" src="/javascripts/tweetit.js"></script>
-    <title>Twitter | Home</title>
-
     <!-- sweet alert  -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.all.min.js"></script>
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
 
+    <title>Twitter | Home</title>
+    
 </head>
 
 <body>
@@ -57,10 +58,7 @@
                                         class=" tweet-comment-box word-wrap" id="twt-area" cols="30" rows="5"
                                         maxlength="300" spellcheck="false"></textarea>
                                 </div>
-                                <!-- <div id="searchResHash"
-                                    style="position: absolute; width:100%; top:0;left:0;right:0;min-height:40vh;overflow-x:auto;">
-
-                                </div> -->
+                               
 
                             </div>
                             <div id="iimg" class=" all-center flex-column">
@@ -110,7 +108,7 @@
                 let newHTML = ""
                 for (let curHashtag of hashTag) {
                     if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
-                        tweetHTML = tweetHTML.replace(curHashtag, `<span class="text-primary">${curHashtag}</span>`)
+                        tweetHTML = tweetHTML.replace(curHashtag, `<span class="text-blue fw-600">${curHashtag}</span>`)
                 }
 
                 document.querySelector("#myTextArea").innerHTML = tweetHTML;
@@ -178,7 +176,7 @@
                             <li class="d-flex">
                                 <a class="dropdown-item" onclick="logout()"><i
                                         class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout <span
-                                        class="text-blue" id="userDataId">bhavesh007</span>
+                                        class="text-blue" id="userDataId1"></span>
 
                                 </a>
                             </li>
@@ -188,33 +186,36 @@
                     <div class="all-center h-100">
                         <i class="fa-brands fa-twitter"></i>
                     </div>
+                    <!-- <a href="/trend" class="menu-link">
+                        <i class="fa-solid fa-hashtag link-icon  text-light"></i>
+                    </a> -->
                 </div>
 
                 <div class="d-sm-none d-block" id="bottomBar">
                     <div class="container">
                         <div class="row">
                             <div class="col all-center">
-                                <a href="/dashboard" class="menu-link" id="homeLink">
+                                <a href="/dashboard" class="menu-link dashboardLink" >
                                     <i class="fa-solid fa-house link-icon  text-light"></i>
                                 </a>
                             </div>
                             <div class="col all-center">
-                                <a href="" class="menu-link" data-bs-toggle="modal" data-bs-target="#searchPageModal">
+                                <a href="" class="menu-link searchLink" data-bs-toggle="modal" data-bs-target="#searchPageModal">
                                     <i class="fa-solid fa-magnifying-glass link-icon text-light"></i>
                                 </a>
                             </div>
                             <div class="col all-center">
-                                <a href="/profile/user" class="menu-link" id="profileLink">
+                                <a href="/profile/user" class="menu-link profileLink">
                                     <i class="fa-regular fa-user link-icon text-light"></i>
                                 </a>
                             </div>
                             <div class="col all-center">
-                                <a href="" class="menu-link" id="notificationLink">
+                                <a href="" class="menu-link notificationLink">
                                     <i class="fa-regular fa-bell link-icon text-light"></i>
                                 </a>
                             </div>
                             <div class="col all-center">
-                                <a href="" class="menu-link" id="settingsLink">
+                                <a href="" class="menu-link settingsLink">
                                     <i class="fa-solid fa-gear link-icon text-light"></i>
                                 </a>
                             </div>
@@ -237,36 +238,42 @@
                         <div class="inner-menu h-100">
                             <ul class="list-unstyled menu-ul">
                                 <li>
-                                    <a href="/dashboard" class="menu-link">
+                                    <a href="/dashboard" class="menu-link ">
                                         <i class="fa-brands fa-twitter text-blue logo-icon"></i>
                                     </a>
                                 </li>
                                 <li class="link-hover">
-                                    <a href="/dashboard" class="menu-link" id="homeLink">
+                                    <a href="/dashboard" class="menu-link dashboardLink">
                                         <i class="fa-solid fa-house link-icon "></i>
                                         <span>Home</span>
                                     </a>
                                 </li>
                                 <li class="link-hover">
-                                    <a href="" class="menu-link" id="notificationLink">
+                                    <a href="/trend" class="menu-link trendLink">
+                                        <i class="fa-solid fa-hashtag link-icon "></i>
+                                        <span>Explore</span>
+                                    </a>
+                                </li>
+                                <li class="link-hover">
+                                    <a href="" class="menu-link notificationLink">
                                         <i class="fa-regular fa-bell link-icon"></i>
                                         <span>Notifications</span>
                                     </a>
                                 </li>
                                 <li class="link-hover">
-                                    <a href="/profile/user" class="menu-link" id="profileLink">
+                                    <a href="/profile/user" class="menu-link profileLink">
                                         <i class="fa-regular fa-user link-icon"></i>
                                         <span>Profile</span>
                                     </a>
                                 </li>
                                 <li class="link-hover">
-                                    <a href="" class="menu-link" id="settingsLink">
+                                    <a href="" class="menu-link settingsLink">
                                         <i class="fa-solid fa-gear link-icon"></i>
                                         <span>Settings</span>
                                     </a>
                                 </li>
                                 <li class="link-hover d-md-none d-sm-block d-block">
-                                    <a href="" class="menu-link" data-bs-toggle="modal"
+                                    <a href="" class="menu-link searchLink" data-bs-toggle="modal"
                                         data-bs-target="#searchPageModal">
                                         <i class="fa-solid fa-magnifying-glass link-icon"></i>
                                         <span>Search</span>
@@ -306,9 +313,9 @@
                             </div>
                             <ul class="dropdown-menu">
                                 <li class="d-flex">
-                                    <a class="dropdown-item" onclick="logout()"><i
+                                    <a class="dropdown-item cp" onclick="logout()"><i
                                             class="fa-solid fa-arrow-right-from-bracket me-2"></i> Logout <span
-                                            class="text-blue" id="userDataId"></span>
+                                            class="text-blue" id="userDataId2"></span>
 
                                     </a>
                                 </li>
@@ -316,18 +323,6 @@
                             </ul>
                         </div>
                     </div>
-                    <script>
-
-                        if (location.href.includes("dashboard")) {
-                            // document.querySelector("#profileLink").classList.add("active")
-                        }
-                        else if (location.href.includes("profile")) {
-                            document.querySelector("#profileLink").classList.add("active")
-                        }
-
-
-
-                    </script>
 
                     <div class="modal fade " id="settingsModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                         aria-hidden="true">

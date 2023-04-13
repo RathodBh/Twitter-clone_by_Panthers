@@ -4,15 +4,24 @@ window.addEventListener("load", function () {
     allClicks()
     //trending search results
     try {
+        // document.querySelector("#searchTweetHash")
+
         if (sel != "") {
             document.querySelector("#searchTweetHash").value = "#" + sel
+            document.querySelector("title").innerText = "Trending | #" + sel
+            searchSuggestionsTrend()
+        } else if (sel == "") {
+            document.querySelector("#searchTweetHash").value = "#"
+            document.querySelector("title").innerText = "Trending" + sel
+            searchSuggestionsTrend()
         }
+
     } catch (e) {
-        // console.log("🚀 ~ file: dashboard.js:8 ~ e:", e)
     }
 });
 
 function allClicks() {
+
     let allClicks = document.querySelectorAll(".clickComment")
     allClicks.forEach((cur) => {
         // let linkModal = document.querySelector("#clickComment");
@@ -133,8 +142,6 @@ try {
 
 async function forYouDataLoad(srch = "", hash = "") {
     let fetchDashboard;
-    console.log("src", srch);
-    console.log("hash", hash);
     if (srch != "") {
         fetchDashboard = await fetch(`/dashboard/dashboardData?srch=${srch}`);
     } else if (hash != "") {
@@ -157,16 +164,8 @@ async function forYouDataLoad(srch = "", hash = "") {
         let tweetTemp = t.tweet
         for (let curHashtag of hashTag) {
             if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
-                tweetTemp = tweetTemp.replace(curHashtag, `<span class="text-primary">${curHashtag}</span>`)
+                tweetTemp = tweetTemp.replace(curHashtag, `<a href="/trend?srchval=${curHashtag.substring(1)}" class="text-blue fw-400">${curHashtag}</a>`)
         }
-        // let tweetWithHash = t.tweet
-        // let hashTag = tweetWithHash.match(/#[a-z0-9_]+/g)
-
-        // if (hashTag != null)
-        //     for (let curHashtag of hashTag) {
-        //         if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
-        //             tweetWithHash = tweetWithHash.replace(curHashtag, `<a href="" class="text-primary">${curHashtag}</a>`)
-        //     }
         part1Data +=
             `
         <div onclick="test(${t.id})"
@@ -317,9 +316,16 @@ async function forYouDataLoad(srch = "", hash = "") {
     for (let i = 0; i < arrlikeid.length; i++) {
         userLike.push(arrlikeid[i]);
     }
+
     userLike.forEach(element => {
-        document.getElementById(element).classList = "fa-solid fa-heart text-danger";
+        try {
+            document.getElementById(element).classList = "fa-solid fa-heart text-danger";
+        } catch (e) {
+            // console.log("🚀 ~ file: dashboard.js:321     ~ forYouDataLoad ~ e:", e)  
+        }
     });
+
+
 
 
     // load()
@@ -355,7 +361,7 @@ async function followingTab() {
             let tweetTemp = t.tweet
             for (let curHashtag of hashTag) {
                 if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
-                    tweetTemp = tweetTemp.replace(curHashtag, `<span class="text-primary">${curHashtag}</span>`)
+                    tweetTemp = tweetTemp.replace(curHashtag, `<a href="/trend?srchval=${curHashtag.substring(1)}" class="text-blue fw-400">${curHashtag}</a>`)
             }
 
             part2Data +=
@@ -719,62 +725,99 @@ trendingSearch1.addEventListener('blur', clearRes)
 function clearRes() {
     if (trendingSearch1.value == "" || trendingSearch1.value == "#") {
         searchSuggestions.classList.remove("d-none")
-
     }
 }
 
 let searchSuggestions = document.querySelector("#searchSuggestion");
+async function searchSuggestionsTrend(e) {
 
-async function searchSuggestionsTrend() {
     let trendingSearch = document.querySelector("#searchTweetHash")
+    if (trendingSearch.value == "") {
+        forYouDataLoad();
+    }
+    else {
 
-    if (trendingSearch.value.startsWith("#")) {
-        let data = await fetch(`/dashboard/getTrending?search=${trendingSearch.value.substring(1)}`);
-        let searchRes = await data.json();
-        let allData = searchRes.searchHashtag;
+        if (trendingSearch.value.startsWith("#")) {
+            //search suggestion
+            let data = await fetch(`/dashboard/getTrending?search=${trendingSearch.value.substring(1)}`);
+            let searchRes = await data.json();
+            let allData = searchRes.searchHashtag;
 
-        if (trendingSearch.value == "#") {
-            searchSuggestions.classList.add("d-none")
-        } else {
-            searchSuggestions.classList.remove("d-none")
-        }
-        document.querySelector("#searchSuggestion").innerHTML = ""
-        if (allData != undefined) {
-            if (allData.length > 0) {
-                for (const x of allData) {
-                    searchSuggestions.innerHTML += `
+            if (trendingSearch.value == "#") {
+                searchSuggestions.classList.add("d-none")
+            } else {
+                searchSuggestions.classList.remove("d-none")
+            }
+            searchSuggestions.innerHTML = ""
+            if (allData != undefined) {
+                if (allData.length > 0) {
+                    for (const x of allData) {
+                        searchSuggestions.innerHTML += `
                 <a onclick="sendData('${x.hashtag}')" class="my-4 d-flex align-items-center w-100 text-blue" id="" >
                     
-                    <div class="col-3 all-center">
+                    <div class="col-2 all-center">
                         <i class="fa-solid fa-magnifying-glass fa-2x"></i>
                    </div>
-                    <div class="info col-7 d-flex align-items-center " > 
+                    <div class="info col-8 d-flex align-items-center " > 
                         <span class="fs-18">${x.hashtag}</span>
                     </div>
         </a>
                 `
+                    }
+                } else {
+                    searchSuggestions.classList.add("d-none")
                 }
-            } else {
-                searchSuggestions.classList.add("d-none")
-
             }
+
+            //search API for tweet Data
+            forYouDataLoad("", trendingSearch.value.substring(1))
+
+        } else {
+
+            //search for user data
+            let val = trendingSearch.value;
+            let user_details = ``;
+            if (val) {
+                searchSuggestions.classList.remove("d-none");
+                let data1 = await fetch(`/srch?val=${val}`)
+                let data = await data1.json();
+                for (let i = 0; i < data.length; i++) {
+                    user_details += `
+    <div class="my-4 d-flex justify-content-between align-items-center w-100" id="${data[i].id}" onclick="getTargetProfile(this)" style="cursor: pointer;">
+        <div class="d-flex">
+            <img src="${data[i].user_image}" alt="" class="profile-size me-2 border">
+            <div class="info" > 
+                <h6>${data[i].name}</h6>
+                <span class="text-gray">@${data[i].user_name}</span>
+            </div>
+        </div>
+</div>
+`
+                }
+                if(data.length == 0){
+                    searchSuggestions.classList.add("d-none");
+                }
+            }
+            else {
+                searchSuggestions.classList.add("d-none");
+            }
+
+            searchSuggestions.innerHTML = user_details;
+
+            forYouDataLoad(trendingSearch.value)
         }
-
-        console.log("Hello world");
-        //search API for tweet Data
-        forYouDataLoad("", trendingSearch.value.substring(1))
-
-    } else if (trendingSearch.value == "") {
+    }
+    if (e == undefined) {
         searchSuggestions.classList.add("d-none")
-
-    } else {
-        forYouDataLoad(trendingSearch.value)
-
     }
 }
-
+function hideSuggestion(sec=500) {
+    setTimeout(() => {
+        searchSuggestions.classList.add("d-none")
+    }, sec)
+}
 function sendData(hashtag) {
     document.getElementById("searchTweetHash").value = "#" + hashtag;
     searchSuggestions.classList.add("d-none")
-
+    searchSuggestionsTrend()
 }

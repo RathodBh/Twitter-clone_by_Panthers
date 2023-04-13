@@ -183,6 +183,7 @@ const postTweet = asyncHandler(async (req, res) => {
         return;
     }
     const file = req.files;
+    console.log(req.files);
     const user_id = req.session.user_id;
     const tweet = req.body.tweet;
     const hashTagsArr = req.body.hashTags;
@@ -192,11 +193,14 @@ const postTweet = asyncHandler(async (req, res) => {
     let lastTweetInsertedId;
 
     let fileLength = (file == undefined) ? 0 : file.length;
+    // console.log("🚀 ~ file: dashboardController.js:195 ~ postTweet ~ fileLength:", fileLength,file)
     if (fileLength == 0) {
+        // console.log("Yes");
         let ins = await queryExec('INSERT INTO  tweets (user_id,tweet,media_type,created_at) VALUES (?,?,?,NOW())', [user_id, tweet, 'text']);
         lastTweetInsertedId = ins.insertId;
         console.log("0", user_id, tweet);
     } else {
+        // console.log("Else");
         for (var i = 0; i < file.length; i++) {
             const filename = file[i].originalname;
             const filepath = file[i].path;
@@ -248,10 +252,10 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
         
         let srchQuery = "";
         if(req.query.srch){
-            srchQuery += `WHERE t.tweet LIKE '${req.query.srch}%'`
+            srchQuery += `WHERE t.tweet LIKE '%${req.query.srch}%'`
         }
         else if(req.query.hash){
-             srchQuery += `WHERE t.id in (SELECT th.tweet_id FROM tweet_hashtag as th JOIN hashtag_master as h ON th.hash_id=h.id WHERE h.hashtag = '${req.query.hash}')`;
+             srchQuery += `WHERE t.id in (SELECT th.tweet_id FROM tweet_hashtag as th JOIN hashtag_master as h ON th.hash_id=h.id WHERE h.hashtag LIKE '%${req.query.hash}%')`;
         }
         let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM tweets as t INNER JOIN users u ON t.user_id = u.id ${srchQuery} ORDER BY t.id DESC  `;
         let follow_sel = `SELECT following.following_id FROM following WHERE following.user_id = ?`;
