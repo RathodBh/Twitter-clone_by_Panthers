@@ -199,7 +199,10 @@ async function forYouDataLoad(srch = "", hash = "") {
                                     </div>
                                     ` ;
 
-        if (t.media_type.includes("image")) {
+                                    if(t.media_type== null){
+
+                                    }
+        else if (t.media_type.includes("image")) {
 
             part1Data += `<div class="tweet-img-container">
                                             <img src="${t.media_url}" alt="" class="w-100">
@@ -210,9 +213,7 @@ async function forYouDataLoad(srch = "", hash = "") {
                                                     <source src="${t.media_url}" type="video/mp4">
                                                 </video>
                                             </div>`;
-        } else {
-
-        }
+        } 
 
         part1Data += `<div class="tweet-reactions-container mt-3">
                                                     <ul class="list-unstyled row">
@@ -396,8 +397,10 @@ async function followingTab() {
 
                                     </div>
                                     ` ;
+                                    if(t.media_type== null){
 
-            if (t.media_type.includes("image")) {
+                                    }
+            else if (t.media_type.includes("image")) {
 
                 part2Data += `<div class="tweet-img-container">
                                             <img src="${t.media_url}" alt="" class="w-100">
@@ -408,9 +411,7 @@ async function followingTab() {
                                                     <source src="${t.media_url}" type="video/mp4">
                                                 </video>
                                             </div>`;
-            } else {
-
-            }
+            } 
 
             part2Data += `<div class="tweet-reactions-container mt-3">
                                                     <ul class="list-unstyled row">
