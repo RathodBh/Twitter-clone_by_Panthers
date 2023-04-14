@@ -11,57 +11,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const asyncHandler = require("express-async-handler");
 
 
-//post login details
-// const loginHandler = async (req, res) => {
-//     try {
-//         const { email, password } = req.body;
-//         const ErrorHandler = {}
-//         let log_qry = `select * from users where email='${email}' and is_active = '1'`;
-//         const result = await queryExec(log_qry);
-//         if (result.length == 0) {
-//             return res.render("login", { error1: true});
-//         } else if (result[0].isActive == "0") {
-//             let id = result[0].id;
-//             return res.render("active", {
-//                 activated: false,
-//                 activationUrl: activationUrl,
-//                 userID: id,
-//             });
-//         }
-//         let dbPassword = result[0].password;
-//         let UserData = result[0];
-//         // let username = UserData.username
-
-
-//         const match = await bcrypt.compare(password, dbPassword);
-//         if (!match) {
-
-//             let error = true;
-//             return res.render("login", { error1:true});
-
-//             // res.cookie('Access_token', token, { httpOnly: true })
-//         }
-
-//         // req.session.email = temp_email;
-
-//         let payload = { email };
-//         const session_token = jwt.sign(payload, "JWT_SECRET");
-//         req.session.user_id = result[0].id;
-//         req.session.email = session_token;
-
-
-
-//         var hour = 3600000
-//         req.session.cookie.expires = new Date(Date.now() + hour)
-//         req.session.cookie.maxAge = hour
-
-//         return res.redirect('/dashboard')
-
-//     } catch (error) {
-//         console.log("came heer");
-//         throw error;
-//     }
-// };
 
 const loginHandler = async (req, res) => {
     try {
@@ -135,7 +84,6 @@ const loginHandler = async (req, res) => {
                                 h = "0" + h
                             }
                         }
-                        console.log("HMS",h,m,s);
                         res.render('login',{error1:`Your account is blocked, try again at or after ${h}:${m}:${s} ${am_pm}`})
                     }
                 }

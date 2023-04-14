@@ -1,0 +1,163 @@
+<%- include("menu") -%>
+    <div class="col-lg-6 col-md-6 col-sm-8 col-12 px-0 home Setting-main">
+
+        <div class="blur-ui p-3 pb-0">
+            <h4 class="text-black ">Change Password</h4>
+            <div class="all-data">
+                <div class="tab-content">
+                    <div id="for-settings" class="tab-pane active">
+                        <div class="setting-container flex-column">
+                            <div class="blur-ui p-3 pb-0">
+
+                                <div class="container light-style flex-grow-1 container-p-y">
+
+
+                                    <form onsubmit="validateForm(event)" id="changePwd">
+
+                                        <div class="mb-3">
+                                            <label for="exampleInputPassword1" class="form-label">Current
+                                                Password</label>
+                                            <input type="password" class="form-control" id="oldPass"
+                                                onblur="checkoldpass()">
+                                            <small id="error1"></small>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleInputPassword1" class="form-label">New Password</label>
+                                            <input type="password" class="form-control" id="newPass">
+                                            <small id="error2"></small>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="exampleInputPassword1" class="form-label">Confirm
+                                                Password</label>
+                                            <input type="password" class="form-control" id="cPass">
+                                            <small id="error3"></small>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+
+
+        async function checkoldpass() {
+            let oldPassword = document.getElementById('oldPass').value
+
+            let reqa = await fetch('/setting/checkpassword', {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    data: oldPassword
+                })
+            })
+            let respdata = await reqa.json();
+            if (respdata.ans == true) {
+                return true
+            }
+            else {
+                return false
+            }
+
+        }
+
+        async function validateForm(e) {
+            e.preventDefault();
+            let check = await checkoldpass()
+            let comparepass = checkConfirmPass()
+            let reqirements = checkPwd()
+            if (check && comparepass && reqirements) {
+
+
+                let fetReq = await fetch(`/setting/updatePwd`, {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        data: document.querySelector('#newPass').value
+                    })
+                })
+
+                let fetchres = await fetReq.json();
+                if (fetchres.msg == "success") {
+                    document.querySelector("#changePwd").submit()
+                    /////TOST AHIYA MUKJE
+                    location.replace("/setting")
+                }
+                else {
+                    /////TOST AHIYA MUKJE
+                    location.reload()
+
+                }
+
+            }
+
+
+        }
+        function checkConfirmPass() {
+            let pwd = document.querySelector("#newPass").value;
+            let cpwd = document.querySelector("#cPass").value;
+            let passErr = document.querySelector("#error2");
+            if (pwd == "" || cpwd == "") {
+                passErr.innerText = ""
+            }
+            else if (pwd != cpwd) {
+                passErr.innerText = "Password and confirm password are not match"
+            } else {
+                passErr.innerText = ""
+                return true;
+            }
+            return false;
+        }
+        const pwd = document.querySelector("#newPass");
+        pwd.addEventListener("input", checkPwd)
+
+        function checkPwd() {
+            let pwd = document.querySelector("#newPass").value;
+            let passErr = document.querySelector("#error3");
+            if (pwd.length < 8 || pwd.length > 16) {
+
+                passErr.innerText = "Password must be 8 to 16 characters long";
+            }
+            else if (!(/[a-z]/.test(pwd))) {
+                // document.querySelector("#btnSubmit").disabled = true
+                passErr.innerText = "Password must contain atleast 1 lowercase character";
+            }
+            else if (!(/[A-Z]/.test(pwd))) {
+                // document.querySelector("#btnSubmit").disabled = true
+                passErr.innerText = "Password must contain atleast 1 uppercase character";
+            }
+            else if (!(/\d/.test(pwd))) {
+                // document.querySelector("#btnSubmit").disabled = true
+                passErr.innerText = "Password must contain atleast 1 digit";
+            }
+            else if (!(/[^a-zA-Z0-9]/.test(pwd))) {
+                // document.querySelector("#btnSubmit").disabled = true
+                passErr.innerText = "Password must contain atleast 1 Special character like, @,#,$,*";
+            }
+            else {
+                passErr.innerText = "";
+                return true;
+                pwdCHK = true;
+                // document.querySelector(".inner").style.display = "none";
+            }
+            return false;
+        }
+    </script>
+
+
+    <%- include("search") -%>
