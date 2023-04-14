@@ -193,7 +193,12 @@ const postTweet = asyncHandler(async (req, res) => {
     console.log(body);
     const user_id = req.session.user_id;
     const tweet = body.tweet;
-    const hashTagsArr = body.hashtags;
+    let hashTagsArr = body.hashtags;
+    console.log("Before",typeof hashTagsArr)
+
+    if(typeof hashTagsArr == "string")
+        hashTagsArr = [hashTagsArr]
+    
 
     
     // console.log("this is",JSON.parse(JSON.stringify(req.body)));

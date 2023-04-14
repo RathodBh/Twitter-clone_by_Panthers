@@ -145,11 +145,14 @@
                     }
 
                     formItems.append('tweet',tweet );
-                    
-                    for (const x of hashTags) {
-                        formItems.append('hashtags',x);
-                        
-                    }
+                    // if(hashTags.length > 1){
+                         for (const x of hashTags) {
+                            formItems.append('hashtags',x);
+                        }
+                    // }
+                    // else{
+                    //     formItems.append('hashtags',hashTags);
+                    // }
 
                     let tweetReq = await fetch(`/dashboard/tweet`, {
                         method: "POST",
