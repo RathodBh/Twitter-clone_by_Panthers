@@ -16,8 +16,9 @@ const registerUser = async (req, res) => {
     console.log("body", req.body);
     let sessionOtp = req.session.otp;
     if (sessionOtp == req.body.otp) {
-        const { yyyy, mm, dd } = req.body
-        let dob = `${yyyy}/${mm}/${dd}`
+        const { year, month, day } = req.body
+        let dob = `${year}/${month}/${day}`
+        console.log("datepfb",dob);
         try {
             const { name, email, password, uname,otp } = req.body
             async function register(name, email, password, uname, dob) {

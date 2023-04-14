@@ -102,7 +102,7 @@ a {
 }
 
 .inner-menu .active {
-    font-weight: 00;
+    font-weight: 900;
     /* border-bottom: 1px solid var(--bg-blue); */
 }
 

@@ -361,14 +361,14 @@
     if (location.href.includes("trend")) {
         document.querySelectorAll(".trendLink").forEach((cur) => {
             cur.classList.add("active");
-            cur.removeAttribute("href")
+            cur.setAttribute("href","javascript: void(0)")
             cur.classList.add("cp")
         })
     }
     else if (location.href.includes("profile/user") && !location.href.includes("profile/user/")) {
         document.querySelectorAll(".profileLink").forEach((cur) => {
             cur.classList.add("active")
-            cur.removeAttribute("href")
+            cur.setAttribute("href","javascript: void(0)")
             cur.classList.add("cp")
         })
     }
@@ -384,7 +384,7 @@
         if (location.href.includes("dashboard")) {
             document.querySelectorAll(".dashboardLink").forEach((cur) => {
                 cur.classList.add("active")
-                cur.removeAttribute("href")
+                cur.setAttribute("href","javascript: void(0)")
                 cur.classList.add("cp")
 
             })
