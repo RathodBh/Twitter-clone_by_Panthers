@@ -119,7 +119,7 @@ app.post("/updateProfile", uploads.fields([{
 
 app.get("/srch?", async (req, res) => {
     var srchval = req.query.val;
-    var sql = `SELECT id,name,user_name,user_image FROM twitter_clone.users where user_name like ? or name like ? `;
+    var sql = `SELECT id,name,user_name,user_image FROM users where user_name like ? or name like ? `;
     var matchedResult = await queryExec(sql,["%"+srchval+"%","%"+srchval+"%"]);
     res.json(matchedResult)
 
