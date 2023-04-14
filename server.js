@@ -15,8 +15,10 @@ const logout = require('./Routes/logout')
 const follow = require('./Routes/follow')
 const setting = require('./Routes/setting')
 const forgetPassword = require('./Routes/forgetPassword');
+const notification = require('./Routes/notification')
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+const util = require('util')
 app.use(cookieParser());
 // app.use(helmet({ contentSecurityPolicy: false, }));
 app.use(session({
@@ -33,6 +35,11 @@ app.use(express.static(__dirname + '/public'))
 app.set('view engine', 'ejs')
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+
+
+
+app.set('view engine','ejs')
+
 // my all end points
 app.set('view engine', 'ejs')
 app.use('/user', register)
@@ -45,7 +52,7 @@ app.use("/profile", profile)
 app.use("/tweet", commentInfo)
 app.use("/forget", forgetPassword)
 app.use("/follow", follow)
-
+app.use("/notification", notification)
 const multer = require('multer');
 const { protect } = require('./Middlewares/auth');
 
@@ -136,19 +143,21 @@ app.get("/addfollow", async (req, res) => {
     let cnt = 0;
     let userId = req.session.user_id
     let followerId = req.query.followerId
+    
     if (req.query.flag == 0) {
         cnt++;
         await queryExec(`insert into followers (user_id,follower_id,isdelete) values(?,?,"${0}");`,[followerId,userId]);
         await queryExec(`insert into following (user_id,following_id,isdelete) values(?,?,"${0}")`,[userId,followerId]);
         let a = await queryExec(`UPDATE users SET following = following + ${cnt} WHERE id = ?`,[userId]);
         let b=await queryExec(`UPDATE users SET followers = followers + ${cnt} WHERE id = ?`,[followerId]);
-        
+        let notify_follow =  await queryExec(`insert into notify(user_id,target_id,notify_msg) values(?,?,'Started following you !')`,[userId,followerId]);
     } else {
         cnt--;
         await queryExec(`delete from  followers  where user_id = ? AND follower_id = ?`,[followerId,userId]);
         await queryExec(`delete from  following  where user_id = ? AND following_id = ? `,[userId,followerId]);
         await queryExec(`UPDATE users SET following = following + ${cnt} WHERE id = ?`,[userId]);
         await queryExec(`UPDATE users SET followers = followers + ${cnt} WHERE id = ?`,[followerId]);
+        let notify_follow =  await queryExecuter(`insert into notify(user_id,target_id,notify_msg) values('${userId}','${followerId}','Unfollowing you !')`);
     }
 
     return res.send({ message: "update" });

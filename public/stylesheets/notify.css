@@ -1,0 +1,20 @@
+.notify{
+    position:sticky;
+    margin-top: 1rem;
+    font-size: 25px;
+    font-family: sans-serif;
+}
+.messages{
+    padding: 20px 10px 25rem 10px;
+    border-radius: 16px;
+
+}
+.n-msg span{
+margin-left: -7rem;
+margin-top: 1.5rem;
+}
+
+.n-block{
+    border-radius: 12px;
+    padding: 10px 10px 10px 10px;
+}

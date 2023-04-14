@@ -228,8 +228,14 @@ a {
     height: 100vh;
     max-height: 100vh;
     position: sticky;
-    top: 0px;
+
+    top: 0px;  
 }
+
+     .flw{
+        height:500px;
+        overflow-y:scroll;
+    } 
 
 /* home  */
 .tweet-container .tweet {
