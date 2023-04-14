@@ -106,12 +106,14 @@
             textArea.addEventListener("input", (e) => {
                 // let hashTag = textArea.innerText.match(/#[a-z0-9_]+(?!#)/g)
                 let hashTag = textArea.value.split(" ")
+              
                 let tweetHTML = textArea.value;
                 let newHTML = ""
                 for (let curHashtag of hashTag) {
                     if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
                         tweetHTML = tweetHTML.replace(curHashtag, `<span class="text-primary">${curHashtag}</span>`)
                 }
+                
 
                 document.querySelector("#myTextArea").innerHTML = tweetHTML;
 
@@ -133,27 +135,26 @@
                         if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
                             hashTags.push(curHashtag)
                     }
-                    // document.querySelector("#hash").value = hashTags
-                    // let cover_image=document.getElementById('uploaded_file')
+
 
                     let input = document.querySelector('input[type="file"]');
                     var formItems = new FormData();
-                    // let filearr=[]
+
                     for (let i = 0; i < input.files.length; i++) {
-                       
-                        // filearr.push()
                         formItems.append('file', input.files[i]);
                     }
 
-                    console.log(input.files.length);
-                    // formItems.append('message', message);
-
-
+                    formItems.append('tweet',tweet );
+                    
+                    for (const x of hashTags) {
+                        formItems.append('hashtags',x);
+                        
+                    }
 
                     let tweetReq = await fetch(`/dashboard/tweet`, {
                         method: "POST",
-                       
-                        body:formItems
+
+                        body: formItems
                     })
 
                     let ansReq = await tweetReq.json();
