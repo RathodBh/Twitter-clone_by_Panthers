@@ -286,7 +286,6 @@
             e.preventDefault();
             let ctr = document.querySelector('#selectCountry')
             let ctrname = ctr.options[ctr.selectedIndex].text
-            console.log(ctrname);
             let fetReq = await fetch(`/setting/country-upt`, {
                 method: 'post',
                 headers: {
@@ -298,7 +297,6 @@
             })
 
             let fetchres = await fetReq.json();
-                console.log(fetchres);
                 if (fetchres.msd == true) {
                     document.querySelector("#changeUserName").submit()
                     /////TOST AHIYA MUKJE

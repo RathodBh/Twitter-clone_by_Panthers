@@ -41,7 +41,6 @@
     <script>
         async function checkuserEmail() {
             let email = document.querySelector('#newEmail').value
-            console.log(email);
             const regExEmail = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/;
             let test_email = regExEmail.test(email);
 
@@ -84,7 +83,6 @@
         async function validateForm(e) {
             e.preventDefault();
             let result = await checkuserEmail()
-            console.log(result);
 
             if (result) {
                 let email = document.querySelector('#newEmail').value
@@ -98,7 +96,6 @@
                     })
                 })
                 let fetchres = await fetReq.json();
-                console.log(fetchres.msg);
                 if (fetchres.msd == true) {
                     document.querySelector("#changeEml").submit()
                     /////TOST AHIYA MUKJE

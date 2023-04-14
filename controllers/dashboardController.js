@@ -78,7 +78,7 @@ const getpostLike1 = asyncHandler(async (req, res) => {
         }
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 
 })
@@ -156,7 +156,7 @@ const getpostRetweet = asyncHandler(async (req, res) => {
         }
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 
 })
@@ -190,21 +190,13 @@ const postTweet = asyncHandler(async (req, res) => {
     let body={...req.body}
     
     const file = req.files;
-    console.log(body);
     const user_id = req.session.user_id;
     const tweet = body.tweet;
     let hashTagsArr = body.hashtags;
-    console.log("Before",typeof hashTagsArr)
 
     if(typeof hashTagsArr == "string")
         hashTagsArr = [hashTagsArr]
     
-
-    
-    // console.log("this is",JSON.parse(JSON.stringify(req.body)));
-
-    // console.log("this is hashtag",hashTagsArr);
-    // console.log("this is tweet",tweet);
 
 
 
@@ -215,7 +207,6 @@ const postTweet = asyncHandler(async (req, res) => {
     if (fileLength == 0) {
         let ins = await queryExec('INSERT INTO  tweets (user_id,tweet,media_type,created_at) VALUES (?,?,?,NOW())', [user_id, tweet, 'text']);
         lastTweetInsertedId = ins.insertId;
-        console.log("0", user_id, tweet);
     } else {
         for (var i = 0; i < file.length; i++) {
             const filename = file[i].originalname;
@@ -240,12 +231,10 @@ const postTweet = asyncHandler(async (req, res) => {
                 //update hashtag counter into the hashtag_master
                 let updateHash = await queryExec(`UPDATE hashtag_master SET hashtag_used = hashtag_used + ${1},updated_at=NOW() WHERE hashtag=?`, [curHash]);
                 curHashId = checkHash[0].id;
-                console.log("🚀 ~ file: dashboardController.js:228 ~ postTweet ~ curHashId:", checkHash[0].id)
             } else {
                 //insert hashtag into the hashtag_master
                 let insertHash = await queryExec(`INSERT INTO hashtag_master(hashtag,created_at) VALUES(?,NOW())`, [curHash]);
                 curHashId = insertHash.insertId;
-                console.log("🚀 ~ file: dashboardController.js:232 ~ postTweet ~ curHashId:", curHashId)
             }
             //insert tweet hash into the tweet_hashtag table
             await queryExec(`INSERT INTO tweet_hashtag(tweet_id,hash_id,created_at) VALUES(?,?,NOW())`, [lastTweetInsertedId, curHashId]);
@@ -269,10 +258,10 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
         
         let srchQuery = "";
         if(req.query.srch){
-            srchQuery += `WHERE t.tweet LIKE '${req.query.srch}%'`
+            srchQuery += `WHERE t.tweet LIKE '%${req.query.srch}%'`
         }
         else if(req.query.hash){
-             srchQuery += `WHERE t.id in (SELECT th.tweet_id FROM tweet_hashtag as th JOIN hashtag_master as h ON th.hash_id=h.id WHERE h.hashtag = '${req.query.hash}')`;
+             srchQuery += `WHERE t.id in (SELECT th.tweet_id FROM tweet_hashtag as th JOIN hashtag_master as h ON th.hash_id=h.id WHERE h.hashtag LIKE '%${req.query.hash}%')`;
         }
         let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM tweets as t INNER JOIN users u ON t.user_id = u.id ${srchQuery} ORDER BY t.id DESC  `;
 
@@ -429,7 +418,7 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
 
 
     catch (err) {
-        console.log("Error Dashboard:", err);
+        // console.log("Error Dashboard:", err);
     }
 })
 

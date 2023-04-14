@@ -84,7 +84,7 @@ function twt_clk() {
                 .then(function (responseData) {
                 })
         } catch (error) {
-            console.log("TweetIT",error);
+            // console.log("TweetIT",error);
         }
     }
     fetch_data();

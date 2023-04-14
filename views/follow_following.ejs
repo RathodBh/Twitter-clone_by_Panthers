@@ -1,10 +1,12 @@
 <%- include("menu") -%>
-
+<script>
+    document.querySelector("title").innerHTML = "Twitter | Followers Following"
+</script>
     <div class="col-lg-6 col-md-6 col-sm-8 col-12 px-0 border">
         <div class="inner-main home">
             <div class="blur-ui p-3 pb-0 border">
                 <div class="d-flex align-items-center my-2">
-                    <a href="/dashboard" class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "></a>
+                    <a href="javascript: history.go(-1)" class="fa-solid fa-arrow-left-long text-dark d-inline-block me-3 "></a>
                     <div class="d-flex">
 
                         <img src="<%= userInfo.user_image %>" alt="" class="profile-size me-2">
@@ -12,7 +14,7 @@
                             <h5 class="text-black mb-0">
                                 <%= userInfo.name %>
                             </h5>
-                            <h6 class="text-gray">
+                            <h6 class="text-gray">  
                                 @<%= userInfo.user_name %>
                             </h6>
                         </div>

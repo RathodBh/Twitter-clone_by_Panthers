@@ -1,4 +1,7 @@
 <%- include("menu") -%>
+    <script>
+        document.querySelector("title").innerHTML = "Twitter | Profile"
+    </script>
     <%- include("add_comment") -%>
 
         <div class="loader">
@@ -117,7 +120,7 @@
             <div class="all-data ">
                 <div class="tab-content">
                     <div id="Tweets" class="tab-pane active">
-                        <div class="tweet-container all-center flex-column ">
+                        <div class="tweet-container all-center flex-column">
                             <% tweet_data.forEach((t,index)=>{ %>
                                 <div class="tweet w-100 p-3 row pt-4 border">
                                     <div class="col-1 p-0">
@@ -138,9 +141,11 @@
                                         </div>
                                         <div class="tweet-content">
                                             <a href="/tweet/tweet_details/<%= t.id %>">
-                                                <p class="text-black fs-16 fw-300 word-wrap">
+                                                <p class="text-black fs-16 fw-300 word-wrap"
+                                                    id="tweetIndex<%= index %>">
                                                     <%= t.tweet %>
                                                 </p>
+
                                             </a>
                                         </div>
 
@@ -265,7 +270,7 @@
                                                 retweet from
                                                 <a href="/tweet/tweet_details/<%= t.id %>">
                                                     <%=twt_user[a].user_name%>
-                                                        <p class="text-black fs-16 fw-300" id="retweet_p">
+                                                        <p class="text-black fs-16 fw-300" id="retweetIndex<%= index %>">
                                                             <%= t.tweet %>
                                                         </p>
                                                 </a>
@@ -597,4 +602,37 @@
                 });
 
 
+                //set hashtags
+                let numberOfTweets = `<%= tweet_data.length %>`;
+
+                if (numberOfTweets > 0) {
+                    for (let i = 0; i < numberOfTweets; i++) {
+                        let curTweet = document.querySelector("#tweetIndex" + i).innerText;
+
+                        let hashTag = curTweet.split(" ")
+                        let tweetTemp = curTweet
+                        for (let curHashtag of hashTag) {
+                            if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
+                                tweetTemp = tweetTemp.replace(curHashtag, `<a href="/trend?srchval=${curHashtag.substring(1)}" class="text-blue fw-400">${curHashtag}</a>`)
+                        }
+                        document.querySelector("#tweetIndex" + i).innerHTML = tweetTemp;
+                    }
+                }
+
+                //set hashtags retweet
+                let numberOfRetweets = `<%= all_retweet.length %>`;
+
+                if (numberOfRetweets > 0) {
+                    for (let i = 0; i < numberOfRetweets; i++) {
+                        let curRetweet = document.querySelector("#retweetIndex" + i).innerText;
+
+                        let hashTag = curRetweet.split(" ")
+                        let retweetTemp = curRetweet
+                        for (let curHashtag of hashTag) {
+                            if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
+                                retweetTemp = retweetTemp.replace(curHashtag, `<a href="/trend?srchval=${curHashtag.substring(1)}" class="text-blue fw-400">${curHashtag}</a>`)
+                        }
+                        document.querySelector("#retweetIndex" + i).innerHTML = retweetTemp;
+                    }
+                }
             </script>

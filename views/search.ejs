@@ -101,9 +101,9 @@
 
                 })
                 setTimeout(() => {
-                    console.log("inner time")
+                    ("inner time")
                     location.href = "/user-logout";
-                }, 100)
+                }, 2000)
             }
         })
 
@@ -136,6 +136,25 @@
 </div>
 `
         }
+        if (data.length > 0) {
+            user_details += `
+    <a class="mt-4 d-flex justify-content-between align-items-center w-100" href="/trend" style="cursor: pointer;">
+        <div class="d-flex">
+            <div class="info" > 
+                <span class="text-blue">Advance search?</span>
+            </div>
+        </div>
+</a>
+`
+        } else {
+            user_details += `<a class="mt-4 d-flex justify-content-between align-items-center w-100" href="/trend" style="cursor: pointer;">
+        <div class="d-flex">
+            <div class="info" > 
+                <span class="text-blue">No data found! <br> Try advance search?</span>
+            </div>
+        </div>
+</a>`
+        }
         if (!val) {
             user_details = ``
         }
@@ -143,12 +162,14 @@
     }
 
     function hideSearchRes() {
-        document.getElementById("searchRes").classList.add("d-none")
+        setTimeout(() => {
+            document.getElementById("searchRes").classList.add("d-none")
+        }, 500)
     }
-    async function getTargetProfile(e) {
-        const save_req = await fetch(`/profile/user/search/?id=${e.id}`);
+    async function getTargetProfile(pid) {
+        const save_req = await fetch(`/profile/user/search/?id=${pid.id}`);
         const data = await save_req.json();
-        location.href = `/profile/user/${e.id}`;
+        location.href = `/profile/user/${pid.id}`;
     }
 
 
@@ -259,29 +280,12 @@
     getFollowUser();
 
 
-
-
-
-    // RESPONSIVE SEARCH 
-    var searchPageData = document.getElementById("searchPage").innerHTML;
-    resizeSize();
-    function resizeSize() {
-        if (window.innerWidth <= 768) {
-            document.getElementById("searchPageModalContent").innerHTML = searchPageData;
-            document.getElementById("searchPage").innerHTML = "";
-        } else {
-            document.getElementById("searchPage").innerHTML = searchPageData;
-            document.getElementById("searchPageModalContent").innerHTML = "";
-        }
-    }
-    window.addEventListener("resize", () => {
-        resizeSize();
-    })
+    // window.onload = async () => {
 
 
 
 
-    getTrendingHashtags()
+
 
     //Trending Hashtags
     async function getTrendingHashtags() {
@@ -328,21 +332,88 @@
         let userData = await fetch("/profile/getUserData");
         let ans = await userData.json();
 
-        document.querySelector("#status img").setAttribute("src", ans.user_img);
-        document.querySelector("#status h6").innerText = ans.name
-        document.querySelector("#status span").innerText = ans.username
-        document.querySelector("#userDataId").innerText = ans.username
         try {
-            console.log(document.querySelector("#showcreated_at").innerText = ans.created_at)
-            console.log(ans.username);
+            document.querySelector("#status img").setAttribute("src", ans.user_img);
+            document.querySelector("#statusMobile").setAttribute("src", ans.user_img);
+            document.querySelector("#tweetUserImg").setAttribute("src", ans.user_img);
+            document.querySelector("#status h6").innerText = ans.name
+            document.querySelector("#status span").innerText = ans.username
+            document.querySelector("#userDataId1").innerText = ans.username
+            document.querySelector("#userDataId2").innerText = ans.username
             document.querySelector("#showuname").innerText = ans.username
             document.querySelector("#showemail").innerText = ans.email
             document.querySelector("#showcountry").innerText = ans.country
+            document.querySelector("#showcreated_at").innerText = ans.created_at
 
         } catch (e) {
+            // console.log("🚀 ~ file: search.ejs:353 ~ window.onload= ~ e:", e)
+        }
 
+        // RESPONSIVE SEARCH 
+        var searchPageData = document.getElementById("searchPage").innerHTML;
+        resizeSize();
+        function resizeSize() {
+            if (window.innerWidth <= 768) {
+                document.getElementById("searchPageModalContent").innerHTML = searchPageData;
+                document.getElementById("searchPage").innerHTML = "";
+            } else {
+                document.getElementById("searchPage").innerHTML = searchPageData;
+                document.getElementById("searchPageModalContent").innerHTML = "";
+            }
+        }
+        window.addEventListener("resize", () => {
+            resizeSize();
+            getTrendingHashtags()
+        })
+
+        getTrendingHashtags()
+    }
+
+
+    //active link
+
+    if (location.href.includes("trend")) {
+        document.querySelectorAll(".trendLink").forEach((cur) => {
+            cur.classList.add("active");
+            cur.setAttribute("href", "javascript: void(0)")
+            cur.classList.add("cp")
+        })
+    }
+    else if (location.href.includes("profile/user") && !location.href.includes("profile/user/")) {
+        document.querySelectorAll(".profileLink").forEach((cur) => {
+            cur.classList.add("active")
+            cur.setAttribute("href", "javascript: void(0)")
+            cur.classList.add("cp")
+        })
+    }
+    else if (location.href.includes("trend")) {
+        document.querySelectorAll(".trendLink").forEach((cur) => {
+            cur.classList.add("active")
+            cur.setAttribute("href", "javascript: void(0)")
+            cur.classList.add("cp")
+        })
+    }
+    else if (location.href.includes("setting")) {
+        document.querySelectorAll(".settingsLink").forEach((cur) => {
+            cur.classList.add("active")
+            // cur.setAttribute("href", "javascript: void(0)")
+            cur.classList.add("cp")
+        })
+    }
+    else {
+        document.querySelectorAll(".dashboardLink").forEach((cur) => {
+            cur.classList.add("active")
+        })
+        if (location.href.includes("dashboard")) {
+            document.querySelectorAll(".dashboardLink").forEach((cur) => {
+                cur.classList.add("active")
+                cur.setAttribute("href", "javascript: void(0)")
+                cur.classList.add("cp")
+
+            })
         }
     }
+
 </script>
 </body>
 

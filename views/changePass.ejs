@@ -79,12 +79,9 @@
             let check = await checkoldpass()
             let comparepass = checkConfirmPass()
             let reqirements = checkPwd()
-            console.log("herer");
-            console.log("ansssss", check, comparepass, reqirements);
             if (check && comparepass && reqirements) {
 
 
-                console.log(document.querySelector('#newPass').value)
                 let fetReq = await fetch(`/setting/updatePwd`, {
                     method: 'post',
                     headers: {
@@ -96,7 +93,6 @@
                 })
 
                 let fetchres = await fetReq.json();
-                console.log(fetchres.msg);
                 if (fetchres.msg == "success") {
                     document.querySelector("#changePwd").submit()
                     /////TOST AHIYA MUKJE

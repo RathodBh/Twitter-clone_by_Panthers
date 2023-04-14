@@ -467,7 +467,6 @@ sendOtpBtn.addEventListener("click", async () => {
       if (timer > 0) {
         --timer;
         timerOtpInfo.innerHTML = timer;
-        console.log(timer);
       } else {
         clearInterval(timerOfOtp);
         timerOtp.classList.add("d-none");

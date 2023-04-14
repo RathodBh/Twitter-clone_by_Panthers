@@ -59,7 +59,6 @@ const checkOldPass = asyncHandler(async (req, res) => {
     let password = exeqry[0].password;
 
     const match = await bcrypt.compare(data, password);
-    console.log(match);
     if (match) {
        
         res.json({ ans: true })
@@ -75,7 +74,6 @@ const checkOldPass = asyncHandler(async (req, res) => {
 const updatePwd = asyncHandler(async (req, res) => {
 
     const { data } = req.body
-    console.log(data);
     const salt = await bcrypt.genSalt(15);
     const hashedPassword = await bcrypt.hash(data, salt);
    
