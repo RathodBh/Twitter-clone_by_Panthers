@@ -65,11 +65,10 @@ const commentInfo = asyncHandler(async (req, res) => {
     let tweet_id = req.params.id;
     let db = `twitter_clone`;
     try {
-        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM  tweets as t JOIN users as u  WHERE t.id = ? && u.id = t.user_id `;
+        let sel_tweets = `SELECT t.id,t.tweet,GROUP_CONCAT(DISTINCT CONCAT(tm.media_url, ',', tm.media_type) SEPARATOR ';') AS media,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM  tweets as t LEFT JOIN tweet_media as tm ON tm.tweet_id = t.id JOIN users as u WHERE t.id = ? AND u.id = t.user_id GROUP BY t.id`;
 
         const [tweet] = await queryExec(sel_tweets,[tweet_id]);
 
-        //thigdu
         if (!tweet) {
             return res.end();
         }

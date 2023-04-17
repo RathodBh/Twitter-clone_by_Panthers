@@ -261,7 +261,15 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
         else if (req.query.hash) {
             srchQuery += `WHERE t.id in (SELECT th.tweet_id FROM tweet_hashtag as th JOIN hashtag_master as h ON th.hash_id=h.id WHERE h.hashtag LIKE '%${req.query.hash}%')`;
         }
-        let sel_tweets = `SELECT t.id,t.tweet,tm.media_url,tm.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM tweets as t INNER JOIN users u ON t.user_id = u.id LEFT JOIN tweet_media as tm ON tm.tweet_id=t.id  ${srchQuery}  ORDER BY t.id DESC  `;
+        // SELECT t.id,t.tweet,tm.media_url,tm.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM tweets as t INNER JOIN users u ON t.user_id = u.id LEFT JOIN tweet_media as tm ON tm.tweet_id=t.id
+        let sel_tweets = `SELECT t.id, t.tweet,
+        GROUP_CONCAT(DISTINCT CONCAT(tm.media_url, ',', tm.media_type) SEPARATOR ';') AS media,
+        t.tweet_likes, t.tweet_comments, t.tweet_retweets, t.created_at,
+        u.id as user_id, u.name, u.user_image, u.user_name, u.bio, u.following, u.followers
+        FROM tweets as t
+        INNER JOIN users u ON t.user_id = u.id
+        LEFT JOIN tweet_media as tm ON tm.tweet_id = t.id
+        GROUP BY t.id ${srchQuery}  ORDER BY t.id DESC`;
 
         let follow_sel = `SELECT following.following_id FROM following WHERE following.user_id = ?`;
 
@@ -276,8 +284,16 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
         let all_tweet_data;
 
         all_tweet_data = await queryExec(sel_tweets);
-        console.log("🚀 ~ file: dashboardController.js:279 ~ getDashboardFetchRequest ~ all_tweet_data:", all_tweet_data)
 
+        // let tmp = []
+        // let tmpId = []
+        // for (const x of all_tweet_data) {
+        //     tmp.push(x)
+        //     tmpId.push(x.id)
+        //     if(tmpId.includes())
+        // }
+
+        // str?.split()
 
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -437,4 +453,9 @@ const getHome = asyncHandler(async (req, res) => {
     res.render("home");
 })
 
-module.exports = { getDashboard, getTrendingHashtags, getHome, getDashboardFetchRequest, postTweet, getpostLike1, getpostRetweet }
+const previewImage = asyncHandler(async (req, res) => {
+    console.log("param",req.params);
+    res.render("img",{name: req.params.name});
+})
+
+module.exports = { getDashboard, getTrendingHashtags, getHome, previewImage, getDashboardFetchRequest, postTweet, getpostLike1, getpostRetweet }

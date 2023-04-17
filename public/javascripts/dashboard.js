@@ -101,7 +101,6 @@ async function likepost(e, t_id) {
 //copy to clipboard
 
 async function copyContent(e, text) {
-    //
 
     let link = location.href.split('/')[0] + "//" + location.href.split('/')[2];
     let myData = `/tweet/tweet_details/${text}`
@@ -129,8 +128,8 @@ async function copyContent(e, text) {
         console.error('Failed to copy: ', err);
     }
 }
-const test = (id) => {
-    window.location.href = (`/tweet/tweet_details/${id}`)
+function openInfo (id) {
+    window.location.href = `/tweet/tweet_details/${id}`;
 }
 try {
     if (sel != "") {
@@ -161,6 +160,19 @@ async function forYouDataLoad(srch = "", hash = "") {
     tweet_data.forEach((t, index) => {
 
         let hashTag = t.tweet.split(" ")
+        let mediaUrl = t.media?.split(";")
+        // console.log(mediaUrl);
+
+        let mediaTypes = []
+        let mediaUrls = []
+        mediaUrl?.forEach(url => {
+            let [ele1, ele2] = url.split(",");
+            mediaUrls.push(ele1)
+            mediaTypes.push(ele2)
+        })
+
+
+        // let mediaType = t.media?.split(",")[1]
         let tweetTemp = t.tweet
         for (let curHashtag of hashTag) {
             if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
@@ -168,12 +180,12 @@ async function forYouDataLoad(srch = "", hash = "") {
         }
         part1Data +=
             `
-        <div onclick="test(${t.id})"
+        <div onclick="openInfo(${t.id})"
                                 class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
                                 <div class="col-1 p-0">
                                     <img src="${t.user_image}" alt="" class="profile-size me-2 border">
                                 </div>
-                                <div class="col-10 px-4 " >
+                                <div class="col-10 px-4 pe-1" >
                                     <div class="d-flex align-items-center user-info position-relative flex-wrap">
                                         
                                         <a href="/profile/user/${t.user_id}"
@@ -199,21 +211,30 @@ async function forYouDataLoad(srch = "", hash = "") {
                                     </div>
                                     ` ;
 
-                                    if(t.media_type== null){
+        part1Data += `<div class="tweet-img-container  d-flex flex-wrap ${(mediaTypes?.length == 0) ? "d-none" : ""} ">`
+        mediaUrls?.forEach((cur, i) => {
+            if (mediaTypes[i].includes("image")) {
+                if (i % 2 == 0 && mediaTypes.length == i + 1) {
+                    part1Data += `<a class="  bg-light w-100" onclick='openImg(event,"${cur.split("/")[3]}")'><img src="${cur}" alt="" class="border"></a>`;
+                } else {
+                    part1Data += `<a class="  bg-light w-50"  onclick='openImg(event,"${cur.split("/")[3]}")'><img src="${cur}" alt="" class="border}"></a>`;
+                }
 
-                                    }
-        else if (t.media_type.includes("image")) {
+            } else if (mediaTypes[i].includes("video")) {
+                if (i % 2 == 0 && mediaTypes.length == i + 1) {
+                    part1Data += `<div class="  w-100"> <video controls loop onclick="stopProp(event)" class="w-100 h-100">
+                    <source src="${cur}" type="video/mp4">
+                </video></div>`;
+                } else {
+                    part1Data += `<div class="  w-50"> <video controls loop onclick="stopProp(event)" class="w-100 h-100">
+                    <source src="${cur}" type="video/mp4">
+                </video></div>`;
+                }
 
-            part1Data += `<div class="tweet-img-container">
-                                            <img src="${t.media_url}" alt="" class="w-100">
-                                        </div>`;
-        } else if (t.media_type.includes("video")) {
-            part1Data += `<div class="tweet-video-container">
-                                                <video controls loop onclick="stopProp(event)">
-                                                    <source src="${t.media_url}" type="video/mp4">
-                                                </video>
-                                            </div>`;
-        } 
+            }
+        })
+        part1Data += `</div>`
+
 
         part1Data += `<div class="tweet-reactions-container mt-3">
                                                     <ul class="list-unstyled row">
@@ -307,6 +328,7 @@ async function forYouDataLoad(srch = "", hash = "") {
                                 </div>
                             </div>
         `;
+        mediaUrls = mediaTypes = []
 
 
     })
@@ -365,9 +387,19 @@ async function followingTab() {
                     tweetTemp = tweetTemp.replace(curHashtag, `<a href="/trend?srchval=${curHashtag.substring(1)}" class="text-blue fw-400">${curHashtag}</a>`)
             }
 
+            let mediaUrl = t.media?.split(";")
+
+            let mediaTypes = []
+            let mediaUrls = []
+            mediaUrl?.forEach(url => {
+                let [ele1, ele2] = url.split(",");
+                mediaUrls.push(ele1)
+                mediaTypes.push(ele2)
+            })
+
             part2Data +=
                 `
-                <div onclick="test(${t.id})"
+                <div onclick="openInfo(${t.id})"
                                 class="tweet w-100 p-3 row pt-4 border-bottom border-top cp">
                                 <div class="col-1 p-0">
                                     <img src="${t.user_image}" alt="" class="profile-size me-2 border" >
@@ -397,21 +429,29 @@ async function followingTab() {
 
                                     </div>
                                     ` ;
-                                    if(t.media_type== null){
-
-                                    }
-            else if (t.media_type.includes("image")) {
-
-                part2Data += `<div class="tweet-img-container">
-                                            <img src="${t.media_url}" alt="" class="w-100">
-                                        </div>`;
-            } else if (t.media_type.includes("video")) {
-                part2Data += `<div class="tweet-video-container">
-                                                <video controls loop onclick="stopProp(event)">
-                                                    <source src="${t.media_url}" type="video/mp4">
-                                                </video>
-                                            </div>`;
-            } 
+                                    part2Data += `<div class="tweet-img-container  d-flex flex-wrap ${(mediaTypes?.length == 0) ? "d-none" : ""} ">`
+                                    mediaUrls?.forEach((cur, i) => {
+                                        if (mediaTypes[i].includes("image")) {
+                                            if (i % 2 == 0 && mediaTypes.length == i + 1) {
+                                                part2Data += `<a class="  bg-light w-100"  onclick='openImg(event,"${cur.split("/")[3]}")'><img src="${cur}" alt="" class="border"></a>`;
+                                            } else {
+                                                part2Data += `<a class="  bg-light w-50"  onclick='openImg(event,"${cur.split("/")[3]}")'><img src="${cur}" alt="" class="border}"></a>`;
+                                            }
+                            
+                                        } else if (mediaTypes[i].includes("video")) {
+                                            if (i % 2 == 0 && mediaTypes.length == i + 1) {
+                                                part2Data += `<div class="  w-100"> <video controls loop onclick="stopProp(event)" class="w-100 h-100">
+                                                <source src="${cur}" type="video/mp4">
+                                            </video></div>`;
+                                            } else {
+                                                part2Data += `<div class="  w-50"> <video controls loop onclick="stopProp(event)" class="w-100 h-100">
+                                                <source src="${cur}" type="video/mp4">
+                                            </video></div>`;
+                                            }
+                            
+                                        }
+                                    })
+                                    part2Data += `</div>`
 
             part2Data += `<div class="tweet-reactions-container mt-3">
                                                     <ul class="list-unstyled row">
@@ -506,6 +546,7 @@ class="fa-solid fa-user-plus me-2" ></i>
                             </div>
         `;
         }
+        mediaUrls = mediaTypes = []
 
     })
     part2.innerHTML = part2Data;
@@ -771,7 +812,7 @@ async function searchSuggestionsTrend(e) {
 </div>
 `
                 }
-                if(data.length == 0){
+                if (data.length == 0) {
                     searchSuggestions.classList.add("d-none");
                 }
             }
@@ -788,7 +829,7 @@ async function searchSuggestionsTrend(e) {
         searchSuggestions.classList.add("d-none")
     }
 }
-function hideSuggestion(sec=500) {
+function hideSuggestion(sec = 500) {
     setTimeout(() => {
         searchSuggestions.classList.add("d-none")
     }, sec)
@@ -797,4 +838,9 @@ function sendData(hashtag) {
     document.getElementById("searchTweetHash").value = "#" + hashtag;
     searchSuggestions.classList.add("d-none")
     searchSuggestionsTrend()
+}
+
+function openImg(e,imgName) {
+    e.stopPropagation();
+    location.href = `/dashboard/img/${imgName}`;
 }
