@@ -156,7 +156,8 @@ $(document).ready(function () {
   var option = '<option value="year" selected hidden disabled>year</option>';
   selectedYear = "year";
   var ThisYear = d.getFullYear()
-  for (var i = ThisYear; i >= 1930; i--) {// years start i
+  
+  for (var i = ThisYear; i >= (ThisYear-100); i--) {// years start i
     option += '<option value="' + i + '">' + i + '</option>';
   }
   $('#year').append(option);
@@ -466,7 +467,6 @@ sendOtpBtn.addEventListener("click", async () => {
       if (timer > 0) {
         --timer;
         timerOtpInfo.innerHTML = timer;
-        console.log(timer);
       } else {
         clearInterval(timerOfOtp);
         timerOtp.classList.add("d-none");

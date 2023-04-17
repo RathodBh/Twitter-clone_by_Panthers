@@ -1,4 +1,5 @@
 const express = require('express')
+// const helmet = require("helmet");
 const bodyParser = require('body-parser')
 require('dotenv').config("./.env")
 const app = express();
@@ -12,10 +13,14 @@ const dashboard = require('./Routes/dashboard')
 const home = require('./Routes/home')
 const logout = require('./Routes/logout')
 const follow = require('./Routes/follow')
+const setting = require('./Routes/setting')
 const forgetPassword = require('./Routes/forgetPassword');
+const notification = require('./Routes/notification')
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
+const util = require('util')
 app.use(cookieParser());
+// app.use(helmet({ contentSecurityPolicy: false, }));
 app.use(session({
     secret: "secret key",
     resave: false,
@@ -24,16 +29,21 @@ app.use(session({
 
 const path = require('path');
 app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.urlencoded({ extended: true }))
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/public'))
 app.set('view engine', 'ejs')
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
+
+
+
+app.set('view engine','ejs')
+
 // my all end points
 app.set('view engine', 'ejs')
 app.use('/user', register)
+app.use('/setting', setting)
 app.use('/user-login', login)
 app.use('/user-logout', logout)
 app.use('/', home)
@@ -42,7 +52,7 @@ app.use("/profile", profile)
 app.use("/tweet", commentInfo)
 app.use("/forget", forgetPassword)
 app.use("/follow", follow)
-
+app.use("/notification", notification)
 const multer = require('multer');
 const { protect } = require('./Middlewares/auth');
 
@@ -109,17 +119,31 @@ app.post("/updateProfile", uploads.fields([{
 
 app.get("/srch?", async (req, res) => {
     var srchval = req.query.val;
-    var sql = `SELECT id,name,user_name,user_image FROM twitter_clone.users where user_name like ? or name like ? `;
+    var sql = `SELECT id,name,user_name,user_image FROM users where user_name like ? or name like ? `;
     var matchedResult = await queryExec(sql,["%"+srchval+"%","%"+srchval+"%"]);
     res.json(matchedResult)
 
 })
+app.get("/trend",(req, res)=>{
+    const token = req.session.email
 
+    if (!token) {
+        res.redirect('/user-login');
+        return
+    }
+    if(req.query.srchval){
+        return res.render("trending",{sel:req.query.srchval})
+    }
+
+    else
+    return res.render("trending",{sel:""})
+})
 //vivek (Follow-Unfollow)
 app.get("/addfollow", async (req, res) => {
 
     let userId = req.session.user_id
     let followerId = req.query.followerId
+    
     if (req.query.flag == 0) {
         // cnt++;
         var cnt = await queryExec(`SELECT count(id) as follower FROM twitter_clone.followers where user_id=${userId} and isdelete='0';`)
@@ -155,7 +179,7 @@ app.get("/addfollow", async (req, res) => {
         var cnt = await queryExec(`SELECT count(id) as follower  FROM twitter_clone.followers where user_id=${userId} and isdelete='0';`)
         console.log("cnt value below ", userId+"and "+followerId);
         let followers = cnt[0].follower
-
+let notify_follow =  await queryExec(`insert into notify(user_id,target_id,notify_msg) values(?,?,'Started following you !')`,[userId,followerId]);
         var flw = await queryExec(`SELECT count(id) as folowing FROM twitter_clone.following where user_id=${userId};`)
         console.log("flw value below", userId +"and "+followerId);
         let folowing = flw[0].folowing
@@ -164,6 +188,7 @@ app.get("/addfollow", async (req, res) => {
         await queryExec(`UPDATE users SET following =  ${folowing} WHERE id = ${userId}`);
         await queryExec(`UPDATE users SET followers =  ${followers} WHERE id = ${followerId}`);
         console.log("complete else in server");
+        // let notify_follow =  await queryExecuter(`insert into notify(user_id,target_id,notify_msg) values('${userId}','${followerId}','Unfollowing you !')`);
     }
 
     return res.send({ message: "update" });
@@ -195,11 +220,13 @@ function calcTime(city, offset) {
 app.get('/home', function (req, res) {
     res.render("home")
 })
+
 app.get("*", (req, res) => {
     res.render("404")
 })
 app.listen(PORT, () => {
     console.log(`I am listining on ${PORT},\n Click here http://localhost:3008/user-login`);
 });
+
 
 

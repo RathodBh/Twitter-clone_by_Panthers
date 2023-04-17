@@ -13,11 +13,10 @@ const asyncHandler = require("express-async-handler");
 const registerUser = async (req, res) => {
     //i need to show the post request for register page
 
-    console.log("body", req.body);
     let sessionOtp = req.session.otp;
     if (sessionOtp == req.body.otp) {
-        const { yyyy, mm, dd } = req.body
-        let dob = `${yyyy}/${mm}/${dd}`
+        const { year, month, day } = req.body
+        let dob = `${year}/${month}/${day}`
         try {
             const { name, email, password, uname,otp } = req.body
             async function register(name, email, password, uname, dob) {

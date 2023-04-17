@@ -1,11 +1,9 @@
+const { json } = require('body-parser');
 const { queryExec } = require('../connection/conn');
 // const queryExec = require('../queryExecute/queryExec')
 const express = require('express')
 const app = express();
 const asyncHandler = require("express-async-handler");
-
-
-
 
 var tweet_ids
 const getpostLike1 = asyncHandler(async (req, res) => {
@@ -20,6 +18,9 @@ const getpostLike1 = asyncHandler(async (req, res) => {
         var tweet_id = data.tweet_id
         tweet_ids = data.tweet_id
         if (data.like == true) {
+
+            
+            
             const qrt = `SELECT  * FROM  likes where tweet_id=? and user_id=?`
 
             const like_data = await queryExec(qrt, [data.tweet_id, user_id]);
@@ -42,18 +43,18 @@ const getpostLike1 = asyncHandler(async (req, res) => {
                 res.json({ flag, alllikecount })
             }
             else if (like_data.length == 1) {
-                console.log("in if condition else if");
-                const select_tweet_like = `select tweet_likes from tweets where id=${data.tweet_id}`
-                const tweet_like_count = await queryExec(select_tweet_like);
+
+                const select_tweet_like = `select tweet_likes from tweets where id=?`
+                const tweet_like_count = await queryExec(select_tweet_like, [data.tweet_id]);
                 alllikecount = tweet_like_count[0].tweet_likes
                 alllikecount = alllikecount + 1
 
-                const up_tweets_tweetlike = `Update tweets Set tweet_likes=${alllikecount}  where id=${data.tweet_id}`
-                const Update_entry_tweet = await queryExec(up_tweets_tweetlike);
+                const up_tweets_tweetlike = `Update tweets Set tweet_likes=?  where id=?`
+                const Update_entry_tweet = await queryExec(up_tweets_tweetlike, [alllikecount, data.tweet_id]);
 
 
-                const Update_unlike = `Update likes Set updated_at= Now(),is_deleted=0  where tweet_id=${data.tweet_id}`
-                const Update_unlike_entry = await queryExec(Update_unlike);
+                const Update_unlike = `Update likes Set updated_at= Now(),is_deleted=0  where tweet_id=?`
+                const Update_unlike_entry = await queryExec(Update_unlike, [data.tweet_id]);
                 let flag = true
                 res.json({ flag, alllikecount })
             }
@@ -76,29 +77,30 @@ const getpostLike1 = asyncHandler(async (req, res) => {
     // }
         }
         else {
-    const select_tweet_like = `select tweet_likes from tweets where id=?`
-    const tweet_like_count = await queryExec(select_tweet_like, [data.tweet_id]);
-    alllikecount = tweet_like_count[0].tweet_likes
-    alllikecount = alllikecount - 1
+            const select_tweet_like = `select tweet_likes from tweets where id=?`
+            const tweet_like_count = await queryExec(select_tweet_like, [data.tweet_id]);
+            alllikecount = tweet_like_count[0].tweet_likes
+            alllikecount = alllikecount - 1
 
-    const up_tweets_tweetlike = `Update tweets Set tweet_likes=?  where id=?`
-    const Update_entry_tweet = await queryExec(up_tweets_tweetlike, [alllikecount, data.tweet_id]);
+            const up_tweets_tweetlike = `Update tweets Set tweet_likes=?  where id=?`
+            const Update_entry_tweet = await queryExec(up_tweets_tweetlike, [alllikecount, data.tweet_id]);
 
 
-    const Update_unlike = `Update likes Set  updated_at= Now(),is_deleted=1  where tweet_id=?`
-    const Update_unlike_entry = await queryExec(Update_unlike, [data.tweet_id]);
-    let flag = false
-    res.json({ flag, alllikecount })
-}
+            const Update_unlike = `Update likes Set  updated_at= Now(),is_deleted=1  where tweet_id=?`
+            const Update_unlike_entry = await queryExec(Update_unlike, [data.tweet_id]);
+            let flag = false
+            res.json({ flag, alllikecount })
+        }
 
     } catch (error) {
-    console.log(error);
-}
+        // console.log(error);
+    }
 
 })
 
 
 const getpostRetweet = asyncHandler(async (req, res) => {
+  
     try {
         const token = req.session.email
         const user_id = req.session.user_id
@@ -169,7 +171,7 @@ const getpostRetweet = asyncHandler(async (req, res) => {
         }
 
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 
 })
@@ -189,13 +191,9 @@ const tweetit = asyncHandler(async function (req, res) {
     res.render('tweet', { flag })
 });
 
-// const tweetit1 = asyncHandler(async function (req, res)  {
-//     // console.log(req.file.path);
-//     // i need to show the get request for tweet page
-//     let flag = false;
-//     console.log("hello,hii");
-//     res.render('dashboard',{flag})
-// });
+
+
+
 
 
 const postTweet = asyncHandler(async (req, res) => {
@@ -204,14 +202,26 @@ const postTweet = asyncHandler(async (req, res) => {
         res.redirect('/user-login')
         return;
     }
-
-
+    let body={...req.body}
+    
     const file = req.files;
     const user_id = req.session.user_id;
-    const tweet = req.body.tweet_text || "";
+    const tweet = body.tweet;
+    let hashTagsArr = body.hashtags;
 
-    if (file.length == 0) {
-        await queryExec('INSERT INTO  tweets (user_id,tweet,media_type,created_at) VALUES (?,?,?,NOW())', [user_id, tweet, 'text']);
+    if(typeof hashTagsArr == "string")
+        hashTagsArr = [hashTagsArr]
+    
+
+
+
+
+    let lastTweetInsertedId;
+
+    let fileLength = (file == undefined) ? 0 : file.length;
+    if (fileLength == 0) {
+        let ins = await queryExec('INSERT INTO  tweets (user_id,tweet,media_type,created_at) VALUES (?,?,?,NOW())', [user_id, tweet, 'text']);
+        lastTweetInsertedId = ins.insertId;
     } else {
         for (var i = 0; i < file.length; i++) {
             const filename = file[i].originalname;
@@ -220,16 +230,39 @@ const postTweet = asyncHandler(async (req, res) => {
             const filename1 = file[i].filename
             var imgsrc = '/assets/images/' + filename1;
             const sql = 'INSERT INTO  tweets (user_id,tweet, media_url,media_type,created_at) VALUES (?,?, ?, ?,NOW())';
-
             const data = [user_id, tweet, imgsrc, filetype];
-            await queryExec(sql, data);
+            let q = await queryExec(sql, data);
+            lastTweetInsertedId = q.insertId;
         }
     }
 
-    res.redirect('/dashboard');
+    let hashLength = (hashTagsArr == undefined) ? 0 : hashTagsArr.length;
+    if (hashLength > 0) {
+        for (const hash of hashTagsArr) {
+            let curHash = hash.substring(1)
+            let curHashId = ""
+            let checkHash = await queryExec(`SELECT hashtag,id from hashtag_master WHERE hashtag = ?`, [curHash]);
+            if (checkHash.length > 0) {
+                //update hashtag counter into the hashtag_master
+                let updateHash = await queryExec(`UPDATE hashtag_master SET hashtag_used = hashtag_used + ${1},updated_at=NOW() WHERE hashtag=?`, [curHash]);
+                curHashId = checkHash[0].id;
+            } else {
+                //insert hashtag into the hashtag_master
+                let insertHash = await queryExec(`INSERT INTO hashtag_master(hashtag,created_at) VALUES(?,NOW())`, [curHash]);
+                curHashId = insertHash.insertId;
+            }
+            //insert tweet hash into the tweet_hashtag table
+            await queryExec(`INSERT INTO tweet_hashtag(tweet_id,hash_id,created_at) VALUES(?,?,NOW())`, [lastTweetInsertedId, curHashId]);
+        }
+    }
+
+    res.json({ ans: true })
+
+
 })
 
 const getDashboardFetchRequest = asyncHandler(async (req, res) => {
+    
     const user_id = req.session.user_id
     try {
         const token = req.session.email
@@ -237,8 +270,18 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
             res.redirect('/user-login');
             return
         }
-        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM tweets as t INNER JOIN users u ON t.user_id = u.id ORDER BY t.id DESC `;
+        
+        let srchQuery = "";
+        if(req.query.srch){
+            srchQuery += `WHERE t.tweet LIKE '%${req.query.srch}%'`
+        }
+        else if(req.query.hash){
+             srchQuery += `WHERE t.id in (SELECT th.tweet_id FROM tweet_hashtag as th JOIN hashtag_master as h ON th.hash_id=h.id WHERE h.hashtag LIKE '%${req.query.hash}%')`;
+        }
+        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM tweets as t INNER JOIN users u ON t.user_id = u.id ${srchQuery} ORDER BY t.id DESC  `;
+
         let follow_sel = `SELECT following.following_id FROM following WHERE following.user_id = ?`;
+       
         const followingId = await queryExec(follow_sel, [user_id]);
 
         let allFollowingIds = [];
@@ -247,9 +290,10 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
         }
         //get comments of every tweet
         let comments = 0;
+        let all_tweet_data;
+        
+            all_tweet_data = await queryExec(sel_tweets);
 
-
-        const all_tweet_data = await queryExec(sel_tweets);
 
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -384,18 +428,29 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
         }
 
         let flag = false;
-
         return res.json({ tweet_data: all_tweet_data, following_data: allFollowingIds, post_date: post_at, all_comments, all_likes, arrtruefalse, arrlikeid, arrretweetid, userID: req.session.user_id });
     }
 
 
     catch (err) {
-        console.log("Error Dashboard:", err);
+        // console.log("Error Dashboard:", err);
     }
 })
 
+const getTrendingHashtags = asyncHandler(async (req, res) => {
+
+    if (req.query.search) {
+        let searchHashtag = await queryExec(`SELECT hashtag from hashtag_master WHERE hashtag like ? LIMIT 5`, [req.query.search + "%"]);
+        return res.json({ searchHashtag })
+    } else {
+        let getTrending = await queryExec(`SELECT hashtag,hashtag_used from hashtag_master ORDER BY hashtag_used DESC LIMIT 3`);
+        return res.json({ getTrending })
+    }
+
+})
 
 const getHome = asyncHandler(async (req, res) => {
     res.render("home");
 })
-module.exports = { getDashboard, getHome, getDashboardFetchRequest, postTweet, getpostLike1, getpostRetweet }
+
+module.exports = { getDashboard, getTrendingHashtags, getHome, getDashboardFetchRequest, postTweet, getpostLike1, getpostRetweet }

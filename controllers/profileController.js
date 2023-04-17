@@ -227,13 +227,17 @@ const updateProfilepoint = asyncHandler(async (req, res) => {
 
 const getUserInfo = asyncHandler(async (req, res) => {
     let userId = req.session.user_id;
-    let user = await queryExec(`SELECT name,user_name,user_image from users WHERE id = ${userId}`)
-    res.json({ name: user[0].name, username: user[0].user_name, user_img: user[0].user_image })
+
+    let user = await queryExec(`SELECT name,user_name,user_image,created_at,country,email from users WHERE id = ${userId}`)
+
+    return res.json({ name: user[0].name, username: user[0].user_name, user_img: user[0].user_image, created_at: user[0].created_at, country: user[0].country, email: user[0].email })
 })
 
 
 const getTagetProfiledata = async (req, res) => {
 
+
+    
     try {
         const token = req.session.email
         if (!token) {
@@ -267,6 +271,7 @@ const getTargetProfile = asyncHandler(async (req, res) => {
         }
         let sel_tweets = `select * from tweets where user_id=? order by id DESC`;
         const all_tweet_data = await queryExec(sel_tweets, [user_id]);
+
 
 
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -422,6 +427,15 @@ const fflist = asyncHandler(async (req, res) => {
 
     if (req.query.id) {
         uid = req.query.id;
+    
+    var getuser = await queryExec(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(?)`, [uid]);
+    var curuser = await queryExec(`select id,name,user_name,user_image from users where id = ?`, [uid]);
+    var getfollowerId = await queryExec(`select follower_id from followers where user_id =?`, [uid]);
+    var followers = [];
+    getfollowerId.forEach(id => {
+        followers.push(id.follower_id);
+    });
+    var following = await queryExec(`select users.id,users.name,users.user_name,users.user_image from users INNER join following on users.id = following.following_id where following.user_id = ?`, [uid])
         var getuser = await queryExec(`select id,name,user_name,user_image,cover_image,birth_date,bio,email from users where id not in(${uid})`);
         var curuser = await queryExec(`select id,name,user_name,user_image from users where id = '${uid}'`);
         var getfollowerId = await queryExec(`select follower_id from followers where user_id =${uid}`);
@@ -488,6 +502,7 @@ const fflist = asyncHandler(async (req, res) => {
 
     }
 
+    var follower = await queryExec(`select users.id,users.name,users.user_name,users.user_image from users left join followers on users.id = followers.follower_id where followers.user_id = ?`, [uid])
 
 })
 
