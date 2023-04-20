@@ -30,7 +30,7 @@ function emoji_clk() {
 // document.querySelector("#sub_btn").disabled = 'false'
 
 var limit_img = 0;
-try{
+
     const previewImage = (event) => {
     const imageFiles = event.target.files;
     limit_img+=imageFiles.length;
@@ -78,9 +78,6 @@ try{
     }
 }
 
-}catch(err){
-
-}
 
 
 
@@ -106,7 +103,6 @@ function twt_clk1() {
     window.location = "/dashboard/tweet";
 }
 
-try{
 
 let gg=0;
 
@@ -124,7 +120,4 @@ function emoji_picker1() {
         gg = 0;
     }
     // document.getElementById('emojiSelectorIcon').style.display="none"
-}
-}catch(err){
-    
 }
