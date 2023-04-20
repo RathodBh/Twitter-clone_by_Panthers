@@ -134,62 +134,55 @@
                                             </a>
                                         </div>
 
-                                        <% if(t.media_type.includes("image")){ %>
-                                            <div class="tweet-img-container">
-                                                <img src="<%= t.media_url %>" alt="" class="w-100">
-                                            </div>
-                                            <% }else if(t.media_type.includes("video") ){ %>
-                                                <div class="tweet-video-container">
-                                                    <video controls loop>
-                                                        <source src="<%= t.media_url %>" type="video/mp4">
-                                                    </video>
-                                                </div>
-                                                <% } %>
-                                                    <div class="tweet-reactions-container mt-3">
-                                                        <ul class="list-unstyled row">
-                                                            <li class="col">
+                                        <!-- media  -->
+                                        <div id="mediaUrl<%= index %>" class="d-none">
+                                            <%= t.media %>
+                                        </div>
+                                        <div id="media<%= index %>"></div>
 
-                                                                <a href="" data-bs-toggle="modal"
-                                                                    class="comment clickComment"
-                                                                    data-bs-target="#commentModal" data-id="<%= t.id %>"
-                                                                    id="clickComment">
-                                                                    <i class="fa-regular fa-comment"></i>
-                                                                    <span id="allComment<%= t.id %>">
-                                                                        <%= t.tweet_comments %>
-                                                                    </span>
+                                        <div class="tweet-reactions-container mt-3">
+                                            <ul class="list-unstyled row">
+                                                <li class="col">
 
-                                                                </a>
-                                                            </li>
-                                                            <li class="col">
-                                                                <a class="retweet">
-                                                                    <i class="fa-solid fa-retweet"
-                                                                        onclick="retweetpost(this)"
-                                                                        id="k<%= t.id %>"></i>
-                                                                    <span id="retweet<%= t.id %>">
-                                                                        <%= t.tweet_retweets %>
-                                                                    </span>
+                                                    <a href="" data-bs-toggle="modal" class="comment clickComment"
+                                                        data-bs-target="#commentModal" data-id="<%= t.id %>"
+                                                        id="clickComment">
+                                                        <i class="fa-regular fa-comment"></i>
+                                                        <span id="allComment<%= t.id %>">
+                                                            <%= t.tweet_comments %>
+                                                        </span>
 
-                                                                </a>
-                                                            </li>
-                                                            <li class="col">
+                                                    </a>
+                                                </li>
+                                                <li class="col">
+                                                    <a class="retweet">
+                                                        <i class="fa-solid fa-retweet" onclick="retweetpost(this)"
+                                                            id="k<%= t.id %>"></i>
+                                                        <span id="retweet<%= t.id %>">
+                                                            <%= t.tweet_retweets %>
+                                                        </span>
 
-                                                                <a class="like <%= t.id %>">
-                                                                    <i class="fa-regular fa-heart"
-                                                                        onclick="likepost(this)" id="<%= t.id %>"></i>
-                                                                    <span id="like<%= t.id %>">
-                                                                        <%= t.tweet_likes %>
-                                                                    </span>
-                                                                </a>
-                                                            </li>
+                                                    </a>
+                                                </li>
+                                                <li class="col">
 
-                                                            <li class="col">
-                                                                <a href="" class="share">
-                                                                    <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                                                    <a class="like <%= t.id %>">
+                                                        <i class="fa-regular fa-heart" onclick="likepost(this)"
+                                                            id="<%= t.id %>"></i>
+                                                        <span id="like<%= t.id %>">
+                                                            <%= t.tweet_likes %>
+                                                        </span>
+                                                    </a>
+                                                </li>
 
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
+                                                <li class="col">
+                                                    <a href="" class="share">
+                                                        <i class="fa-solid fa-arrow-up-from-bracket"></i>
+
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                     <div class="col-1 dropstart">
                                         <a href="" class="text-dark" data-bs-toggle="dropdown" aria-expanded="false">
@@ -230,7 +223,8 @@
                         <div class="tweet-container all-center flex-column ">
                             <%var a=0;%>
                                 <% all_retweet.forEach((t,index)=>{ %>
-                                    <div class="tweet w-100 p-3 row pt-4 border-bottom border-top">
+                                    <div class="tweet w-100 p-3 row pt-4 border-bottom border-top"
+                                        onclick="openInfo('<%= t.id %>')">
                                         <div class="col-1 p-0">
                                             <img src="<%= users[0].user_image %>" alt=""
                                                 class="profile-size me-2 border">
@@ -252,56 +246,62 @@
                                                 retweet from
                                                 <a href="/tweet/tweet_details/<%= t.id %>">
                                                     @<%=twt_user[a].user_name%>
-                                                        <p class="text-black fs-16 fw-300" id="retweetIndex<%= index %>">
+                                                        <p class="text-black fs-16 fw-300"
+                                                            id="retweetIndex<%= index %>">
                                                             <%= t.tweet %>
                                                         </p>
                                                 </a>
                                             </div>
 
-                                            <% if(t.media_type.includes("image")){ %>
-                                                <div class="tweet-img-container">
-                                                    <img src="<%= t.media_url %>" alt="" class="w-100">
-                                                </div>
-                                                <% }else if(t.media_type.includes("video") ){ %>
-                                                    <div class="tweet-video-container">
-                                                        <video controls loop>
-                                                            <source src="<%= t.media_url %>" type="video/mp4">
-                                                        </video>
-                                                    </div>
-                                                    <% } %>
-                                                        <div class="tweet-reactions-container mt-3">
-                                                            <ul class="list-unstyled row">
-                                                                <li class="col">
-                                                                    <a href="/tweet/tweet_details/<%= t.id %>"
-                                                                        class="comment">
-                                                                        <i class="fa-regular fa-comment"></i>
-                                                                        <%= t.tweet_comments %>
-                                                                    </a>
-                                                                </li>
+                                            <!-- media  -->
+                                            <div id="mediaUrl_<%= index %>" class="d-none">
+                                                <%= t.media %>
+                                            </div>
+                                            <div id="media_<%= index %>"></div>
 
-                                                                <li class="col">
-                                                                    <a class="like <%= t.id %>">
-                                                                        <i class="fa-regular fa-heart"
-                                                                            onclick="likepost(this)"
-                                                                            id="<%= t.id %>"></i>
+                                            <div class="tweet-reactions-container mt-3">
+                                                <ul class="list-unstyled row">
+                                                    <li class="col">
+                                                        <a href="/tweet/tweet_details/<%= t.id %>" class="comment">
+                                                            <i class="fa-regular fa-comment"></i>
+                                                            <%= t.tweet_comments %>
+                                                        </a>
+                                                    </li>
+
+                                                    <li class="col">
+                                                        <a class="like <%= t.id %>">
+                                                            <i class="fa-regular fa-heart"
+                                                                onclick="likepost(event,this)" id="<%= t.id %>"></i>
 
 
-                                                                        <span id="like<%= t.id %>">
-                                                                            <%= t.tweet_likes %>
-                                                                        </span>
+                                                            <span id="like<%= t.id %>">
+                                                                <%= t.tweet_likes %>
+                                                            </span>
 
 
-                                                                    </a>
-                                                                </li>
-                                                                <li class="col">
-                                                                    <a href="" class="share">
-                                                                        <i
-                                                                            class="fa-solid fa-arrow-up-from-bracket"></i>
+                                                        </a>
+                                                    </li>
+                                                    <li class="col">
+                                                        <a href="" class="share p-2 all-center"
+                                                            data-bs-toggle="dropdown" aria-expanded="false"
+                                                            onclick="stopProp(event)">
+                                                            <i class="fa-solid fa-arrow-up-from-bracket"></i>
 
-                                                                    </a>
-                                                                </li>
-                                                            </ul>
-                                                        </div>
+                                                        </a>
+                                                        <ul class="dropdown-menu p-0">
+                                                            <li class="d-flex">
+                                                                <a class="dropdown-item text-dark"
+                                                                    onclick="copyContent(event,'${t.id}')">
+                                                                    <i class="fa-regular fa-clipboard me-2"></i>
+
+                                                                    Click to copy link
+
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
                                         <div class="col-1 dropstart">
                                             <a href="" class="text-dark" data-bs-toggle="dropdown"
@@ -574,7 +574,7 @@
                         unfollowerIds.push(x.id);
                     }
 
-                    if (unfollowerIds.includes(parseInt(targetId))) {
+                    if (unfollowerIds?.includes(parseInt(targetId))) {
                         document.querySelector("#btnFollow").innerText = `Follow`;
                         document.querySelector("#btnFollow").setAttribute("onclick", `follow(${targetId},0)`);
 
@@ -587,7 +587,6 @@
                 getFollowUser2();
 
                 //set hashtags
-                //set hashtags
                 let numberOfTweets = `<%= tweet_data.length %>`;
 
                 if (numberOfTweets > 0) {
@@ -597,10 +596,51 @@
                         let hashTag = curTweet.split(" ")
                         let tweetTemp = curTweet
                         for (let curHashtag of hashTag) {
-                            if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
+                            if (curHashtag.startsWith("#") && !curHashtag.substring(1)?.includes("#"))
                                 tweetTemp = tweetTemp.replace(curHashtag, `<a href="/trend?srchval=${curHashtag.substring(1)}" class="text-blue fw-400">${curHashtag}</a>`)
                         }
                         document.querySelector("#tweetIndex" + i).innerHTML = tweetTemp;
+
+                        //set media
+
+                        let mediaUrl = document.querySelector("#mediaUrl" + i).innerText?.split(";")
+                        
+
+                        let mediaTypes = []
+                        let mediaUrls = []
+                        mediaUrl?.forEach(url => {
+                            let [ele1, ele2] = url.split(",");
+                            mediaUrls.push(ele1)
+                            mediaTypes.push(ele2)
+                        })
+                        let part1Data = "";
+                        part1Data += `<div class="tweet-img-container  d-flex flex-wrap ${(mediaTypes?.length == 0) ? "d-none" : ""} ">`
+                        mediaUrls?.forEach((cur, i) => {
+                            if (mediaTypes[i]?.includes("image")) {
+                                if (i % 2 == 0 && mediaTypes.length == i + 1) {
+                                    part1Data += `<a class=" bg-light w-100"  onclick='openImg(event,"${cur.split("/")[3]}")'><img src="${cur}" alt="" class="border"></a>`;
+                                } else {
+                                    part1Data += `<a class=" bg-light w-50"  onclick='openImg(event,"${cur.split("/")[3]}")'><img src="${cur}" alt="" class="border}"></a>`;
+                                }
+
+                            } else if (mediaTypes[i]?.includes("video")) {
+                                if (i % 2 == 0 && mediaTypes.length == i + 1) {
+                                    part1Data += `<div class="  w-100"> <video controls loop onclick="stopProp(event)" class="w-100 h-100">
+                                                    <source src="${cur}" type="video/mp4">
+                                                </video></div>`;
+                                } else {
+                                    part1Data += `<div class="  w-50"> <video controls loop onclick="stopProp(event)" class="w-100 h-100">
+                                                    <source src="${cur}" type="video/mp4">
+                                                </video></div>`;
+                                }
+
+                            }
+                        })
+                        part1Data += `</div>`;
+                        if(part1Data != `<div class="tweet-img-container  d-flex flex-wrap  "></div>`){
+                            document.getElementById("media" + i).innerHTML = part1Data;
+                        }
+                        mediaUrls = mediaTypes = []
                     }
                 }
                 //set hashtags
@@ -613,10 +653,61 @@
                         let hashTag = curRetweet.split(" ")
                         let retweetTemp = curRetweet
                         for (let curHashtag of hashTag) {
-                            if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
+                            if (curHashtag.startsWith("#") && !curHashtag.substring(1)?.includes("#"))
                                 retweetTemp = retweetTemp.replace(curHashtag, `<a href="/trend?srchval=${curHashtag.substring(1)}" class="text-blue fw-400">${curHashtag}</a>`)
                         }
                         document.querySelector("#retweetIndex" + i).innerHTML = retweetTemp;
+
+                        //set media
+
+                        let mediaUrl = document.querySelector("#mediaUrl_" + i).innerText?.split(";")
+
+                        let mediaTypes = []
+                        let mediaUrls = []
+                        mediaUrl?.forEach(url => {
+                            let [ele1, ele2] = url.split(",");
+                            mediaUrls.push(ele1)
+                            mediaTypes.push(ele2)
+                        })
+                        part1Data = "";
+                        part1Data += `<div class="tweet-img-container  d-flex flex-wrap ${(mediaTypes?.length == 0) ? "d-none" : ""} ">`
+                        mediaUrls?.forEach((cur, i) => {
+                            if (mediaTypes[i]?.includes("image")) {
+                                if (i % 2 == 0 && mediaTypes.length == i + 1) {
+                                    part1Data += `<a class=" bg-light w-100" onclick='openImg(event,${cur.split("/")[3]})'><img src="${cur}" alt="" class="border"></a>`;
+                                } else {
+                                    part1Data += `<a class=" bg-light w-50" onclick='openImg(event,${cur.split("/")[3]})'><img src="${cur}" alt="" class="border"></a>`;
+                                }
+
+                            } else if (mediaTypes[i]?.includes("video")) {
+                                if (i % 2 == 0 && mediaTypes.length == i + 1) {
+                                    part1Data += `<div class="  w-100"> <video controls loop onclick="stopProp(event)" class="w-100 h-100">
+                                                    <source src="${cur}" type="video/mp4">
+                                                </video></div>`;
+                                } else {
+                                    part1Data += `<div class="  w-50"> <video controls loop onclick="stopProp(event)" class="w-100 h-100">
+                                                    <source src="${cur}" type="video/mp4">
+                                                </video></div>`;
+                                }
+
+                            }
+                        })
+                        part1Data += `</div>`;
+                        document.getElementById("media_" + i).innerHTML = part1Data;
+                        mediaUrls = mediaTypes = []
                     }
+                }
+
+                function openImg(e, imgName) {
+                    e.stopPropagation();
+                    location.href = `/dashboard/img/${imgName}`;
+                }
+
+                function openInfo(id) {
+                    window.location.href = `/tweet/tweet_details/${id}`;
+                }
+
+                function stopProp(e) {
+                    e.stopPropagation();
                 }
             </script>

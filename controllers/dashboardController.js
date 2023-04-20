@@ -19,8 +19,8 @@ const getpostLike1 = asyncHandler(async (req, res) => {
         tweet_ids = data.tweet_id
         if (data.like == true) {
 
-            
-            
+
+
             const qrt = `SELECT  * FROM  likes where tweet_id=? and user_id=?`
 
             const like_data = await queryExec(qrt, [data.tweet_id, user_id]);
@@ -85,7 +85,7 @@ const getpostLike1 = asyncHandler(async (req, res) => {
 
 
 const getpostRetweet = asyncHandler(async (req, res) => {
-  
+
     try {
         const token = req.session.email
         const user_id = req.session.user_id
@@ -187,19 +187,15 @@ const postTweet = asyncHandler(async (req, res) => {
         res.redirect('/user-login')
         return;
     }
-    let body={...req.body}
-    
+    let body = { ...req.body }
+
     const file = req.files;
     const user_id = req.session.user_id;
     const tweet = body.tweet;
     let hashTagsArr = body.hashtags;
 
-    if(typeof hashTagsArr == "string")
+    if (typeof hashTagsArr == "string")
         hashTagsArr = [hashTagsArr]
-    
-
-
-
 
     let lastTweetInsertedId;
 
@@ -208,16 +204,18 @@ const postTweet = asyncHandler(async (req, res) => {
         let ins = await queryExec('INSERT INTO  tweets (user_id,tweet,media_type,created_at) VALUES (?,?,?,NOW())', [user_id, tweet, 'text']);
         lastTweetInsertedId = ins.insertId;
     } else {
+        const sql = 'INSERT INTO tweets (user_id,tweet,created_at) VALUES (?,?,NOW())';
+        const data = [user_id, tweet];
+        let q = await queryExec(sql, data);
+        lastTweetInsertedId = q.insertId;
         for (var i = 0; i < file.length; i++) {
             const filename = file[i].originalname;
             const filepath = file[i].path;
             const filetype = file[i].mimetype;
             const filename1 = file[i].filename
-            var imgsrc = '/assets/images/' + filename1;
-            const sql = 'INSERT INTO  tweets (user_id,tweet, media_url,media_type,created_at) VALUES (?,?, ?, ?,NOW())';
-            const data = [user_id, tweet, imgsrc, filetype];
-            let q = await queryExec(sql, data);
-            lastTweetInsertedId = q.insertId;
+            let imgsrc = '/assets/images/' + filename1;
+            const mediaQ = 'INSERT INTO  tweet_media (media_type,media_url,tweet_id) VALUES (?,?,?)';
+            await queryExec(mediaQ,[filetype,imgsrc,lastTweetInsertedId])
         }
     }
 
@@ -247,7 +245,7 @@ const postTweet = asyncHandler(async (req, res) => {
 })
 
 const getDashboardFetchRequest = asyncHandler(async (req, res) => {
-    
+
     const user_id = req.session.user_id
     try {
         const token = req.session.email
@@ -255,18 +253,28 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
             res.redirect('/user-login');
             return
         }
-        
+
         let srchQuery = "";
-        if(req.query.srch){
+        if (req.query.srch) {
             srchQuery += `WHERE t.tweet LIKE '%${req.query.srch}%'`
         }
-        else if(req.query.hash){
-             srchQuery += `WHERE t.id in (SELECT th.tweet_id FROM tweet_hashtag as th JOIN hashtag_master as h ON th.hash_id=h.id WHERE h.hashtag LIKE '%${req.query.hash}%')`;
+        else if (req.query.hash) {
+            console.log("🚀 ~ file: dashboardController.js:262 ~ getDashboardFetchRequest ~ req.query.hash:", req.query.hash)
+            
+            srchQuery += `WHERE t.id in (SELECT th.tweet_id FROM tweet_hashtag as th JOIN hashtag_master as h ON th.hash_id=h.id WHERE h.hashtag LIKE '%${req.query.hash}%')`;
         }
-        let sel_tweets = `SELECT t.id,t.tweet,t.media_url,t.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM tweets as t INNER JOIN users u ON t.user_id = u.id ${srchQuery} ORDER BY t.id DESC  `;
+        // SELECT t.id,t.tweet,tm.media_url,tm.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM tweets as t INNER JOIN users u ON t.user_id = u.id LEFT JOIN tweet_media as tm ON tm.tweet_id=t.id
+        let sel_tweets = `SELECT t.id, t.tweet,
+        GROUP_CONCAT(DISTINCT CONCAT(tm.media_url, ',', tm.media_type) SEPARATOR ';') AS media,
+        t.tweet_likes, t.tweet_comments, t.tweet_retweets, t.created_at,
+        u.id as user_id, u.name, u.user_image, u.user_name, u.bio, u.following, u.followers
+        FROM tweets as t
+        INNER JOIN users u ON t.user_id = u.id
+        LEFT JOIN tweet_media as tm ON tm.tweet_id = t.id
+        ${srchQuery} GROUP BY t.id ORDER BY t.id DESC`;
 
         let follow_sel = `SELECT following.following_id FROM following WHERE following.user_id = ?`;
-       
+
         const followingId = await queryExec(follow_sel, [user_id]);
 
         let allFollowingIds = [];
@@ -276,17 +284,25 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
         //get comments of every tweet
         let comments = 0;
         let all_tweet_data;
-        
-            all_tweet_data = await queryExec(sel_tweets);
 
+        all_tweet_data = await queryExec(sel_tweets);
+        // console.log("🚀 ~ file: dashboardController.js:287 ~ getDashboardFetchRequest ~ all_tweet_data:", all_tweet_data)
+
+        // let tmp = []
+        // let tmpId = []
+        // for (const x of all_tweet_data) {
+        //     tmp.push(x)
+        //     tmpId.push(x.id)
+        //     if(tmpId.includes())
+        // }
+
+        // str?.split()
 
         const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
         let post_at = []
         //set month name and date
         all_tweet_data.forEach(async (tweet) => {
-
-
 
             const d = new Date(tweet.created_at);
             const d2 = new Date()
@@ -438,4 +454,9 @@ const getHome = asyncHandler(async (req, res) => {
     res.render("home");
 })
 
-module.exports = { getDashboard, getTrendingHashtags, getHome, getDashboardFetchRequest, postTweet, getpostLike1, getpostRetweet }
+const previewImage = asyncHandler(async (req, res) => {
+    console.log("param",req.params);
+    res.render("img",{name: req.params.name});
+})
+
+module.exports = { getDashboard, getTrendingHashtags, getHome, previewImage, getDashboardFetchRequest, postTweet, getpostLike1, getpostRetweet }

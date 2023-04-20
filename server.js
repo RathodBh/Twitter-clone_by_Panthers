@@ -191,7 +191,10 @@ function calcTime(city, offset) {
 
 // for time zone end
 // try end
-
+// app.get("/img/:name", (req, res)=>{
+//     let name = req.params.name;
+//     res.render("img",{name})
+// })
 app.get("*", (req, res) => {
     res.render("404")
 })
