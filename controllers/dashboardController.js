@@ -259,6 +259,8 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
             srchQuery += `WHERE t.tweet LIKE '%${req.query.srch}%'`
         }
         else if (req.query.hash) {
+            console.log("🚀 ~ file: dashboardController.js:262 ~ getDashboardFetchRequest ~ req.query.hash:", req.query.hash)
+            
             srchQuery += `WHERE t.id in (SELECT th.tweet_id FROM tweet_hashtag as th JOIN hashtag_master as h ON th.hash_id=h.id WHERE h.hashtag LIKE '%${req.query.hash}%')`;
         }
         // SELECT t.id,t.tweet,tm.media_url,tm.media_type,t.tweet_likes,t.tweet_comments,t.tweet_retweets,t.created_at,u.id as user_id, u.name,u.user_image,u.user_name,u.bio,u.following,u.followers FROM tweets as t INNER JOIN users u ON t.user_id = u.id LEFT JOIN tweet_media as tm ON tm.tweet_id=t.id
@@ -269,7 +271,7 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
         FROM tweets as t
         INNER JOIN users u ON t.user_id = u.id
         LEFT JOIN tweet_media as tm ON tm.tweet_id = t.id
-        GROUP BY t.id ${srchQuery}  ORDER BY t.id DESC`;
+        ${srchQuery} GROUP BY t.id ORDER BY t.id DESC`;
 
         let follow_sel = `SELECT following.following_id FROM following WHERE following.user_id = ?`;
 
@@ -284,6 +286,7 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
         let all_tweet_data;
 
         all_tweet_data = await queryExec(sel_tweets);
+        // console.log("🚀 ~ file: dashboardController.js:287 ~ getDashboardFetchRequest ~ all_tweet_data:", all_tweet_data)
 
         // let tmp = []
         // let tmpId = []
@@ -300,8 +303,6 @@ const getDashboardFetchRequest = asyncHandler(async (req, res) => {
         let post_at = []
         //set month name and date
         all_tweet_data.forEach(async (tweet) => {
-
-
 
             const d = new Date(tweet.created_at);
             const d2 = new Date()

@@ -370,6 +370,7 @@ async function forYouDataLoad(srch = "", hash = "") {
 
 
 async function followingTab() {
+    console.log("followingTab")
     let fetchDashboard = await fetch(`/dashboard/dashboardData`);
     let ansData = await fetchDashboard.json();
 
@@ -737,6 +738,7 @@ async function followProp(e, follower_id, flag) {
 }
 
 // search tweet has or anything TRENDING.EJS
+
 let trendingSearch1 = document.querySelector("#searchTweetHash")
 trendingSearch1.addEventListener('click', clearRes)
 trendingSearch1.addEventListener('blur', clearRes)

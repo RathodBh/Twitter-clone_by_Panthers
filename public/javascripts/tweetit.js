@@ -5,16 +5,24 @@
 var ff = 0;
 
 function emoji_clk() {
+    console.log('txt',document.getElementById('myTextArea').innerHTML)
+    console.log('txtBox',document.getElementById('twt-area').innerHTML)
     if (ff == 0) {
         document.getElementById('emojis_img').style.display = "block";
         document.querySelector('emoji-picker')
-            .addEventListener('emoji-click', event => document.getElementById('myTextArea').innerText += event.detail.unicode);
+            .addEventListener('emoji-click', event => {
+                document.getElementById('myTextArea').innerHTML += event.detail.unicode
+                document.getElementById('twt-area').value += event.detail.unicode
+            });
         ff = 1;
     }
     else {
         document.getElementById('emojis_img').style.display = "none";
         document.querySelector('emoji-picker')
-            .addEventListener('emoji-click', event => document.getElementById('myTextArea').innerText += event.detail.unicode);
+            .addEventListener('emoji-click', event =>{
+                document.getElementById('myTextArea').innerHTML += event.detail.unicode
+                document.getElementById('twt-area').value += event.detail.unicode
+            } );
         ff = 0;
     }
     // document.getElementById('emojiSelectorIcon').style.display="none"
@@ -22,8 +30,8 @@ function emoji_clk() {
 // document.querySelector("#sub_btn").disabled = 'false'
 
 var limit_img = 0;
-
-const previewImage = (event) => {
+try{
+    const previewImage = (event) => {
     const imageFiles = event.target.files;
     limit_img+=imageFiles.length;
     document.querySelector("#sub_btn").disabled = "false"
@@ -70,6 +78,10 @@ const previewImage = (event) => {
     }
 }
 
+}catch(err){
+
+}
+
 
 
 function twt_clk() {
@@ -94,6 +106,7 @@ function twt_clk1() {
     window.location = "/dashboard/tweet";
 }
 
+try{
 
 let gg=0;
 
@@ -111,4 +124,7 @@ function emoji_picker1() {
         gg = 0;
     }
     // document.getElementById('emojiSelectorIcon').style.display="none"
+}
+}catch(err){
+    
 }

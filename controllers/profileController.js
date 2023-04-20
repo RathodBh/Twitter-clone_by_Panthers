@@ -27,7 +27,6 @@ const editprofile = asyncHandler(async (req, res) => {
 const getProfile = asyncHandler(async (req, res) => {
 
     //i need to show the get request for register page
-    let db = `twitter_clone`;
     try {
         const token = req.session.email
         if (!token) {
@@ -251,7 +250,6 @@ const getTagetProfiledata = async (req, res) => {
 
 
 const getTargetProfile = asyncHandler(async (req, res) => {
-    let db = `twitter_clone`;
     try {
         const token = req.session.email
         if (!token) {
@@ -261,8 +259,9 @@ const getTargetProfile = asyncHandler(async (req, res) => {
         if (user_id == req.session.user_id) {
             return res.redirect('/profile/user')
         }
-        let sel_tweets = `select * from tweets where user_id=? order by id DESC`;
+        let sel_tweets = `select t.*,GROUP_CONCAT(DISTINCT CONCAT(tm.media_url, ',', tm.media_type) SEPARATOR ';') AS media from tweets as t LEFT JOIN tweet_media as tm ON tm.tweet_id = t.id  where t.user_id=? GROUP BY t.id order by t.id DESC`;
         const all_tweet_data = await queryExec(sel_tweets, [user_id]);
+        console.log("🚀 ~ file: profileController.js:266 ~ getTargetProfile ~ all_tweet_data:", all_tweet_data)
 
 
 

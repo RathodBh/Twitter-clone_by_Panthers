@@ -574,7 +574,7 @@
                         unfollowerIds.push(x.id);
                     }
 
-                    if (unfollowerIds.includes(parseInt(targetId))) {
+                    if (unfollowerIds?.includes(parseInt(targetId))) {
                         document.querySelector("#btnFollow").innerText = `Follow`;
                         document.querySelector("#btnFollow").setAttribute("onclick", `follow(${targetId},0)`);
 
@@ -596,7 +596,7 @@
                         let hashTag = curTweet.split(" ")
                         let tweetTemp = curTweet
                         for (let curHashtag of hashTag) {
-                            if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
+                            if (curHashtag.startsWith("#") && !curHashtag.substring(1)?.includes("#"))
                                 tweetTemp = tweetTemp.replace(curHashtag, `<a href="/trend?srchval=${curHashtag.substring(1)}" class="text-blue fw-400">${curHashtag}</a>`)
                         }
                         document.querySelector("#tweetIndex" + i).innerHTML = tweetTemp;
@@ -604,6 +604,7 @@
                         //set media
 
                         let mediaUrl = document.querySelector("#mediaUrl" + i).innerText?.split(";")
+                        
 
                         let mediaTypes = []
                         let mediaUrls = []
@@ -612,17 +613,17 @@
                             mediaUrls.push(ele1)
                             mediaTypes.push(ele2)
                         })
-                        part1Data = "";
+                        let part1Data = "";
                         part1Data += `<div class="tweet-img-container  d-flex flex-wrap ${(mediaTypes?.length == 0) ? "d-none" : ""} ">`
                         mediaUrls?.forEach((cur, i) => {
-                            if (mediaTypes[i].includes("image")) {
+                            if (mediaTypes[i]?.includes("image")) {
                                 if (i % 2 == 0 && mediaTypes.length == i + 1) {
                                     part1Data += `<a class=" bg-light w-100"  onclick='openImg(event,"${cur.split("/")[3]}")'><img src="${cur}" alt="" class="border"></a>`;
                                 } else {
                                     part1Data += `<a class=" bg-light w-50"  onclick='openImg(event,"${cur.split("/")[3]}")'><img src="${cur}" alt="" class="border}"></a>`;
                                 }
 
-                            } else if (mediaTypes[i].includes("video")) {
+                            } else if (mediaTypes[i]?.includes("video")) {
                                 if (i % 2 == 0 && mediaTypes.length == i + 1) {
                                     part1Data += `<div class="  w-100"> <video controls loop onclick="stopProp(event)" class="w-100 h-100">
                                                     <source src="${cur}" type="video/mp4">
@@ -636,7 +637,9 @@
                             }
                         })
                         part1Data += `</div>`;
-                        document.getElementById("media" + i).innerHTML = part1Data;
+                        if(part1Data != `<div class="tweet-img-container  d-flex flex-wrap  "></div>`){
+                            document.getElementById("media" + i).innerHTML = part1Data;
+                        }
                         mediaUrls = mediaTypes = []
                     }
                 }
@@ -650,7 +653,7 @@
                         let hashTag = curRetweet.split(" ")
                         let retweetTemp = curRetweet
                         for (let curHashtag of hashTag) {
-                            if (curHashtag.startsWith("#") && !curHashtag.substring(1).includes("#"))
+                            if (curHashtag.startsWith("#") && !curHashtag.substring(1)?.includes("#"))
                                 retweetTemp = retweetTemp.replace(curHashtag, `<a href="/trend?srchval=${curHashtag.substring(1)}" class="text-blue fw-400">${curHashtag}</a>`)
                         }
                         document.querySelector("#retweetIndex" + i).innerHTML = retweetTemp;
@@ -669,14 +672,14 @@
                         part1Data = "";
                         part1Data += `<div class="tweet-img-container  d-flex flex-wrap ${(mediaTypes?.length == 0) ? "d-none" : ""} ">`
                         mediaUrls?.forEach((cur, i) => {
-                            if (mediaTypes[i].includes("image")) {
+                            if (mediaTypes[i]?.includes("image")) {
                                 if (i % 2 == 0 && mediaTypes.length == i + 1) {
                                     part1Data += `<a class=" bg-light w-100" onclick='openImg(event,${cur.split("/")[3]})'><img src="${cur}" alt="" class="border"></a>`;
                                 } else {
                                     part1Data += `<a class=" bg-light w-50" onclick='openImg(event,${cur.split("/")[3]})'><img src="${cur}" alt="" class="border"></a>`;
                                 }
 
-                            } else if (mediaTypes[i].includes("video")) {
+                            } else if (mediaTypes[i]?.includes("video")) {
                                 if (i % 2 == 0 && mediaTypes.length == i + 1) {
                                     part1Data += `<div class="  w-100"> <video controls loop onclick="stopProp(event)" class="w-100 h-100">
                                                     <source src="${cur}" type="video/mp4">
